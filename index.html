@@ -1,193 +1,925 @@
-<!doctype html>
-<html lang="ru">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Обед ПСО</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@400;500;600&display=swap">
 <style>
-  :root {
-    --bg: #f4f1ec; --card: #ffffff; --text: #2b2b2b; --muted: #6b6b6b;
-    --accent: #c0392b; --line: #e3ddd4; --ok: #2e7d32;
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-         background: var(--bg); color: var(--text); }
-  header { background: var(--accent); color: #fff; padding: 16px; text-align: center; }
-  header h1 { margin: 0; font-size: 1.5rem; }
-  header p { margin: 4px 0 0; opacity: .9; }
-  main { max-width: 720px; margin: 0 auto; padding: 16px 16px 140px; }
-  .notice { background: #fff3cd; border-radius: 8px; padding: 10px 12px; margin-bottom: 16px; font-size: .95rem; }
-  .notice.closed { background: #fdecea; color: var(--accent); font-weight: 600; }
-  section { background: var(--card); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; }
-  section h2 { margin: 0 0 8px; font-size: 1.15rem; }
-  section h2 small { color: var(--muted); font-weight: 400; }
-  .item { display: flex; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
-  .item:first-of-type { border-top: 0; }
-  .info { flex: 1; }
-  .name { font-weight: 600; }
-  .desc { color: var(--muted); font-size: .85rem; margin-top: 2px; }
-  .price { white-space: nowrap; font-weight: 600; }
-  .qty { display: flex; align-items: center; gap: 6px; }
-  .qty button { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line);
-                background: #fff; font-size: 1.1rem; cursor: pointer; }
-  .qty span { min-width: 20px; text-align: center; }
-  .order { position: fixed; left: 0; right: 0; bottom: 0; background: var(--card);
-           box-shadow: 0 -2px 10px rgba(0,0,0,.1); padding: 12px 16px; }
-  .order-inner { max-width: 720px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-  .order input { flex: 1 1 180px; padding: 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 1rem; }
-  .total { font-weight: 700; }
-  .send { background: var(--ok); color: #fff; border: 0; border-radius: 8px; padding: 10px 16px;
-          font-size: 1rem; cursor: pointer; }
-  .send:disabled { background: #9e9e9e; cursor: not-allowed; }
+:root{
+  --ground:#E3E7E4; --surface:#F3F4F1; --surface-2:#EAEEEB; --paper:#FAFBF8; --ink:#1E2523; --muted:#5F6A66;
+  --line:#CAD1CD; --accent:#4B6C63; --accent-ink:#F4F7F5; --accent-soft:#D3DDD8;
+  --plum:#86616F; --plum-soft:#EADFE3; --warn:#9A6B2F; --shadow:0 1px 2px rgba(30,40,36,.06),0 8px 24px rgba(30,40,36,.07);
+  --display:"Unbounded","Onest",system-ui,sans-serif; --body:"Onest",-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --ground:#141918; --surface:#1D2422; --surface-2:#232B29; --paper:#202826; --ink:#E5EAE7; --muted:#9AA5A0;
+  --line:#2F3A37; --accent:#96C1B3; --accent-ink:#11201B; --accent-soft:#2A3A35;
+  --plum:#CFA4B4; --plum-soft:#3A2B31; --warn:#D9A866; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#141918; --surface:#1D2422; --surface-2:#232B29; --paper:#202826; --ink:#E5EAE7; --muted:#9AA5A0;
+  --line:#2F3A37; --accent:#96C1B3; --accent-ink:#11201B; --accent-soft:#2A3A35;
+  --plum:#CFA4B4; --plum-soft:#3A2B31; --warn:#D9A866; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--ground)}
+body{color:var(--ink);font:400 18px/1.4 var(--body);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:640px;margin:0 auto;padding-inline:16px;padding-block:0 190px}
+.num{font-variant-numeric:tabular-nums}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ground);padding-block:14px 12px;margin-inline:-16px;padding-inline:16px;border-bottom:1px solid transparent;transition:border-color .2s}
+.top.scrolled{border-bottom-color:var(--line)}
+.brand{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.brand h1{font:600 26px/1.1 var(--display);letter-spacing:-.01em;margin:0}
+.brand h1 span{color:var(--accent)}
+.day{font:500 15px/1.2 var(--body);color:var(--muted);text-align:right}
+.day b{display:block;font:500 17px/1.2 var(--display);color:var(--ink);letter-spacing:.01em}
+.deadline{margin-top:10px;display:flex;align-items:center;gap:10px;font-size:15px;color:var(--muted)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none;box-shadow:0 0 0 4px var(--accent-soft)}
+.deadline.closed .dot{background:var(--warn);box-shadow:none}
+.deadline strong{color:var(--ink);font-weight:600}
+
+/* participant picker */
+.who{margin-top:12px}
+.who-lbl{display:block;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 6px 2px}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:2px;margin:-2px}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;display:inline-flex;align-items:center;gap:7px;min-height:42px;padding:0 15px;border-radius:99px;background:var(--surface);border:1px solid var(--line);font-weight:600;font-size:16px;white-space:nowrap}
+.chip[aria-checked="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.chip-n{min-width:22px;height:22px;padding:0 6px;border-radius:99px;background:var(--accent-soft);color:var(--ink);font-size:13px;line-height:22px;text-align:center}
+.chip[aria-checked="true"] .chip-n{background:var(--accent-ink);color:var(--accent)}
+.chip.add{background:none;border-style:dashed;color:var(--accent)}
+.add-row{display:flex;gap:8px;margin-top:10px}
+.add-row input{flex:1;min-width:0}
+.add-row .btn{min-height:50px;font-size:16px;padding:0 14px;flex:none}
+
+.hint{color:var(--muted);font-size:16px;margin:6px 0 0}
+.stale{margin-top:16px;padding:12px 14px;border-radius:16px;background:var(--plum-soft);font-size:16px;line-height:1.35}
+.stale b{font-weight:600}
+
+/* menu */
+.sec{margin-top:26px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:0 4px 10px}
+.sec-h h2{font:500 21px/1.15 var(--display);margin:0;letter-spacing:-.005em}
+.portion{font-size:15px;color:var(--muted);white-space:nowrap}
+.list{list-style:none;margin:0;padding:0;background:var(--surface);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+.list>li+li{border-top:1px solid var(--line)}
+.sec.premium .list{background:var(--plum-soft);box-shadow:none;border:1px solid color-mix(in srgb,var(--plum) 30%,transparent)}
+.sec.premium .sec-h h2{color:var(--plum)}
+.item{display:grid;grid-template-columns:34px 1fr auto;gap:14px;align-items:start;width:100%;text-align:left;padding:16px 16px 16px 14px;min-height:64px}
+.tick{width:30px;height:30px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;margin-top:1px;transition:background .15s,border-color .15s}
+.tick svg{width:16px;height:16px;opacity:0;transform:scale(.6);transition:.15s}
+.item[aria-checked="true"] .tick{background:var(--accent);border-color:var(--accent)}
+.item[aria-checked="true"] .tick svg{opacity:1;transform:none}
+.tick svg path{stroke:var(--accent-ink)}
+.nm{display:block;font-weight:600;font-size:19px;line-height:1.28}
+.ds{display:block;color:var(--muted);font-size:15px;line-height:1.35;margin-top:4px}
+.pr{font:500 18px/1.3 var(--display);white-space:nowrap;padding-top:1px}
+.pr small{font:400 14px var(--body);color:var(--muted);margin-left:2px}
+.badge{display:inline-block;vertical-align:2px;margin-left:8px;font:600 11px/1 var(--body);letter-spacing:.08em;padding:4px 7px;border-radius:99px;background:var(--plum);color:var(--surface)}
+.grill{display:inline-block;margin-left:6px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--warn);font-weight:600;vertical-align:2px}
+.qty{display:flex;align-items:center;gap:12px;padding:0 16px 14px 62px}
+.step{display:inline-flex;align-items:center;background:var(--surface-2);border-radius:99px;border:1px solid var(--line)}
+.step button{width:44px;height:40px;font-size:22px;line-height:1;display:grid;place-items:center;color:var(--accent)}
+.step output{min-width:28px;text-align:center;font-weight:600;font-size:18px}
+.qty .sum{color:var(--muted);font-size:16px}
+
+/* dock */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:10;padding:0 12px calc(10px + env(safe-area-inset-bottom,0px));pointer-events:none}
+.dock>*{pointer-events:auto;max-width:616px;margin-inline:auto}
+.cart{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--accent);color:var(--accent-ink);border-radius:20px;padding:10px 10px 10px 18px;margin-bottom:10px;box-shadow:0 10px 30px rgba(20,40,34,.25)}
+.cart-info{flex:1;min-width:0}
+.cart .c1{display:block;font-size:15px;opacity:.88;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cart .c2{display:block;font:500 20px/1.25 var(--display);white-space:nowrap}
+.ok{flex:none;min-width:96px;min-height:52px;padding:0 22px;border-radius:15px;background:var(--accent-ink);color:var(--accent);font:600 20px/1 var(--display);letter-spacing:.02em}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:22px;padding:5px;box-shadow:var(--shadow)}
+.tab{padding:10px 4px;border-radius:17px;font-size:15px;font-weight:600;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;position:relative}
+.tab svg{width:24px;height:24px}
+.tab svg *{stroke:currentColor}
+.tab[aria-selected="true"]{background:var(--accent-soft);color:var(--ink)}
+.tab .cnt{position:absolute;top:5px;left:calc(50% + 8px);min-width:20px;height:20px;padding:0 5px;border-radius:99px;background:var(--plum);color:var(--surface);font-size:12px;line-height:20px;text-align:center}
+
+/* cards & forms */
+.card{background:var(--surface);border-radius:20px;box-shadow:var(--shadow);padding:18px}
+.card+.card{margin-top:14px}
+.title{font:500 24px/1.15 var(--display);margin:22px 4px 12px;letter-spacing:-.01em}
+label.lbl,.lbl{display:block;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-weight:600}
+input[type=text],textarea{width:100%;font:500 18px/1.35 var(--body);color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+textarea{min-height:130px;resize:vertical;font-size:16px;font-weight:400}
+.btns{display:grid;gap:10px;margin-top:16px}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;min-height:54px;border-radius:16px;font-weight:600;font-size:17px;padding:0 16px;background:var(--surface);border:1px solid var(--line);text-align:center}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.big{min-height:72px;flex-direction:column;gap:2px;font-size:19px}
+.btn.big small{font-size:14px;font-weight:400;opacity:.85}
+.btn.ghost{background:none;border-color:transparent;color:var(--muted);min-height:44px;font-size:16px}
+.btn.danger{color:var(--warn)}
+.empty{text-align:center;color:var(--muted);padding:26px 10px}
+.empty p{margin:0 0 14px}
+.msg{font-size:15px;margin-top:10px;color:var(--accent)}
+.msg.warn{color:var(--warn)}
+.edit-link{display:block;margin:10px auto 0;color:var(--accent);font-weight:600;font-size:16px;min-height:44px}
+
+/* order document preview */
+.paper{margin-top:14px;background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:22px 18px 18px;position:relative;overflow:hidden}
+.paper::before{content:"";position:absolute;inset:0 0 auto 0;height:6px;background:var(--accent)}
+.p-eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.p-title{font:500 22px/1.2 var(--display);margin:8px 0 2px}
+.p-date{font:500 18px/1.2 var(--display);color:var(--accent)}
+.p-people{margin-top:16px;border-top:2px solid var(--ink)}
+.p-person{padding:12px 0;border-bottom:1px solid var(--line)}
+.p-person:last-child{border-bottom:0}
+.p-ph{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-weight:700;font-size:19px;line-height:1.3}
+.p-ph .num{font:600 18px/1.3 var(--display);white-space:nowrap}
+.p-act{display:flex;gap:18px;padding-left:14px;margin-top:4px}
+.p-edit,.p-drop{min-height:34px;padding:4px 0;font:600 15px var(--body);color:var(--accent)}
+.p-drop{color:var(--warn)}
+.sum-card{background:var(--accent);color:var(--accent-ink);border-radius:20px;padding:16px 18px;box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:center;gap:6px 14px;flex-wrap:wrap}
+.sum-lbl{display:block;font-size:14px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+.sum-sub{display:block;font-size:15px;opacity:.85;margin-top:2px}
+.sum-big{font:600 32px/1.1 var(--display);white-space:nowrap}
+.p-line{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-left:14px;margin-top:5px;font-size:16px;line-height:1.35}
+.p-line .num{color:var(--muted);white-space:nowrap}
+.p-total{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding-top:14px;border-top:2px solid var(--ink)}
+.p-total span{color:var(--muted);font-size:15px}
+.p-total span b{display:block;color:var(--ink);font:700 18px/1.3 var(--body);text-transform:uppercase;letter-spacing:.04em}
+.p-total>b{font:600 28px/1 var(--display);white-space:nowrap}
+.p-kitchen{margin-top:18px;padding-top:12px;border-top:1px dashed var(--line)}
+.p-kitchen h4{margin:0 0 6px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.pk{display:flex;justify-content:space-between;gap:12px;padding:3px 0;font-size:16px}
+.pk .num{font-weight:600;white-space:nowrap}
+
+/* roster */
+.roster{display:flex;flex-wrap:wrap;gap:8px}
+.rchip{display:inline-flex;align-items:center;gap:2px;min-height:44px;padding:0 4px 0 15px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line);font-weight:600;font-size:16px}
+.rchip .x{min-width:36px;height:36px;border-radius:99px;display:grid;place-items:center;color:var(--muted);font-size:20px}
+.rchip.sure{border-color:var(--warn)}
+.rchip.sure .x{padding:0 12px;font-size:14px;font-weight:600;color:var(--warn)}
+
+.phone{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:22px;padding:14px 16px;border-radius:16px;border:1px dashed var(--line);color:var(--muted);font-size:15px}
+.phone b{display:block;white-space:nowrap;color:var(--ink);font:500 18px var(--display);user-select:all}
+.phone .btn{min-height:44px;font-size:15px}
+.toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top,0px));transform:translate(-50%,-140%);background:var(--ink);color:var(--ground);padding:12px 18px;border-radius:14px;font-weight:600;font-size:16px;z-index:30;transition:transform .25s;max-width:calc(100% - 32px);text-align:center}
+.toast.show{transform:translate(-50%,0)}
+.sheet{position:fixed;inset:0;z-index:40;background:rgba(10,16,14,.45);display:flex;align-items:flex-end;justify-content:center;padding:12px}
+.sheet .card{width:100%;max-width:616px;max-height:88vh;overflow:auto;margin-bottom:env(safe-area-inset-bottom,0px)}
+.sheet textarea{min-height:40vh;font-family:ui-monospace,Menlo,monospace;font-size:14px}
+.sheet img{display:block;width:100%;border-radius:12px;border:1px solid var(--line)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
-</head>
-<body>
-<header>
-  <h1>Обед ПСО</h1>
-  <p id="menu-date"></p>
-</header>
 
-<main>
-  <div class="notice" id="deadline">Заказы принимаются до 21:00.</div>
-  <div id="menu"></div>
-</main>
+<script type="application/json" id="menu-data">
+{
+ "date": "2026-09-30",
+ "cafe": "Кухня · вкусная доставка",
+ "phone": "+7 (351) 230-66-66",
+ "deadline": "10:00",
+ "collectBy": "21:00",
+ "note": "Заказы принимаются до 10:00 с пн по пт",
+ "sections": [
+  {
+   "title": "Супы",
+   "portion": "~330 мл",
+   "items": [
+    {
+     "id": "s1",
+     "name": "Гороховый с копчёностями",
+     "price": 140
+    },
+    {
+     "id": "s2",
+     "name": "Уха с горбушей",
+     "price": 150
+    },
+    {
+     "id": "s3",
+     "name": "Сухарики",
+     "price": 15,
+     "desc": "К супу"
+    }
+   ]
+  },
+  {
+   "title": "Горячие блюда",
+   "portion": "~300 г",
+   "items": [
+    {
+     "id": "h1",
+     "name": "Котлета фаршированная сыром с картофельным пюре и итальянским соусом",
+     "price": 230
+    },
+    {
+     "id": "h2",
+     "name": "Люля-кебаб на углях с макаронами и грибным соусом",
+     "price": 230,
+     "grill": true
+    },
+    {
+     "id": "h3",
+     "name": "Говядина по-азиатски с китайским рисом",
+     "price": 260
+    },
+    {
+     "id": "h4",
+     "name": "Мясное азу с гречкой",
+     "price": 230
+    },
+    {
+     "id": "h5",
+     "name": "Куриный стейк на углях со сложным гарниром (запечённый картофель и лобио)",
+     "price": 230,
+     "grill": true
+    }
+   ]
+  },
+  {
+   "title": "Премиум",
+   "portion": "",
+   "premium": true,
+   "items": [
+    {
+     "id": "p1",
+     "name": "Минтай в сухарях панко с картофельным пюре и соусом огуречный рилиш",
+     "price": 400
+    },
+    {
+     "id": "p2",
+     "name": "Боул с курицей терияки",
+     "price": 400,
+     "desc": "Авокадо, куриное филе, рис китайский, кукуруза консервированная, терияки соус, перец болгарский, огурец, жареный лук фри"
+    }
+   ]
+  },
+  {
+   "title": "Салаты",
+   "portion": "~135–145 г",
+   "items": [
+    {
+     "id": "c1",
+     "name": "Свекольный",
+     "price": 120,
+     "desc": "Свекла, чернослив, грецкий орех, сметана, майонез, чеснок"
+    },
+    {
+     "id": "c2",
+     "name": "Баба Надя",
+     "price": 140,
+     "desc": "Курица запечённая, овощи запечённые (цукини, баклажан, перец болгарский, картофель), яйцо, майонез, петрушка"
+    },
+    {
+     "id": "c3",
+     "name": "Фунчоза",
+     "price": 140,
+     "desc": "Фунчоза, помидор, огурец свежий, перец болгарский, курица копчёная, заправка"
+    }
+   ]
+  },
+  {
+   "title": "Завтрак",
+   "portion": "",
+   "items": [
+    {
+     "id": "z1",
+     "name": "Каша 5 злаков с джемом",
+     "price": 140
+    }
+   ]
+  },
+  {
+   "title": "Напитки",
+   "portion": "~330 мл",
+   "items": [
+    {
+     "id": "d1",
+     "name": "Морс из брусники",
+     "price": 90
+    }
+   ]
+  },
+  {
+   "title": "Выпечка",
+   "portion": "",
+   "items": [
+    {
+     "id": "b1",
+     "name": "Блины с жюльеном и сыром",
+     "price": 150,
+     "desc": "2 шт"
+    },
+    {
+     "id": "b2",
+     "name": "Блины с творогом и сметанным кремом",
+     "price": 130,
+     "desc": "2 шт"
+    },
+    {
+     "id": "b3",
+     "name": "Блины с ветчиной и сыром",
+     "price": 130,
+     "desc": "2 шт"
+    },
+    {
+     "id": "b4",
+     "name": "Трайфл с клубничным кремом и грецким орехом",
+     "price": 150
+    },
+    {
+     "id": "b5",
+     "name": "Манник с грецким орехом со сгущённым молоком",
+     "price": 130
+    },
+    {
+     "id": "b6",
+     "name": "Запеканка ванильная с яблоком и корицей со сгущённым молоком",
+     "price": 130
+    },
+    {
+     "id": "b7",
+     "name": "Пирожок с картошкой",
+     "price": 70
+    },
+    {
+     "id": "b8",
+     "name": "Пирожок с яйцом и луком",
+     "price": 80
+    },
+    {
+     "id": "b9",
+     "name": "Беляш",
+     "price": 80
+    },
+    {
+     "id": "b10",
+     "name": "Сосиска в тесте",
+     "price": 80
+    },
+    {
+     "id": "b11",
+     "name": "Курник",
+     "price": 90
+    }
+   ]
+  }
+ ]
+}
+</script>
 
-<div class="order">
-  <div class="order-inner">
-    <input id="name" placeholder="Ваше имя" autocomplete="name">
-    <span class="total">Итого: <span id="total">0</span> ₽</span>
-    <button class="send" id="send">Отправить заказ</button>
-  </div>
+<div class="wrap">
+  <header class="top" id="top">
+    <div class="brand">
+      <h1>Обед <span>ПСО</span></h1>
+      <div class="day"><span id="wday">понедельник</span><b class="num" id="dmy">28.09.2026</b></div>
+    </div>
+    <div class="deadline" id="deadline"><span class="dot"></span><span id="dl-text">Заказы до 21:00</span></div>
+    <div class="who" id="who-wrap">
+      <span class="who-lbl" id="who-lbl">Заказ для</span>
+      <div class="chips" id="chips" role="radiogroup" aria-labelledby="who-lbl"></div>
+      <form class="add-row" id="add-row" hidden>
+        <input type="text" id="p-new" placeholder="Фамилия и имя" autocomplete="off" enterkeyhint="done" aria-label="Новый участник">
+        <button class="btn primary" type="submit">Добавить</button>
+        <button class="btn" type="button" id="p-cancel">Отмена</button>
+      </form>
+    </div>
+  </header>
+
+  <main>
+    <section class="view" id="v-menu" aria-label="Меню"></section>
+
+    <section class="view" id="v-order" hidden aria-label="Общий заказ">
+      <h2 class="title">Общий заказ ПСО</h2>
+      <div id="order-body"></div>
+      <div class="phone">
+        <div>Кафе, приём заказов до 10:00 пн–пт<b id="phone">+7 (351) 230-66-66</b></div>
+        <button class="btn" id="copy-phone">Копировать</button>
+      </div>
+    </section>
+
+    <section class="view" id="v-team" hidden aria-label="Коллеги">
+      <h2 class="title">Коллеги</h2>
+      <div id="team-check"></div>
+      <div class="card" style="margin-top:14px">
+        <span class="lbl">Список коллег</span>
+        <div class="roster" id="roster"></div>
+        <form class="add-row" id="t-add">
+          <input type="text" id="t-new" placeholder="Фамилия и имя" autocomplete="off" enterkeyhint="done" aria-label="Новый участник">
+          <button class="btn primary" type="submit">Добавить</button>
+        </form>
+        <p class="hint">Список сохраняется на этом телефоне. Над меню выберите коллегу и отметьте его блюда.</p>
+      </div>
+      <div class="card">
+        <label class="lbl" for="paste">Заказы из чата отделения</label>
+        <textarea id="paste" placeholder="Скопируйте сообщения коллег из общего чата и вставьте сюда. Можно сразу несколько."></textarea>
+        <div class="btns"><button class="btn" id="parse">Добавить в общий заказ</button></div>
+        <div class="msg" id="parse-msg" hidden></div>
+        <button class="edit-link" id="to-order" data-go="order" hidden>Открыть общий заказ →</button>
+        <p class="hint" id="nostore" hidden>Список не сохраняется после закрытия приложения. Вставляйте сообщения всех коллег разом, перед отправкой заказа.</p>
+      </div>
+      <div class="card">
+        <span class="lbl">Отправить выбор в чат</span>
+        <p class="hint" style="margin-top:0">Копирует блюда выбранного участника сообщением для чата отделения.</p>
+        <div class="btns"><button class="btn" id="copy-chat">Скопировать для чата ПСО</button></div>
+      </div>
+    </section>
+  </main>
 </div>
 
+<div class="dock">
+  <div class="cart" id="cart" hidden>
+    <span class="cart-info"><span class="c1" id="cart-n"></span><span class="c2 num" id="cart-sum"></span></span>
+    <button class="ok" id="ok" aria-label="ОК, открыть общий заказ">ОК</button>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-v="menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Меню</button>
+    <button class="tab" role="tab" aria-selected="false" data-v="order">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>Общий заказ<span class="cnt num" id="order-cnt" hidden>0</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-v="team">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="9" r="3"/><circle cx="16.5" cy="9" r="3"/><path d="M2.5 19c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5M13 15c1-.4 2.2-.6 3.5-.5 2.5 0 4.7 1.5 5.5 4.5"/></svg>Коллеги</button>
+  </nav>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
 <script>
-// ===== МЕНЮ НА ЗАВТРА (заменяется целиком при обновлении по фото) =====
-const MENU_DATE = "Среда, 30.09.2026";
-const MENU = [
-  { title: "Супы", note: "~330 мл", items: [
-    { name: "Гороховый с копчёностями", price: 140 },
-    { name: "Уха с горбушей", price: 150 },
-    { name: "Сухарики", price: 15 },
-  ]},
-  { title: "Горячие блюда", note: "~300 г", items: [
-    { name: "Котлета фаршированная сыром с картофельным пюре и итальянским соусом", price: 230 },
-    { name: "Люля-кебаб на углях с макаронами и грибным соусом", price: 230 },
-    { name: "Говядина по-азиатски с китайским рисом", price: 260 },
-    { name: "Мясное азу с гречкой", price: 230 },
-    { name: "Куриный стейк на углях со сложным гарниром (запечённый картофель и лобио)", price: 230 },
-  ]},
-  { title: "Салаты", note: "~135–145 г", items: [
-    { name: "Свекольный", price: 120, desc: "Свекла, чернослив, грецкий орех, сметана, майонез, чеснок" },
-    { name: "Баба Надя", price: 140, desc: "Курица запечённая, овощи запечённые (цукини, баклажан, перец болгарский, картофель), яйцо, майонез, петрушка" },
-    { name: "Фунчоза", price: 140, desc: "Фунчоза, помидор, огурец свежий, перец болгарский, курица копчёная, заправка" },
-  ]},
-  { title: "Премиум блюда", items: [
-    { name: "Минтай в сухарях панко с картофельным пюре и соусом огуречный релиш", price: 400 },
-    { name: "Боул с курицей терияки", price: 400, desc: "Авокадо, куриное филе, рис китайский, кукуруза консервированная, терияки соус, перец болгарский, огурец, жареный лук фри" },
-  ]},
-  { title: "Напитки", note: "~330 мл", items: [
-    { name: "Морс из брусники", price: 90 },
-  ]},
-  { title: "Завтрак", items: [
-    { name: "Каша 5 злаков с джемом", price: 140 },
-  ]},
-  { title: "Выпечка", items: [
-    { name: "Блины с жюльеном и сыром (2 шт)", price: 150 },
-    { name: "Блины с творогом и сметанным кремом (2 шт)", price: 130 },
-    { name: "Блины с ветчиной и сыром (2 шт)", price: 130 },
-    { name: "Трайфл с клубничным кремом и грецким орехом", price: 150 },
-    { name: "Манник с грецким орехом со сгущённым молоком", price: 130 },
-    { name: "Запеканка ванильная с яблоком и корицей со сгущённым молоком", price: 130 },
-    { name: "Пирожок с картошкой", price: 70 },
-    { name: "Пирожок с яйцом и луком", price: 80 },
-    { name: "Беляш", price: 80 },
-    { name: "Сосиска в тесте", price: 80 },
-    { name: "Курник", price: 90 },
-  ]},
-];
-// ===== КОНЕЦ МЕНЮ =====
+(function(){
+const MENU = JSON.parse(document.getElementById('menu-data').textContent);
+const WD = ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+const WDs = ['вс','пн','вт','ср','чт','пт','сб'];
+const WDacc = ['воскресенье','понедельник','вторник','среду','четверг','пятницу','субботу'];  /* «на среду» */
+const pad = n=>String(n).padStart(2,'0');
+const [Y,M,D] = MENU.date.split('-').map(Number);
+const menuDate = new Date(Y, M-1, D);
+const ddmm = pad(D)+'.'+pad(M), dmy = ddmm+'.'+Y;
+const CAFE = (MENU.cafe||'Кафе').split(' · ')[0];
+const byId = {}, ORDER = [];
+MENU.sections.forEach(s=>s.items.forEach(i=>{byId[i.id]=Object.assign({section:s.title},i);ORDER.push(i.id)}));
 
-const DEADLINE_HOUR = 21; // приём заказов до 21:00
-const cart = {};
+const $ = id=>document.getElementById(id);
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const rub = n=>n.toLocaleString('ru-RU')+' ₽';
+function plural(n,a,b,c){n=Math.abs(n)%100;const n1=n%10;if(n>10&&n<20)return c;if(n1>1&&n1<5)return b;if(n1===1)return a;return c}
+const peopleWord = k=>k+' '+plural(k,'человек','человека','человек');
+const itemsWord = k=>k+' '+plural(k,'позиция','позиции','позиций');
+const CHECK = '<svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3L13 4.5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-function isOpen() { return new Date().getHours() < DEADLINE_HOUR; }
+/* ---------- storage (on this device) ---------- */
+let canStore=true;try{localStorage.setItem('pso:t','1');localStorage.removeItem('pso:t')}catch(e){canStore=false}
+const store = {
+  get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+const K = {roster:'pso:roster', active:'pso:active', orders:'pso:orders:'+MENU.date};
+const cleanName = s=>String(s||'').replace(/\s+/g,' ').trim().slice(0,60);
 
-function render() {
-  document.getElementById("menu-date").textContent = "Меню на " + MENU_DATE;
-  const root = document.getElementById("menu");
-  root.innerHTML = "";
-  MENU.forEach((sec, si) => {
-    const s = document.createElement("section");
-    s.innerHTML = `<h2>${sec.title} ${sec.note ? `<small>${sec.note}</small>` : ""}</h2>`;
-    sec.items.forEach((it, ii) => {
-      const id = si + "-" + ii;
-      const row = document.createElement("div");
-      row.className = "item";
-      row.innerHTML = `
-        <div class="info">
-          <div class="name">${it.name}</div>
-          ${it.desc ? `<div class="desc">${it.desc}</div>` : ""}
-        </div>
-        <div class="price">${it.price != null ? it.price + " ₽" : "уточнить"}</div>
-        <div class="qty">
-          <button data-id="${id}" data-d="-1" aria-label="Убрать">−</button>
-          <span id="q-${id}">0</span>
-          <button data-id="${id}" data-d="1" aria-label="Добавить">+</button>
-        </div>`;
-      s.appendChild(row);
-    });
-    root.appendChild(s);
-  });
+let roster = store.get(K.roster,null);
+if(!Array.isArray(roster)){
+  roster=[];
+  const old=cleanName((store.get('pso:who',{})||{}).name||store.get('pso:name',''));
+  if(old) roster.push(old);
 }
-
-function findItem(id) { const [s, i] = id.split("-").map(Number); return MENU[s].items[i]; }
-
-function update() {
-  let total = 0;
-  for (const id in cart) total += (findItem(id).price || 0) * cart[id];
-  document.getElementById("total").textContent = total;
-  const open = isOpen();
-  const dl = document.getElementById("deadline");
-  dl.textContent = open ? "Заказы принимаются до 21:00." : "Приём заказов на завтра закрыт (после 21:00).";
-  dl.classList.toggle("closed", !open);
-  document.getElementById("send").disabled = !open;
+roster = roster.map(cleanName).filter((n,i,a)=>n&&a.findIndex(x=>x.toLowerCase()===n.toLowerCase())===i);
+function addToRoster(nm){
+  nm=cleanName(nm); if(!nm) return '';
+  const f=roster.find(r=>r.toLowerCase()===nm.toLowerCase());
+  if(f) return f;
+  roster.push(nm); return nm;
 }
+let orders = store.get(K.orders,null);
+if(!orders||typeof orders!=='object'||Array.isArray(orders)){
+  orders={};
+  const oldSel=store.get('pso:sel:'+MENU.date,{}), oldGroup=store.get('pso:group:'+MENU.date,{})||{};
+  if(oldSel&&Object.keys(oldSel).length){orders[roster[0]||addToRoster('Мой заказ')]=oldSel}
+  Object.keys(oldGroup).forEach(nm=>{const c=addToRoster(nm);if(c&&oldGroup[nm]&&oldGroup[nm].items)orders[c]=oldGroup[nm].items});
+}
+Object.keys(orders).forEach(nm=>{
+  const it=orders[nm]||{};
+  Object.keys(it).forEach(id=>{if(!byId[id]||!(it[id]>0))delete it[id]});
+  if(!Object.keys(it).length) delete orders[nm];
+});
+let active = store.get(K.active,'');
+if(!roster.includes(active)) active=roster[0]||'';
+const saveRoster=()=>store.set(K.roster,roster), saveOrders=()=>store.set(K.orders,orders), saveActive=()=>store.set(K.active,active);
+saveRoster(); saveOrders(); saveActive();
 
-document.getElementById("menu").addEventListener("click", e => {
-  const b = e.target.closest("button[data-id]");
-  if (!b) return;
-  const id = b.dataset.id;
-  cart[id] = Math.max(0, (cart[id] || 0) + Number(b.dataset.d));
-  if (!cart[id]) delete cart[id];
-  document.getElementById("q-" + id).textContent = cart[id] || 0;
-  update();
+$('wday').textContent = WD[menuDate.getDay()];
+$('dmy').textContent = dmy;
+$('phone').textContent = MENU.phone;
+if(!canStore) $('nostore').hidden = false;
+
+/* ---------- deadline: collect until 21:00 the evening before ---------- */
+function tickDeadline(){
+  const [h,m] = (MENU.collectBy||'21:00').split(':').map(Number);
+  const dl = new Date(Y,M-1,D-1,h,m), left = dl-new Date(), el=$('deadline');
+  const when = WDs[dl.getDay()]+' '+pad(dl.getDate())+'.'+pad(dl.getMonth()+1);
+  if(left<=0){$('dl-text').textContent='Сбор заказов закрыт ('+(MENU.collectBy||'21:00')+', '+when+')';el.classList.add('closed');return}
+  el.classList.remove('closed');
+  const hrs=Math.floor(left/36e5), mins=Math.floor(left%36e5/6e4);
+  const rest = hrs>=24 ? '' : ' · осталось <strong>'+(hrs?hrs+' ч ':'')+mins+' мин</strong>';
+  $('dl-text').innerHTML='Заказы до <strong>'+esc(MENU.collectBy||'21:00')+'</strong>, '+when+rest;
+}
+tickDeadline(); setInterval(tickDeadline,30000);
+
+/* ---------- order model ---------- */
+const sortedIds = items=>ORDER.filter(id=>items[id]>0);
+function totals(items){let n=0,s=0;for(const id in items){if(!byId[id])continue;n+=items[id];s+=items[id]*byId[id].price}return{n,s}}
+const curSel = ()=>orders[active]||{};
+function people(){
+  const names=roster.filter(nm=>orders[nm]&&totals(orders[nm]).n);
+  Object.keys(orders).forEach(nm=>{if(!names.includes(nm)&&totals(orders[nm]).n)names.push(nm)});
+  return names.map(nm=>({name:nm,items:orders[nm]}));
+}
+function aggregate(list){
+  const agg={};let n=0,s=0;
+  list.forEach(p=>{for(const id in p.items){if(!byId[id])continue;const q=p.items[id];agg[id]=(agg[id]||0)+q;n+=q;s+=q*byId[id].price}});
+  return {agg,n,s};
+}
+const aggRows = agg=>ORDER.filter(id=>agg[id]).map(id=>byId[id]);
+const personLines = p=>sortedIds(p.items).map(id=>({name:byId[id].name,q:p.items[id],sum:p.items[id]*byId[id].price}));
+
+/* ---------- participant picker ---------- */
+function renderChips(){
+  const box=$('chips'), sl=box.scrollLeft;
+  box.innerHTML = roster.map(nm=>{
+    const c=totals(orders[nm]||{}).n;
+    return `<button class="chip" role="radio" aria-checked="${nm===active}" data-p="${esc(nm)}">${esc(nm)}${c?`<span class="chip-n num">${c}</span>`:''}</button>`;
+  }).join('') + `<button class="chip add" id="p-open">+ Участник</button>`;
+  box.scrollLeft=sl;
+}
+function setActive(nm){
+  active=nm; saveActive(); renderChips(); syncMenu(); refresh();
+  const el=$('chips').querySelector('.chip[aria-checked="true"]');
+  if(el&&el.scrollIntoView) el.scrollIntoView({inline:'nearest',block:'nearest'});
+}
+function openAdd(focus){$('add-row').hidden=false;$('p-new').value='';if(focus)$('p-new').focus()}
+$('chips').addEventListener('click',e=>{
+  if(e.target.closest('#p-open')){openAdd(true);return}
+  const c=e.target.closest('[data-p]'); if(c) setActive(c.dataset.p);
+});
+$('p-cancel').addEventListener('click',()=>{$('add-row').hidden=true});
+$('add-row').addEventListener('submit',e=>{
+  e.preventDefault();
+  const nm=addToRoster($('p-new').value);
+  if(!nm){$('p-new').focus();return}
+  saveRoster(); $('add-row').hidden=true; $('p-new').blur(); setActive(nm); toast('Отмечаете блюда для: '+nm);
 });
 
-document.getElementById("send").addEventListener("click", async () => {
-  if (!isOpen()) { alert("Приём заказов закрыт в 21:00."); return; }
-  const name = document.getElementById("name").value.trim();
-  if (!name) { alert("Укажите имя."); return; }
-  const ids = Object.keys(cart);
-  if (!ids.length) { alert("Выберите хотя бы одно блюдо."); return; }
-  let total = 0;
-  const lines = ids.map(id => {
-    const it = findItem(id); const sum = (it.price || 0) * cart[id]; total += sum;
-    return `• ${it.name} × ${cart[id]} = ${sum} ₽`;
+/* ---------- menu ---------- */
+function renderMenu(){
+  const today=new Date();today.setHours(0,0,0,0);
+  const sel=curSel();
+  const stale = menuDate < today ? `<div class="stale">Это меню на <b>${WDs[menuDate.getDay()]} ${ddmm}</b>. Новое меню появится здесь после обновления.</div>` : '';
+  $('v-menu').innerHTML = stale + MENU.sections.map(s=>`
+    <section class="sec${s.premium?' premium':''}">
+      <header class="sec-h"><h2>${esc(s.title)}</h2>${s.portion?`<span class="portion">${esc(s.portion)}</span>`:''}</header>
+      <ul class="list">${s.items.map(i=>`
+        <li>
+          <button class="item" role="checkbox" aria-checked="${sel[i.id]?'true':'false'}" data-id="${i.id}">
+            <span class="tick">${CHECK}</span>
+            <span><span class="nm">${esc(i.name)}${i.new?'<span class="badge">NEW</span>':''}${i.grill?'<span class="grill">гриль</span>':''}</span>${i.desc?`<span class="ds">${esc(i.desc)}</span>`:''}</span>
+            <span class="pr num">${i.price}<small>₽</small></span>
+          </button>
+          <div class="qty" data-q="${i.id}" ${sel[i.id]?'':'hidden'}>
+            <span class="step"><button data-dec="${i.id}" aria-label="Меньше">−</button><output class="num">${sel[i.id]||1}</output><button data-inc="${i.id}" aria-label="Больше">+</button></span>
+            <span class="sum num">${rub((sel[i.id]||1)*i.price)}</span>
+          </div>
+        </li>`).join('')}
+      </ul>
+    </section>`).join('') +
+    `<p class="hint" style="margin:22px 4px 0">Выберите участника вверху, отметьте его блюда галочкой и нажмите <b>«ОК»</b>. Все участники попадут в общий заказ.</p>`;
+}
+function updateItem(id){
+  const b=document.querySelector(`.item[data-id="${id}"]`), q=document.querySelector(`[data-q="${id}"]`);
+  if(!b)return;
+  const sel=curSel();
+  b.setAttribute('aria-checked', sel[id]?'true':'false');
+  q.hidden=!sel[id];
+  if(sel[id]){q.querySelector('output').textContent=sel[id];q.querySelector('.sum').textContent=rub(sel[id]*byId[id].price)}
+}
+const syncMenu = ()=>ORDER.forEach(updateItem);
+$('v-menu').addEventListener('click',e=>{
+  const it=e.target.closest('.item'), inc=e.target.closest('[data-inc]'), dec=e.target.closest('[data-dec]');
+  if(!it&&!inc&&!dec) return;
+  if(!active){openAdd(true);toast('Сначала добавьте участника');return}
+  const sel=orders[active]||(orders[active]={});
+  let id;
+  if(it){id=it.dataset.id; if(sel[id]) delete sel[id]; else sel[id]=1;}
+  else if(inc){id=inc.dataset.inc; sel[id]=Math.min(20,(sel[id]||0)+1);}
+  else {id=dec.dataset.dec; sel[id]=(sel[id]||1)-1; if(sel[id]<=0) delete sel[id];}
+  if(!Object.keys(sel).length) delete orders[active];
+  saveOrders(); updateItem(id); renderChips(); refresh();
+});
+
+/* ---------- общий заказ ---------- */
+function summaryHTML(list,n,s){
+  return `<div class="sum-card"><span><span class="sum-lbl">Итого общего заказа</span><span class="sum-sub">${n?peopleWord(list.length)+' · '+itemsWord(n):'пока никто ничего не выбрал'}</span></span><b class="sum-big num">${rub(s)}</b></div>`;
+}
+function checkHTML(list,agg,n,s){
+  return `
+    <article class="paper" aria-label="Чек общего заказа">
+      <div class="p-eyebrow">Кафе «${esc(CAFE)}» · заказ на доставку</div>
+      <h3 class="p-title">Заказ ПСО на ${WDacc[menuDate.getDay()]}</h3>
+      <div class="p-date num">${dmy}</div>
+      <div class="p-people">${list.map(p=>`
+        <section class="p-person">
+          <div class="p-ph"><span>${esc(p.name)}</span><span class="num">${rub(totals(p.items).s)}</span></div>
+          ${personLines(p).map(l=>`<div class="p-line"><span>${esc(l.name)} × ${l.q}</span><span class="num">${rub(l.sum)}</span></div>`).join('')}
+          <div class="p-act"><button class="p-edit" data-edit="${esc(p.name)}">изменить</button><button class="p-drop" data-drop="${esc(p.name)}">убрать</button></div>
+        </section>`).join('')}
+      </div>
+      <div class="p-total"><span><b>Итого</b>${peopleWord(list.length)} · ${itemsWord(n)}</span><b class="num">${rub(s)}</b></div>
+      ${list.length>1?`<div class="p-kitchen"><h4>Всего по блюдам</h4>${aggRows(agg).map(i=>`<div class="pk"><span>${esc(i.name)}</span><span class="num">${agg[i.id]} шт</span></div>`).join('')}</div>`:''}
+    </article>`;
+}
+function renderOrder(){
+  const list=people(), {agg,n,s}=aggregate(list);
+  if(!n){
+    $('order-body').innerHTML=summaryHTML(list,n,s)+`<div class="card" style="margin-top:14px"><div class="empty"><p>Отметьте блюда в меню, и здесь появится чек со всеми коллегами и итоговой суммой.</p><button class="btn primary" data-go="menu">Открыть меню</button></div></div>`;
+    return;
+  }
+  $('order-body').innerHTML=summaryHTML(list,n,s)+checkHTML(list,agg,n,s)+`
+    <div class="btns">
+      <button class="btn primary big" id="save-png">Сохранить файл для кафе<small>картинка, откроется на любом телефоне</small></button>
+      <div class="btn-row">
+        <button class="btn" id="save-txt">Файл .txt</button>
+        <button class="btn" id="copy-order">Скопировать</button>
+      </div>
+      <button class="btn ghost danger" id="clear-all">Очистить весь заказ</button>
+    </div>`;
+}
+
+function orderText(){
+  const list=people(), {agg,n,s}=aggregate(list), L=[];
+  L.push('ЗАКАЗ ПСО — кафе «'+CAFE+'»');
+  L.push('На '+WDacc[menuDate.getDay()]+', '+dmy);
+  L.push('');
+  L.push('ПО СОТРУДНИКАМ');
+  list.forEach((p,j)=>{
+    L.push((j+1)+'. '+p.name+' — '+rub(totals(p.items).s));
+    personLines(p).forEach(l=>L.push('   • '+l.name+' × '+l.q+' — '+rub(l.sum)));
   });
-  const text = `Заказ «Обед ПСО» на ${MENU_DATE}\n${name}\n${lines.join("\n")}\nИтого: ${total} ₽`;
-  try {
-    if (navigator.share) { await navigator.share({ title: "Заказ «Обед ПСО»", text }); return; }
-    await navigator.clipboard.writeText(text);
-    alert("Заказ скопирован — вставьте его в чат:\n\n" + text);
-  } catch (err) {
-    if (err && err.name === "AbortError") return;
-    prompt("Скопируйте заказ:", text);
+  L.push('');
+  L.push('ИТОГО: '+rub(s)+' ('+peopleWord(list.length)+', '+itemsWord(n)+')');
+  if(list.length>1){
+    L.push('');L.push('ВСЕГО ПО БЛЮДАМ (для кухни)');
+    aggRows(agg).forEach(i=>L.push('• '+i.name+' — '+agg[i.id]+' шт'));
+  }
+  return L.join('\n');
+}
+
+/* short text for «Скопировать»: dishes, quantities and the total — no names */
+function shortText(){
+  const {agg,s}=aggregate(people()), L=[];
+  L.push('Заказ ПСО на '+WDacc[menuDate.getDay()]+', '+dmy);
+  L.push('');
+  aggRows(agg).forEach((i,k)=>L.push((k+1)+'. '+i.name+' — '+agg[i.id]+' шт'));
+  L.push('');
+  L.push('ИТОГО: '+rub(s));
+  return L.join('\n');
+}
+
+async function orderCanvas(){
+  const FB='"Onest",-apple-system,"Segoe UI",Roboto,sans-serif', FD='"Unbounded","Onest",-apple-system,sans-serif';
+  try{await Promise.all(['400 32px Onest','600 32px Onest','700 38px Onest','600 54px Unbounded','500 44px Unbounded','600 38px Unbounded'].map(f=>document.fonts.load(f)))}catch(e){}
+  const C={bg:'#F7F8F5',ink:'#1E2523',muted:'#5F6A66',line:'#D3DAD6',accent:'#4B6C63'};
+  const W=1080, P=72, list=people(), {agg,n,s}=aggregate(list);
+  const cv=document.createElement('canvas'), x=cv.getContext('2d');
+  const ops=[]; let y=P+10;
+  const T=(t,font,color,xx,yy,align)=>ops.push({t,font,color,x:xx,y:yy,align:align||'left'});
+  const R=(yy,color,h)=>ops.push({rule:1,y:yy,color,h});
+  function wrap(t,font,maxW){x.font=font;const out=[];let cur='';String(t).split(/\s+/).forEach(w=>{const tt=cur?cur+' '+w:w;if(cur&&x.measureText(tt).width>maxW){out.push(cur);cur=w}else cur=tt});if(cur)out.push(cur);return out.length?out:['']}
+  T(('Кафе «'+CAFE+'» · заказ на доставку').toUpperCase(),'600 26px '+FB,C.muted,P,y+26); y+=26+30;
+  wrap('Заказ ПСО на '+WDacc[menuDate.getDay()],'600 54px '+FD,W-P*2).forEach(ln=>{T(ln,'600 54px '+FD,C.ink,P,y+54);y+=54+14});
+  y+=4; T(dmy,'500 44px '+FD,C.accent,P,y+44); y+=44+40;
+  R(y,C.ink,4); y+=8;
+  list.forEach((p,pi)=>{
+    y+=30;
+    const nl=wrap(p.name,'700 38px '+FB,W-P*2-280);
+    nl.forEach((ln,j)=>T(ln,'700 38px '+FB,C.ink,P,y+38+j*50));
+    T(rub(totals(p.items).s),'600 38px '+FD,C.ink,W-P,y+38,'right');
+    y+=38+(nl.length-1)*50+16;
+    personLines(p).forEach(l=>{
+      const ll=wrap(l.name+' × '+l.q,'400 32px '+FB,W-P*2-40-230);
+      ll.forEach((ln,j)=>T(ln,'400 32px '+FB,C.ink,P+40,y+32+j*42));
+      T(rub(l.sum),'400 32px '+FB,C.muted,W-P,y+32,'right');
+      y+=32+(ll.length-1)*42+14;
+    });
+    y+=14;
+    if(pi<list.length-1) R(y,C.line,2);
+  });
+  y+=6; R(y,C.ink,4); y+=24;
+  T('Итого','700 38px '+FB,C.ink,P,y+42);
+  T(peopleWord(list.length)+' · '+itemsWord(n),'400 30px '+FB,C.muted,P,y+42+44);
+  T(rub(s),'600 64px '+FD,C.ink,W-P,y+62,'right');
+  y+=42+44+34;
+  if(list.length>1){
+    R(y,C.line,2); y+=54;
+    T('ВСЕГО ПО БЛЮДАМ','600 26px '+FB,C.muted,P,y); y+=12;
+    aggRows(agg).forEach(i=>{
+      y+=16;
+      const ll=wrap(i.name,'400 32px '+FB,W-P*2-170);
+      ll.forEach((ln,j)=>T(ln,'400 32px '+FB,C.ink,P,y+32+j*42));
+      T(agg[i.id]+' шт','600 32px '+FB,C.ink,W-P,y+32,'right');
+      y+=32+(ll.length-1)*42;
+    });
+    y+=24;
+  }
+  y+=P-30;
+  cv.width=W; cv.height=Math.ceil(y);
+  x.fillStyle=C.bg; x.fillRect(0,0,W,cv.height);
+  x.fillStyle=C.accent; x.fillRect(0,0,W,14);
+  x.textBaseline='alphabetic';
+  ops.forEach(o=>{if(o.rule){x.fillStyle=o.color;x.fillRect(P,o.y,W-P*2,o.h);return}x.font=o.font;x.fillStyle=o.color;x.textAlign=o.align;x.fillText(o.t,o.x,o.y)});
+  return cv;
+}
+
+/* file saving: Claude viewer → its save dialog; otherwise the phone's share sheet; otherwise show it */
+let dlP=null;
+function getDownloads(){
+  if(!dlP) dlP = (window.claude && typeof window.claude.use==='function') ? Promise.resolve(window.claude.use('downloads')).catch(()=>null) : Promise.resolve(null);
+  return dlP;
+}
+async function offerFile(filename,data,mime,fallback){
+  const dl=await getDownloads();
+  if(dl){
+    try{await dl.save({filename,data});toast('Файл готов');return}
+    catch(err){
+      if(err&&err.code==='declined')return;
+      if(err&&err.code==='rate_limited'){toast('Подождите секунду и нажмите ещё раз');return}
+    }
+  }
+  try{
+    const file=new File([data],filename,{type:mime});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file]});return}
+  }catch(err){if(err&&err.name==='AbortError')return}
+  fallback();
+}
+const fileBase = ()=>'Заказ_ПСО_'+dmy;
+
+/* check actions (both tabs): edit a person's dishes, or drop their order for today */
+document.addEventListener('click',e=>{
+  const ed=e.target.closest('[data-edit]');
+  if(ed){const nm=ed.dataset.edit;if(!roster.includes(nm)){addToRoster(nm);saveRoster()}setActive(nm);go('menu');return}
+  const dr=e.target.closest('[data-drop]');
+  if(dr){
+    const nm=dr.dataset.drop;
+    if(!dr.dataset.sure){dr.dataset.sure='1';dr.textContent='убрать заказ?';setTimeout(()=>{if(dr.isConnected){delete dr.dataset.sure;dr.textContent='убрать'}},3000);return}
+    delete orders[nm]; saveOrders(); syncMenu(); renderChips(); refresh(); toast('Заказ убран: '+nm);
   }
 });
 
-render();
-update();
-setInterval(update, 60000);
+$('v-order').addEventListener('click',async e=>{
+  if(e.target.closest('#copy-phone')){copy(MENU.phone,'Номер скопирован');return}
+  if(e.target.closest('#copy-order')){copy(shortText(),'Заказ скопирован');return}
+  if(e.target.closest('#save-txt')){const t=orderText();offerFile(fileBase()+'.txt',t,'text/plain',()=>showText(t,'Скопируйте текст заказа'));return}
+  const png=e.target.closest('#save-png');
+  if(png){
+    if(png.dataset.busy)return; png.dataset.busy='1';
+    try{
+      const cv=await orderCanvas();
+      const blob=await new Promise(r=>cv.toBlob(r,'image/png'));
+      await offerFile(fileBase()+'.png',blob,'image/png',()=>showImage(cv.toDataURL('image/png')));
+    }finally{delete png.dataset.busy}
+    return;
+  }
+  const c=e.target.closest('#clear-all');
+  if(c){
+    if(c.dataset.sure){orders={};saveOrders();syncMenu();renderChips();refresh();toast('Заказ очищен');return}
+    c.dataset.sure='1';c.textContent='Нажмите ещё раз, чтобы очистить весь заказ';
+    setTimeout(()=>{if(c.isConnected){delete c.dataset.sure;c.textContent='Очистить весь заказ'}},3000);
+  }
+});
+
+/* ---------- участники ---------- */
+function renderTeam(){
+  const list=people(), {agg,n,s}=aggregate(list);
+  $('team-check').innerHTML = summaryHTML(list,n,s) + (n ? checkHTML(list,agg,n,s) : '');
+  $('roster').innerHTML = roster.length
+    ? roster.map(nm=>`<span class="rchip">${esc(nm)}<button class="x" data-rm="${esc(nm)}" aria-label="Убрать ${esc(nm)} из списка">×</button></span>`).join('')
+    : `<p class="hint" style="margin:0">Список пока пуст. Добавьте участников ниже.</p>`;
+}
+$('t-add').addEventListener('submit',e=>{
+  e.preventDefault();
+  const nm=addToRoster($('t-new').value);
+  if(!nm){$('t-new').focus();return}
+  saveRoster(); $('t-new').value='';
+  if(!active){active=nm;saveActive();syncMenu()}
+  renderTeam(); renderChips(); toast('Добавлен: '+nm);
+});
+$('roster').addEventListener('click',e=>{
+  const b=e.target.closest('[data-rm]'); if(!b) return;
+  const chip=b.closest('.rchip'), nm=b.dataset.rm;
+  if(!chip.classList.contains('sure')){
+    chip.classList.add('sure'); b.textContent=orders[nm]?'Убрать с заказом?':'Убрать?';
+    setTimeout(()=>{if(chip.isConnected){chip.classList.remove('sure');b.textContent='×'}},3000);
+    return;
+  }
+  roster=roster.filter(r=>r!==nm); delete orders[nm];
+  if(active===nm) active=roster[0]||'';
+  saveRoster(); saveOrders(); saveActive();
+  renderTeam(); renderChips(); syncMenu(); refresh(); toast('Убран: '+nm);
+});
+function chatMessage(){
+  const sel=curSel(), ids=sortedIds(sel), {s}=totals(sel);
+  return 'Обед ПСО · '+WDs[menuDate.getDay()]+' '+ddmm+'\n'+active+':\n'+
+    ids.map(id=>'• '+byId[id].name+' ×'+sel[id]+' — '+rub(sel[id]*byId[id].price)).join('\n')+
+    '\nИтого: '+rub(s)+'\n#ПСО '+ddmm+' '+active+': '+ids.map(id=>id+'x'+sel[id]).join(' ');
+}
+function parseText(txt){
+  const re=/#ПСО\s+(\d{1,2}\.\d{1,2})\s+([^:\n]+?)\s*:\s*([^\n]*)/gi;
+  let m, added=[], stale=0;
+  while((m=re.exec(txt))){
+    const [dd,mm]=m[1].split('.');
+    if(pad(dd)+'.'+pad(mm)!==ddmm){stale++;continue}
+    const items={};let ok=false;
+    (m[3].match(/[a-z]+\d+\s*[x×х]\s*\d+/gi)||[]).forEach(t=>{
+      const p=t.match(/([a-z]+\d+)\s*[x×х]\s*(\d+)/i), id=p[1].toLowerCase(), q=+p[2];
+      if(byId[id]&&q>0){items[id]=(items[id]||0)+q;ok=true}
+    });
+    if(!ok)continue;
+    const nm=addToRoster(m[2]); if(!nm)continue;
+    orders[nm]=items; if(!added.includes(nm))added.push(nm);
+  }
+  return {added,stale};
+}
+function showMsg(t,warn){const m=$('parse-msg');m.hidden=false;m.textContent=t;m.classList.toggle('warn',!!warn)}
+$('v-team').addEventListener('click',e=>{
+  if(e.target.closest('#parse')){
+    $('to-order').hidden=true;
+    const txt=$('paste').value;
+    if(!txt.trim()){showMsg('Вставьте текст сообщений из чата.',true);return}
+    const r=parseText(txt);
+    if(!r.added.length){showMsg(r.stale?'Эти заказы на другой день. Нужны заказы на '+ddmm+'.':'Не нашла строк «#ПСО». Попросите коллег копировать заказ кнопкой в приложении.',true);return}
+    saveRoster(); saveOrders(); $('paste').value='';
+    showMsg('Добавлено: '+r.added.join(', ')+(r.stale?'. Пропущено на другой день: '+r.stale:''),false);
+    $('to-order').hidden=false;
+    if(!active){active=r.added[0];saveActive()}
+    renderTeam(); renderChips(); syncMenu(); refresh(); return;
+  }
+  if(e.target.closest('#copy-chat')){
+    if(!active){toast('Сначала выберите участника');return}
+    if(!totals(curSel()).n){toast('Отметьте блюда в меню');return}
+    copy(chatMessage(),'Скопировано. Вставьте в чат отделения');
+  }
+});
+
+/* ---------- utils ---------- */
+function copy(text,ok){
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(()=>toast(ok),()=>showText(text,'Выделите текст и скопируйте'));
+  }else showText(text,'Выделите текст и скопируйте');
+}
+let tt;function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('show'),2200)}
+function sheet(inner){
+  const w=document.createElement('div');w.className='sheet';
+  w.innerHTML=`<div class="card">${inner}<div class="btns"><button class="btn primary" data-close>Готово</button></div></div>`;
+  w.addEventListener('click',e=>{if(e.target===w||e.target.closest('[data-close]'))w.remove()});
+  document.body.appendChild(w);return w;
+}
+function showText(text,title){
+  const w=sheet(`<label class="lbl" for="sheet-t">${esc(title)}</label><textarea id="sheet-t" readonly></textarea>`);
+  const ta=w.querySelector('textarea');ta.value=text;ta.focus();ta.select();
+}
+function showImage(src){
+  const w=sheet(`<span class="lbl">Нажмите на картинку и удерживайте, чтобы сохранить</span><img alt="Заказ для кафе">`);
+  w.querySelector('img').src=src;
+}
+
+/* ---------- tabs ---------- */
+let current='menu';
+function refresh(){
+  const my=totals(curSel()), list=people(), all=aggregate(list);
+  $('cart-n').textContent = active ? active+': '+itemsWord(my.n)+' · '+rub(my.s) : 'Участник не выбран';
+  $('cart-sum').textContent = 'ИТОГО '+rub(all.s);
+  $('cart').hidden = !(all.n>0 && current==='menu');
+  $('order-cnt').hidden = !list.length; $('order-cnt').textContent = list.length;
+  $('who-wrap').hidden = current!=='menu';
+  if(current==='order') renderOrder();
+  if(current==='team') renderTeam();
+}
+function go(v){
+  current=v;
+  document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.v===v));
+  ['menu','order','team'].forEach(k=>$('v-'+k).hidden=k!==v);
+  refresh(); window.scrollTo({top:0});
+  if(v==='order') getDownloads();
+  try{sessionStorage.setItem('pso:tab',v)}catch(e){}
+}
+document.querySelector('.tabs').addEventListener('click',e=>{const t=e.target.closest('.tab');if(t)go(t.dataset.v)});
+$('ok').addEventListener('click',()=>go('order'));
+document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g)go(g.dataset.go)});
+addEventListener('scroll',()=>$('top').classList.toggle('scrolled',scrollY>4),{passive:true});
+
+renderChips(); renderMenu();
+if(!roster.length) openAdd(false);
+let start='menu';try{start=sessionStorage.getItem('pso:tab')||'menu'}catch(e){}
+if(!['menu','order','team'].includes(start)) start='menu';
+go(start);
+})();
 </script>
-</body>
-</html>
+
+</body></html>
