@@ -1,0 +1,17 @@
+{
+  "id": "./",
+  "name": "Обед ПСО",
+  "short_name": "Обед ПСО",
+  "description": "Общий заказ обедов для ПСО",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#E3E7E4",
+  "theme_color": "#E3E7E4",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
