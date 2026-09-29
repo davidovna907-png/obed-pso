@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<!doctype html><html lang="ru"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -40,7 +40,7 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px soli
 .wrap{max-width:640px;margin:0 auto;padding-inline:16px;padding-block:0 190px}
 .num{font-variant-numeric:tabular-nums}
 
-/* header */
+/* шапка */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ground);padding-block:14px 12px;margin-inline:-16px;padding-inline:16px;border-bottom:1px solid transparent;transition:border-color .2s}
 .top.scrolled{border-bottom-color:var(--line)}
 .brand{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
@@ -53,7 +53,7 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px soli
 .deadline.closed .dot{background:var(--warn);box-shadow:none}
 .deadline strong{color:var(--ink);font-weight:600}
 
-/* participant picker */
+/* выбор участника */
 .who{margin-top:12px}
 .who-lbl{display:block;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 6px 2px}
 .chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:2px;margin:-2px}
@@ -71,7 +71,7 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px soli
 .stale{margin-top:16px;padding:12px 14px;border-radius:16px;background:var(--plum-soft);font-size:16px;line-height:1.35}
 .stale b{font-weight:600}
 
-/* menu */
+/* меню */
 .sec{margin-top:26px}
 .sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:0 4px 10px}
 .sec-h h2{font:500 21px/1.15 var(--display);margin:0;letter-spacing:-.005em}
@@ -98,7 +98,7 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px soli
 .step output{min-width:28px;text-align:center;font-weight:600;font-size:18px}
 .qty .sum{color:var(--muted);font-size:16px}
 
-/* dock */
+/* нижняя панель */
 .dock{position:fixed;left:0;right:0;bottom:0;z-index:10;padding:0 12px calc(10px + env(safe-area-inset-bottom,0px));pointer-events:none}
 .dock>*{pointer-events:auto;max-width:616px;margin-inline:auto}
 .cart{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--accent);color:var(--accent-ink);border-radius:20px;padding:10px 10px 10px 18px;margin-bottom:10px;box-shadow:0 10px 30px rgba(20,40,34,.25)}
@@ -113,7 +113,7 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px soli
 .tab[aria-selected="true"]{background:var(--accent-soft);color:var(--ink)}
 .tab .cnt{position:absolute;top:5px;left:calc(50% + 8px);min-width:20px;height:20px;padding:0 5px;border-radius:99px;background:var(--plum);color:var(--surface);font-size:12px;line-height:20px;text-align:center}
 
-/* cards & forms */
+/* карточки и формы */
 .card{background:var(--surface);border-radius:20px;box-shadow:var(--shadow);padding:18px}
 .card+.card{margin-top:14px}
 .title{font:500 24px/1.15 var(--display);margin:22px 4px 12px;letter-spacing:-.01em}
@@ -134,7 +134,7 @@ textarea{min-height:130px;resize:vertical;font-size:16px;font-weight:400}
 .msg.warn{color:var(--warn)}
 .edit-link{display:block;margin:10px auto 0;color:var(--accent);font-weight:600;font-size:16px;min-height:44px}
 
-/* order document preview */
+/* чек заказа */
 .paper{margin-top:14px;background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:22px 18px 18px;position:relative;overflow:hidden}
 .paper::before{content:"";position:absolute;inset:0 0 auto 0;height:6px;background:var(--accent)}
 .p-eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
@@ -163,7 +163,7 @@ textarea{min-height:130px;resize:vertical;font-size:16px;font-weight:400}
 .pk{display:flex;justify-content:space-between;gap:12px;padding:3px 0;font-size:16px}
 .pk .num{font-weight:600;white-space:nowrap}
 
-/* roster */
+/* список коллег */
 .roster{display:flex;flex-wrap:wrap;gap:8px}
 .rchip{display:inline-flex;align-items:center;gap:2px;min-height:44px;padding:0 4px 0 15px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line);font-weight:600;font-size:16px}
 .rchip .x{min-width:36px;height:36px;border-radius:99px;display:grid;place-items:center;color:var(--muted);font-size:20px}
@@ -400,13 +400,14 @@ textarea{min-height:130px;resize:vertical;font-size:16px;font-weight:400}
     <section class="view" id="v-menu" aria-label="Меню"></section>
 
     <section class="view" id="v-order" hidden aria-label="Общий заказ">
-      <h2 class="title">Общий заказ ПСО</h2>
+      <h2 class="title" id="order-title">Общий заказ ПСО</h2>
       <p class="msg" id="sync" hidden style="margin:-4px 4px 12px"></p>
       <div id="order-body"></div>
-      <div class="phone">
+      <div class="phone" id="cafe-phone">
         <div>Кафе, приём заказов до 10:00 пн–пт<b id="phone">+7 (351) 230-66-66</b></div>
         <button class="btn" id="copy-phone">Копировать</button>
       </div>
+      <button class="edit-link" id="org-link" hidden>Вход для организатора</button>
     </section>
 
     <section class="view" id="v-team" hidden aria-label="Коллеги">
@@ -441,13 +442,13 @@ textarea{min-height:130px;resize:vertical;font-size:16px;font-weight:400}
 <div class="dock">
   <div class="cart" id="cart" hidden>
     <span class="cart-info"><span class="c1" id="cart-n"></span><span class="c2 num" id="cart-sum"></span></span>
-    <button class="ok" id="ok" aria-label="ОК, открыть общий заказ">ОК</button>
+    <button class="ok" id="ok" aria-label="ОК, открыть заказ">ОК</button>
   </div>
   <nav class="tabs" role="tablist">
     <button class="tab" role="tab" aria-selected="true" data-v="menu">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Меню</button>
     <button class="tab" role="tab" aria-selected="false" data-v="order">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>Общий заказ<span class="cnt num" id="order-cnt" hidden>0</span></button>
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg><span id="order-tab-lbl">Общий заказ</span><span class="cnt num" id="order-cnt" hidden>0</span></button>
     <button class="tab" role="tab" aria-selected="false" data-v="team">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="9" r="3"/><circle cx="16.5" cy="9" r="3"/><path d="M2.5 19c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5M13 15c1-.4 2.2-.6 3.5-.5 2.5 0 4.7 1.5 5.5 4.5"/></svg>Коллеги</button>
   </nav>
@@ -458,7 +459,7 @@ textarea{min-height:130px;resize:vertical;font-size:16px;font-weight:400}
 <script>
 (function(){
 const MENU = JSON.parse(document.getElementById('menu-data').textContent);
-/* shared order for all phones: URL of the Google Apps Script web app (apps-script/Code.gs); empty — orders stay on this phone only */
+/* общий заказ для всех телефонов: адрес веб-приложения Google Apps Script (apps-script/Code.gs); пусто — заказы хранятся только на этом телефоне */
 const ORDERS_API = '';
 const WD =['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
 const WDs = ['вс','пн','вт','ср','чт','пт','сб'];
@@ -479,7 +480,7 @@ const peopleWord = k=>k+' '+plural(k,'человек','человека','чел
 const itemsWord = k=>k+' '+plural(k,'позиция','позиции','позиций');
 const CHECK = '<svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3L13 4.5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-/* ---------- storage (on this device) ---------- */
+/* ---------- хранение (на этом телефоне) ---------- */
 let canStore=true;try{localStorage.setItem('pso:t','1');localStorage.removeItem('pso:t')}catch(e){canStore=false}
 const store = {
   get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
@@ -517,17 +518,20 @@ let active = store.get(K.active,'');
 if(!roster.includes(active)) active=roster[0]||'';
 const saveRoster=()=>store.set(K.roster,roster), saveOrders=()=>store.set(K.orders,orders), saveActive=()=>store.set(K.active,active);
 saveRoster(); saveOrders(); saveActive();
-/* names whose changes the shared order has not confirmed yet; the first run with it uploads what this phone already has */
+/* участники, чьи изменения общая таблица ещё не подтвердила; при первом запуске с общим заказом сюда попадает всё, что уже есть на телефоне */
 const K_DIRTY = 'pso:dirty:'+MENU.date;
 const dirty = new Set((d=>ORDERS_API?(Array.isArray(d)?d:Object.keys(orders)):[])(store.get(K_DIRTY,null)));
 const saveDirty = ()=>{if(ORDERS_API)store.set(K_DIRTY,[...dirty])};
+/* код организатора хранится только на его телефоне: с ним видны заказы всех коллег и общая сумма */
+let adminKey = ORDERS_API ? String(store.get('pso:admin','')||'') : '';
+const colleague = ()=>!!ORDERS_API&&!adminKey;
 
 $('wday').textContent = WD[menuDate.getDay()];
 $('dmy').textContent = dmy;
 $('phone').textContent = MENU.phone;
 if(!canStore) $('nostore').hidden = false;
 
-/* ---------- deadline: collect until 21:00 the evening before ---------- */
+/* ---------- срок: заказы до 21:00 накануне ---------- */
 function tickDeadline(){
   const [h,m] = (MENU.collectBy||'21:00').split(':').map(Number);
   const dl = new Date(Y,M-1,D-1,h,m), left = dl-new Date(), el=$('deadline');
@@ -540,7 +544,7 @@ function tickDeadline(){
 }
 tickDeadline(); setInterval(tickDeadline,30000);
 
-/* ---------- order model ---------- */
+/* ---------- модель заказа ---------- */
 const sortedIds = items=>ORDER.filter(id=>items[id]>0);
 function totals(items){let n=0,s=0;for(const id in items){if(!byId[id])continue;n+=items[id];s+=items[id]*byId[id].price}return{n,s}}
 const curSel = ()=>orders[active]||{};
@@ -557,7 +561,7 @@ function aggregate(list){
 const aggRows = agg=>ORDER.filter(id=>agg[id]).map(id=>byId[id]);
 const personLines = p=>sortedIds(p.items).map(id=>({name:byId[id].name,q:p.items[id],sum:p.items[id]*byId[id].price}));
 
-/* ---------- participant picker ---------- */
+/* ---------- выбор участника ---------- */
 function renderChips(){
   const box=$('chips'), sl=box.scrollLeft;
   box.innerHTML = roster.map(nm=>{
@@ -584,7 +588,7 @@ $('add-row').addEventListener('submit',e=>{
   saveRoster(); $('add-row').hidden=true; $('p-new').blur(); setActive(nm); toast('Отмечаете блюда для: '+nm);
 });
 
-/* ---------- menu ---------- */
+/* ---------- меню ---------- */
 function renderMenu(){
   const today=new Date();today.setHours(0,0,0,0);
   const sel=curSel();
@@ -596,7 +600,7 @@ function renderMenu(){
         <li>
           <button class="item" role="checkbox" aria-checked="${sel[i.id]?'true':'false'}" data-id="${i.id}">
             <span class="tick">${CHECK}</span>
-            <span><span class="nm">${esc(i.name)}${i.new?'<span class="badge">NEW</span>':''}${i.grill?'<span class="grill">гриль</span>':''}</span>${i.desc?`<span class="ds">${esc(i.desc)}</span>`:''}</span>
+            <span><span class="nm">${esc(i.name)}${i.new?'<span class="badge">НОВИНКА</span>':''}${i.grill?'<span class="grill">гриль</span>':''}</span>${i.desc?`<span class="ds">${esc(i.desc)}</span>`:''}</span>
             <span class="pr num">${i.price}<small>₽</small></span>
           </button>
           <div class="qty" data-q="${i.id}" ${sel[i.id]?'':'hidden'}>
@@ -632,7 +636,8 @@ $('v-menu').addEventListener('click',e=>{
 
 /* ---------- общий заказ ---------- */
 function summaryHTML(list,n,s){
-  return `<div class="sum-card"><span><span class="sum-lbl">Итого общего заказа</span><span class="sum-sub">${n?peopleWord(list.length)+' · '+itemsWord(n):'пока никто ничего не выбрал'}</span></span><b class="sum-big num">${rub(s)}</b></div>`;
+  const col=colleague();
+  return `<div class="sum-card"><span><span class="sum-lbl">${col?'Итого':'Итого общего заказа'}</span><span class="sum-sub">${n?peopleWord(list.length)+' · '+itemsWord(n):col?'вы пока ничего не выбрали':'пока никто ничего не выбрал'}</span></span><b class="sum-big num">${rub(s)}</b></div>`;
 }
 function checkHTML(list,agg,n,s){
   return `
@@ -648,61 +653,45 @@ function checkHTML(list,agg,n,s){
         </section>`).join('')}
       </div>
       <div class="p-total"><span><b>Итого</b>${peopleWord(list.length)} · ${itemsWord(n)}</span><b class="num">${rub(s)}</b></div>
-      ${list.length>1?`<div class="p-kitchen"><h4>Всего по блюдам</h4>${aggRows(agg).map(i=>`<div class="pk"><span>${esc(i.name)}</span><span class="num">${agg[i.id]} шт</span></div>`).join('')}</div>`:''}
+      ${list.length>1?`<div class="p-kitchen"><h4>Всего по блюдам</h4>${aggRows(agg).map(i=>`<div class="pk"><span>${esc(i.name)}</span><span class="num">${agg[i.id]} шт · ${rub(agg[i.id]*i.price)}</span></div>`).join('')}</div>`:''}
     </article>`;
 }
 function renderOrder(){
-  const list=people(), {agg,n,s}=aggregate(list);
+  const list=people(), {agg,n,s}=aggregate(list), col=colleague();
   if(!n){
-    $('order-body').innerHTML=summaryHTML(list,n,s)+`<div class="card" style="margin-top:14px"><div class="empty"><p>Отметьте блюда в меню, и здесь появится чек со всеми коллегами и итоговой суммой.</p><button class="btn primary" data-go="menu">Открыть меню</button></div></div>`;
+    $('order-body').innerHTML=summaryHTML(list,n,s)+`<div class="card" style="margin-top:14px"><div class="empty"><p>${col?'Отметьте блюда в меню, и здесь появится ваш заказ.':'Отметьте блюда в меню, и здесь появится чек со всеми коллегами и итоговой суммой.'}</p><button class="btn primary" data-go="menu">Открыть меню</button></div></div>`;
     return;
   }
-  $('order-body').innerHTML=summaryHTML(list,n,s)+checkHTML(list,agg,n,s)+`
+  /* коллеге — только его чек; файл для кафе, копирование и очистка — только организатору */
+  $('order-body').innerHTML=summaryHTML(list,n,s)+checkHTML(list,agg,n,s)+(col?'':`
     <div class="btns">
-      <button class="btn primary big" id="save-png">Сохранить файл для кафе<small>картинка, откроется на любом телефоне</small></button>
+      <button class="btn primary big" id="save-png">Сохранить файл для кафе<small>картинка: блюда, суммы и итог, без фамилий</small></button>
       <div class="btn-row">
-        <button class="btn" id="save-txt">Файл .txt</button>
+        <button class="btn" id="save-txt">Текстовый файл</button>
         <button class="btn" id="copy-order">Скопировать</button>
       </div>
       <button class="btn ghost danger" id="clear-all">Очистить весь заказ</button>
-    </div>`;
+    </div>`);
 }
 
+/* текст для кафе (файл и «Скопировать»): только блюда, количество, суммы и итог — без фамилий */
 function orderText(){
-  const list=people(), {agg,n,s}=aggregate(list), L=[];
+  const {agg,n,s}=aggregate(people()), L=[];
   L.push('ЗАКАЗ ПСО — кафе «'+CAFE+'»');
   L.push('На '+WDacc[menuDate.getDay()]+', '+dmy);
   L.push('');
-  L.push('ПО СОТРУДНИКАМ');
-  list.forEach((p,j)=>{
-    L.push((j+1)+'. '+p.name+' — '+rub(totals(p.items).s));
-    personLines(p).forEach(l=>L.push('   • '+l.name+' × '+l.q+' — '+rub(l.sum)));
-  });
+  aggRows(agg).forEach((i,k)=>L.push((k+1)+'. '+i.name+' × '+agg[i.id]+' — '+rub(agg[i.id]*i.price)));
   L.push('');
-  L.push('ИТОГО: '+rub(s)+' ('+peopleWord(list.length)+', '+itemsWord(n)+')');
-  if(list.length>1){
-    L.push('');L.push('ВСЕГО ПО БЛЮДАМ (для кухни)');
-    aggRows(agg).forEach(i=>L.push('• '+i.name+' — '+agg[i.id]+' шт'));
-  }
+  L.push('ИТОГО: '+rub(s)+' ('+itemsWord(n)+')');
   return L.join('\n');
 }
 
-/* short text for «Скопировать»: dishes, quantities and the total — no names */
-function shortText(){
-  const {agg,s}=aggregate(people()), L=[];
-  L.push('Заказ ПСО на '+WDacc[menuDate.getDay()]+', '+dmy);
-  L.push('');
-  aggRows(agg).forEach((i,k)=>L.push((k+1)+'. '+i.name+' — '+agg[i.id]+' шт'));
-  L.push('');
-  L.push('ИТОГО: '+rub(s));
-  return L.join('\n');
-}
-
+/* картинка для кафе: те же блюда, суммы и итог — без фамилий */
 async function orderCanvas(){
   const FB='"Onest",-apple-system,"Segoe UI",Roboto,sans-serif', FD='"Unbounded","Onest",-apple-system,sans-serif';
   try{await Promise.all(['400 32px Onest','600 32px Onest','700 38px Onest','600 54px Unbounded','500 44px Unbounded','600 38px Unbounded'].map(f=>document.fonts.load(f)))}catch(e){}
   const C={bg:'#F7F8F5',ink:'#1E2523',muted:'#5F6A66',line:'#D3DAD6',accent:'#4B6C63'};
-  const W=1080, P=72, list=people(), {agg,n,s}=aggregate(list);
+  const W=1080, P=72, {agg,n,s}=aggregate(people()), rows=aggRows(agg);
   const cv=document.createElement('canvas'), x=cv.getContext('2d');
   const ops=[]; let y=P+10;
   const T=(t,font,color,xx,yy,align)=>ops.push({t,font,color,x:xx,y:yy,align:align||'left'});
@@ -712,38 +701,19 @@ async function orderCanvas(){
   wrap('Заказ ПСО на '+WDacc[menuDate.getDay()],'600 54px '+FD,W-P*2).forEach(ln=>{T(ln,'600 54px '+FD,C.ink,P,y+54);y+=54+14});
   y+=4; T(dmy,'500 44px '+FD,C.accent,P,y+44); y+=44+40;
   R(y,C.ink,4); y+=8;
-  list.forEach((p,pi)=>{
-    y+=30;
-    const nl=wrap(p.name,'700 38px '+FB,W-P*2-280);
-    nl.forEach((ln,j)=>T(ln,'700 38px '+FB,C.ink,P,y+38+j*50));
-    T(rub(totals(p.items).s),'600 38px '+FD,C.ink,W-P,y+38,'right');
-    y+=38+(nl.length-1)*50+16;
-    personLines(p).forEach(l=>{
-      const ll=wrap(l.name+' × '+l.q,'400 32px '+FB,W-P*2-40-230);
-      ll.forEach((ln,j)=>T(ln,'400 32px '+FB,C.ink,P+40,y+32+j*42));
-      T(rub(l.sum),'400 32px '+FB,C.muted,W-P,y+32,'right');
-      y+=32+(ll.length-1)*42+14;
-    });
-    y+=14;
-    if(pi<list.length-1) R(y,C.line,2);
+  rows.forEach((i,k)=>{
+    y+=26;
+    const ll=wrap(i.name+' × '+agg[i.id],'400 34px '+FB,W-P*2-230);
+    ll.forEach((ln,j)=>T(ln,'400 34px '+FB,C.ink,P,y+34+j*46));
+    T(rub(agg[i.id]*i.price),'600 34px '+FB,C.ink,W-P,y+34,'right');
+    y+=34+(ll.length-1)*46+18;
+    if(k<rows.length-1) R(y,C.line,2);
   });
-  y+=6; R(y,C.ink,4); y+=24;
+  y+=12; R(y,C.ink,4); y+=24;
   T('Итого','700 38px '+FB,C.ink,P,y+42);
-  T(peopleWord(list.length)+' · '+itemsWord(n),'400 30px '+FB,C.muted,P,y+42+44);
+  T(itemsWord(n),'400 30px '+FB,C.muted,P,y+42+44);
   T(rub(s),'600 64px '+FD,C.ink,W-P,y+62,'right');
   y+=42+44+34;
-  if(list.length>1){
-    R(y,C.line,2); y+=54;
-    T('ВСЕГО ПО БЛЮДАМ','600 26px '+FB,C.muted,P,y); y+=12;
-    aggRows(agg).forEach(i=>{
-      y+=16;
-      const ll=wrap(i.name,'400 32px '+FB,W-P*2-170);
-      ll.forEach((ln,j)=>T(ln,'400 32px '+FB,C.ink,P,y+32+j*42));
-      T(agg[i.id]+' шт','600 32px '+FB,C.ink,W-P,y+32,'right');
-      y+=32+(ll.length-1)*42;
-    });
-    y+=24;
-  }
   y+=P-30;
   cv.width=W; cv.height=Math.ceil(y);
   x.fillStyle=C.bg; x.fillRect(0,0,W,cv.height);
@@ -753,7 +723,7 @@ async function orderCanvas(){
   return cv;
 }
 
-/* file saving: Claude viewer → its save dialog; otherwise the phone's share sheet; otherwise show it */
+/* сохранение файла: в просмотрщике Claude — его окно сохранения, иначе меню «Поделиться» телефона, иначе показать на экране */
 let dlP=null;
 function getDownloads(){
   if(!dlP) dlP = (window.claude && typeof window.claude.use==='function') ? Promise.resolve(window.claude.use('downloads')).catch(()=>null) : Promise.resolve(null);
@@ -776,7 +746,7 @@ async function offerFile(filename,data,mime,fallback){
 }
 const fileBase = ()=>'Заказ_ПСО_'+dmy;
 
-/* check actions (both tabs): edit a person's dishes, or drop their order for today */
+/* действия в чеке (на обеих вкладках): изменить блюда участника или убрать его заказ */
 document.addEventListener('click',e=>{
   const ed=e.target.closest('[data-edit]');
   if(ed){const nm=ed.dataset.edit;if(!roster.includes(nm)){addToRoster(nm);saveRoster()}setActive(nm);go('menu');return}
@@ -790,7 +760,7 @@ document.addEventListener('click',e=>{
 
 $('v-order').addEventListener('click',async e=>{
   if(e.target.closest('#copy-phone')){copy(MENU.phone,'Номер скопирован');return}
-  if(e.target.closest('#copy-order')){copy(shortText(),'Заказ скопирован');return}
+  if(e.target.closest('#copy-order')){copy(orderText(),'Заказ скопирован');return}
   if(e.target.closest('#save-txt')){const t=orderText();offerFile(fileBase()+'.txt',t,'text/plain',()=>showText(t,'Скопируйте текст заказа'));return}
   const png=e.target.closest('#save-png');
   if(png){
@@ -883,7 +853,7 @@ $('v-team').addEventListener('click',e=>{
   }
 });
 
-/* ---------- utils ---------- */
+/* ---------- вспомогательное ---------- */
 function copy(text,ok){
   if(navigator.clipboard&&navigator.clipboard.writeText){
     navigator.clipboard.writeText(text).then(()=>toast(ok),()=>showText(text,'Выделите текст и скопируйте'));
@@ -905,16 +875,23 @@ function showImage(src){
   w.querySelector('img').src=src;
 }
 
-/* ---------- shared order: every phone saves to and reads from one Google Sheet ---------- */
+/* ---------- общий заказ: все телефоны сохраняют заказы в одну Google Таблицу ---------- */
 let busy=false, again=false, failed=false, synced=0, lastTry=0, saveTimer=0, gen=0;
 function changed(nm){
   if(!ORDERS_API) return;
   dirty.add(nm); saveDirty();
   clearTimeout(saveTimer); saveTimer=setTimeout(syncOrders,1000);
 }
-async function api(body){
-  const r=await fetch(body?ORDERS_API:ORDERS_API+'?date='+MENU.date, body?{method:'POST',body:JSON.stringify(body)}:{cache:'no-store'});
-  const j=await r.json();
+/* участники этого телефона: коллеге таблица отдаёт заказы только по ним */
+const myNames = ()=>[...new Set(roster.concat(Object.keys(orders),[...dirty]))];
+/* все запросы — POST без своих заголовков: Apps Script не отвечает на предварительные CORS-запросы */
+async function post(body){
+  const r=await fetch(ORDERS_API,{method:'POST',body:JSON.stringify(Object.assign({date:MENU.date},body))});
+  return r.json();
+}
+async function api(body,scope){
+  const j=await post(Object.assign(adminKey?{key:adminKey}:{names:scope||[]},body));
+  if(j&&j.error==='key'&&adminKey){leaveOrganizer('Код организатора изменился — войдите снова');throw new Error('key')}
   if(!j||!j.ok||!j.orders||typeof j.orders!=='object') throw new Error('bad reply');
   return j.orders;
 }
@@ -926,54 +903,119 @@ async function syncOrders(){
   if(!ORDERS_API) return;
   if(busy){again=true;return}
   busy=true; again=false; lastTry=Date.now(); clearTimeout(saveTimer);
-  const g=gen, names=[...dirty], sent={};
+  const g=gen, names=[...dirty], sent={}, scope=adminKey?null:myNames();
   names.forEach(nm=>sent[nm]=JSON.stringify(orders[nm]||{}));
   try{
-    const srv=await api(names.length?{date:MENU.date,set:names.map(payload)}:null);
+    const srv=await api(names.length?{set:names.map(payload)}:{},scope);
     if(g===gen){
       names.forEach(nm=>{if(JSON.stringify(orders[nm]||{})===sent[nm])dirty.delete(nm)});
-      saveDirty(); applyServer(srv);
-      if(names.includes(active)&&current==='menu') toast('Сохранено в общий заказ');
+      saveDirty(); applyServer(srv,scope);
+      if(names.includes(active)&&current==='menu') toast('Заказ сохранён');
     }else again=true;
     failed=false; synced=Date.now();
   }catch(e){
-    if(!failed&&names.length) toast('Нет связи. Заказ отправится, когда появится интернет');
-    failed=true;
+    if(e.message==='key') again=true;
+    else{
+      if(!failed&&names.length) toast('Нет связи. Заказ отправится, когда появится интернет');
+      failed=true;
+    }
   }
   busy=false; showSync();
   if(again) syncOrders();
 }
-/* the sheet is the record; only changes not yet saved from this phone win over it */
+/* таблица — главный источник; сильнее неё только изменения с этого телефона, которые ещё не сохранены */
 const canon=o=>JSON.stringify(Object.keys(o).sort().map(nm=>[nm,Object.keys(o[nm]).sort().map(id=>[id,o[nm][id]])]));
-function applyServer(srv){
-  const next={};
+function applyServer(srv,scope){
+  const got=Object.create(null);
   Object.keys(srv).forEach(k=>{
     const nm=cleanName(k), src=srv[k], it={};
     if(!nm||nm==='__proto__'||!src||typeof src!=='object') return;
     Object.keys(src).forEach(id=>{const q=Math.min(20,Math.floor(+src[id]));if(ORDER.includes(id)&&q>0)it[id]=q});
-    if(Object.keys(it).length) next[nm]=it;
+    if(Object.keys(it).length) got[nm.toLowerCase()]=[nm,it];
   });
+  let next={};
+  if(scope){   /* коллеге таблица вернула только его участников: обновляем только их */
+    next=Object.assign({},orders);
+    scope.forEach(nm=>{const g=got[nm.toLowerCase()];if(g)next[nm]=g[1];else delete next[nm]});
+  }else Object.keys(got).forEach(k=>next[got[k][0]]=got[k][1]);
   dirty.forEach(nm=>{if(orders[nm])next[nm]=orders[nm];else delete next[nm]});
   if(canon(next)===canon(orders)) return;
   orders=next; saveOrders(); syncMenu(); renderChips(); refresh();
 }
 async function clearShared(){
   gen++;
-  try{await api({date:MENU.date,clear:true})}
-  catch(e){toast('Нет связи — заказ не очищен');return}
+  try{await api({clear:true},null)}
+  catch(e){if(e.message!=='key')toast('Нет связи — заказ не очищен');return}
   dirty.clear(); saveDirty(); orders={}; saveOrders(); syncMenu(); renderChips(); refresh(); toast('Заказ очищен');
 }
 function showSync(){
   const el=$('sync');
   el.hidden=!ORDERS_API; if(!ORDERS_API) return;
-  const t=new Date(synced);
+  const t=new Date(synced), hm=pad(t.getHours())+':'+pad(t.getMinutes());
   el.classList.toggle('warn',failed);
-  el.textContent = failed ? 'Нет связи с общим заказом. Показано то, что сохранено на этом телефоне.'
-    : synced ? 'Заказы всех коллег · обновлено в '+pad(t.getHours())+':'+pad(t.getMinutes())
-    : 'Загружаю заказы коллег…';
+  el.textContent = failed ? 'Нет связи. Показано то, что сохранено на этом телефоне.'
+    : !synced ? 'Загружаю заказы…'
+    : !colleague() ? 'Заказы всех коллег · обновлено в '+hm
+    : dirty.size ? 'Сохраняю заказ…'
+    : Object.keys(orders).length ? 'Заказ сохранён и передан организатору · '+hm
+    : 'Обновлено в '+hm;
 }
 
-/* ---------- tabs ---------- */
+/* ---------- кто пользуется: коллега видит только свой заказ, организатор — все заказы и общую сумму ---------- */
+function applyRole(){
+  const col=colleague(), link=$('org-link');
+  document.querySelector('.tab[data-v="team"]').hidden=col;
+  document.querySelector('.tabs').style.gridTemplateColumns=col?'repeat(2,1fr)':'';
+  $('order-tab-lbl').textContent=col?'Мой заказ':'Общий заказ';
+  $('order-title').textContent=col?'Мой заказ':'Общий заказ ПСО';
+  $('v-order').setAttribute('aria-label',col?'Мой заказ':'Общий заказ');
+  $('cafe-phone').hidden=col;
+  link.hidden=!ORDERS_API; delete link.dataset.sure;
+  link.textContent=col?'Вход для организатора':'Выйти из режима организатора';
+  if(col&&current==='team') go('menu');
+}
+function leaveOrganizer(msg){
+  adminKey=''; store.set('pso:admin','');
+  /* на телефоне остаются только свои участники */
+  Object.keys(orders).forEach(nm=>{if(!roster.includes(nm)&&!dirty.has(nm))delete orders[nm]});
+  saveOrders(); applyRole(); syncMenu(); renderChips(); refresh(); showSync(); toast(msg);
+}
+function orgLogin(){
+  const w=document.createElement('div'); w.className='sheet';
+  w.innerHTML=`<form class="card"><label class="lbl" for="org-code">Код организатора</label>
+    <input type="text" id="org-code" inputmode="numeric" autocomplete="off" enterkeyhint="done">
+    <p class="hint">Код — в Google Таблице организатора, на листе «Настройки».</p>
+    <div class="msg warn" id="org-msg" hidden></div>
+    <div class="btn-row" style="margin-top:16px"><button class="btn" type="button" data-close>Отмена</button><button class="btn primary" type="submit">Войти</button></div></form>`;
+  const inp=w.querySelector('#org-code'), msg=w.querySelector('#org-msg');
+  const say=t=>{msg.hidden=false;msg.textContent=t};
+  w.addEventListener('click',e=>{if(e.target===w||e.target.closest('[data-close]'))w.remove()});
+  w.querySelector('form').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const code=inp.value.trim(); if(!code){inp.focus();return}
+    msg.hidden=true;
+    let j=null; try{j=await post({key:code})}catch(err){}
+    if(j&&j.error==='key'){say('Неверный код');inp.select();return}
+    if(!j||!j.ok||!j.admin||!j.orders){say('Нет связи. Попробуйте ещё раз.');return}
+    adminKey=code; store.set('pso:admin',code); w.remove();
+    failed=false; synced=Date.now();
+    applyRole(); applyServer(j.orders,null); go('order'); showSync(); toast('Режим организатора включён');
+    if(dirty.size) syncOrders();
+  });
+  document.body.appendChild(w); inp.focus();
+}
+$('org-link').addEventListener('click',e=>{
+  const b=e.currentTarget;
+  if(colleague()){orgLogin();return}
+  if(!b.dataset.sure){
+    b.dataset.sure='1'; b.textContent='Нажмите ещё раз, чтобы выйти';
+    setTimeout(()=>{if(b.dataset.sure){delete b.dataset.sure;b.textContent='Выйти из режима организатора'}},3000);
+    return;
+  }
+  leaveOrganizer('Вы вышли из режима организатора'); syncOrders();
+});
+
+/* ---------- вкладки ---------- */
 let current='menu';
 function refresh(){
   const my=totals(curSel()), list=people(), all=aggregate(list);
@@ -986,6 +1028,7 @@ function refresh(){
   if(current==='team') renderTeam();
 }
 function go(v){
+  if(v==='team'&&colleague()) v='menu';
   current=v;
   document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.v===v));
   ['menu','order','team'].forEach(k=>$('v-'+k).hidden=k!==v);
@@ -1003,6 +1046,7 @@ renderChips(); renderMenu();
 if(!roster.length) openAdd(false);
 let start='menu';try{start=sessionStorage.getItem('pso:tab')||'menu'}catch(e){}
 if(!['menu','order','team'].includes(start)) start='menu';
+applyRole();
 go(start);
 showSync();
 if(ORDERS_API){
@@ -1015,7 +1059,7 @@ if(ORDERS_API){
 </script>
 
 <script>
-/* app on the home screen has no reload button: when it is reopened, pick up a newly published menu or app version */
+/* у приложения на экране «Домой» нет кнопки «обновить»: когда его открывают снова, подхватываем новое меню или новую версию */
 (function(){
 const sig=doc=>[...doc.querySelectorAll('body > script:not([src])')].map(s=>s.textContent).join('\n\u0000\n');
 const own=sig(document);
