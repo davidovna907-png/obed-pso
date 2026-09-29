@@ -401,6 +401,7 @@ textarea{min-height:130px;resize:vertical;font-size:16px;font-weight:400}
 
     <section class="view" id="v-order" hidden aria-label="Общий заказ">
       <h2 class="title">Общий заказ ПСО</h2>
+      <p class="msg" id="sync" hidden style="margin:-4px 4px 12px"></p>
       <div id="order-body"></div>
       <div class="phone">
         <div>Кафе, приём заказов до 10:00 пн–пт<b id="phone">+7 (351) 230-66-66</b></div>
@@ -457,7 +458,9 @@ textarea{min-height:130px;resize:vertical;font-size:16px;font-weight:400}
 <script>
 (function(){
 const MENU = JSON.parse(document.getElementById('menu-data').textContent);
-const WD = ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+/* shared order for all phones: URL of the Google Apps Script web app (apps-script/Code.gs); empty — orders stay on this phone only */
+const ORDERS_API = '';
+const WD =['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
 const WDs = ['вс','пн','вт','ср','чт','пт','сб'];
 const WDacc = ['воскресенье','понедельник','вторник','среду','четверг','пятницу','субботу'];  /* «на среду» */
 const pad = n=>String(n).padStart(2,'0');
@@ -514,6 +517,10 @@ let active = store.get(K.active,'');
 if(!roster.includes(active)) active=roster[0]||'';
 const saveRoster=()=>store.set(K.roster,roster), saveOrders=()=>store.set(K.orders,orders), saveActive=()=>store.set(K.active,active);
 saveRoster(); saveOrders(); saveActive();
+/* names whose changes the shared order has not confirmed yet; the first run with it uploads what this phone already has */
+const K_DIRTY = 'pso:dirty:'+MENU.date;
+const dirty = new Set((d=>ORDERS_API?(Array.isArray(d)?d:Object.keys(orders)):[])(store.get(K_DIRTY,null)));
+const saveDirty = ()=>{if(ORDERS_API)store.set(K_DIRTY,[...dirty])};
 
 $('wday').textContent = WD[menuDate.getDay()];
 $('dmy').textContent = dmy;
@@ -620,7 +627,7 @@ $('v-menu').addEventListener('click',e=>{
   else if(inc){id=inc.dataset.inc; sel[id]=Math.min(20,(sel[id]||0)+1);}
   else {id=dec.dataset.dec; sel[id]=(sel[id]||1)-1; if(sel[id]<=0) delete sel[id];}
   if(!Object.keys(sel).length) delete orders[active];
-  saveOrders(); updateItem(id); renderChips(); refresh();
+  saveOrders(); changed(active); updateItem(id); renderChips(); refresh();
 });
 
 /* ---------- общий заказ ---------- */
@@ -777,7 +784,7 @@ document.addEventListener('click',e=>{
   if(dr){
     const nm=dr.dataset.drop;
     if(!dr.dataset.sure){dr.dataset.sure='1';dr.textContent='убрать заказ?';setTimeout(()=>{if(dr.isConnected){delete dr.dataset.sure;dr.textContent='убрать'}},3000);return}
-    delete orders[nm]; saveOrders(); syncMenu(); renderChips(); refresh(); toast('Заказ убран: '+nm);
+    delete orders[nm]; saveOrders(); changed(nm); syncMenu(); renderChips(); refresh(); toast('Заказ убран: '+nm);
   }
 });
 
@@ -797,7 +804,7 @@ $('v-order').addEventListener('click',async e=>{
   }
   const c=e.target.closest('#clear-all');
   if(c){
-    if(c.dataset.sure){orders={};saveOrders();syncMenu();renderChips();refresh();toast('Заказ очищен');return}
+    if(c.dataset.sure){if(ORDERS_API){clearShared();return}orders={};saveOrders();syncMenu();renderChips();refresh();toast('Заказ очищен');return}
     c.dataset.sure='1';c.textContent='Нажмите ещё раз, чтобы очистить весь заказ';
     setTimeout(()=>{if(c.isConnected){delete c.dataset.sure;c.textContent='Очистить весь заказ'}},3000);
   }
@@ -827,7 +834,7 @@ $('roster').addEventListener('click',e=>{
     setTimeout(()=>{if(chip.isConnected){chip.classList.remove('sure');b.textContent='×'}},3000);
     return;
   }
-  roster=roster.filter(r=>r!==nm); delete orders[nm];
+  roster=roster.filter(r=>r!==nm); if(orders[nm]){delete orders[nm];changed(nm)}
   if(active===nm) active=roster[0]||'';
   saveRoster(); saveOrders(); saveActive();
   renderTeam(); renderChips(); syncMenu(); refresh(); toast('Убран: '+nm);
@@ -863,7 +870,7 @@ $('v-team').addEventListener('click',e=>{
     if(!txt.trim()){showMsg('Вставьте текст сообщений из чата.',true);return}
     const r=parseText(txt);
     if(!r.added.length){showMsg(r.stale?'Эти заказы на другой день. Нужны заказы на '+ddmm+'.':'Не нашла строк «#ПСО». Попросите коллег копировать заказ кнопкой в приложении.',true);return}
-    saveRoster(); saveOrders(); $('paste').value='';
+    saveRoster(); saveOrders(); r.added.forEach(changed); $('paste').value='';
     showMsg('Добавлено: '+r.added.join(', ')+(r.stale?'. Пропущено на другой день: '+r.stale:''),false);
     $('to-order').hidden=false;
     if(!active){active=r.added[0];saveActive()}
@@ -898,6 +905,74 @@ function showImage(src){
   w.querySelector('img').src=src;
 }
 
+/* ---------- shared order: every phone saves to and reads from one Google Sheet ---------- */
+let busy=false, again=false, failed=false, synced=0, lastTry=0, saveTimer=0, gen=0;
+function changed(nm){
+  if(!ORDERS_API) return;
+  dirty.add(nm); saveDirty();
+  clearTimeout(saveTimer); saveTimer=setTimeout(syncOrders,1000);
+}
+async function api(body){
+  const r=await fetch(body?ORDERS_API:ORDERS_API+'?date='+MENU.date, body?{method:'POST',body:JSON.stringify(body)}:{cache:'no-store'});
+  const j=await r.json();
+  if(!j||!j.ok||!j.orders||typeof j.orders!=='object') throw new Error('bad reply');
+  return j.orders;
+}
+function payload(nm){
+  const items=orders[nm]||{};
+  return {name:nm, items, sum:totals(items).s, text:personLines({name:nm,items}).map(l=>l.name+' × '+l.q).join('; ')};
+}
+async function syncOrders(){
+  if(!ORDERS_API) return;
+  if(busy){again=true;return}
+  busy=true; again=false; lastTry=Date.now(); clearTimeout(saveTimer);
+  const g=gen, names=[...dirty], sent={};
+  names.forEach(nm=>sent[nm]=JSON.stringify(orders[nm]||{}));
+  try{
+    const srv=await api(names.length?{date:MENU.date,set:names.map(payload)}:null);
+    if(g===gen){
+      names.forEach(nm=>{if(JSON.stringify(orders[nm]||{})===sent[nm])dirty.delete(nm)});
+      saveDirty(); applyServer(srv);
+      if(names.includes(active)&&current==='menu') toast('Сохранено в общий заказ');
+    }else again=true;
+    failed=false; synced=Date.now();
+  }catch(e){
+    if(!failed&&names.length) toast('Нет связи. Заказ отправится, когда появится интернет');
+    failed=true;
+  }
+  busy=false; showSync();
+  if(again) syncOrders();
+}
+/* the sheet is the record; only changes not yet saved from this phone win over it */
+const canon=o=>JSON.stringify(Object.keys(o).sort().map(nm=>[nm,Object.keys(o[nm]).sort().map(id=>[id,o[nm][id]])]));
+function applyServer(srv){
+  const next={};
+  Object.keys(srv).forEach(k=>{
+    const nm=cleanName(k), src=srv[k], it={};
+    if(!nm||nm==='__proto__'||!src||typeof src!=='object') return;
+    Object.keys(src).forEach(id=>{const q=Math.min(20,Math.floor(+src[id]));if(ORDER.includes(id)&&q>0)it[id]=q});
+    if(Object.keys(it).length) next[nm]=it;
+  });
+  dirty.forEach(nm=>{if(orders[nm])next[nm]=orders[nm];else delete next[nm]});
+  if(canon(next)===canon(orders)) return;
+  orders=next; saveOrders(); syncMenu(); renderChips(); refresh();
+}
+async function clearShared(){
+  gen++;
+  try{await api({date:MENU.date,clear:true})}
+  catch(e){toast('Нет связи — заказ не очищен');return}
+  dirty.clear(); saveDirty(); orders={}; saveOrders(); syncMenu(); renderChips(); refresh(); toast('Заказ очищен');
+}
+function showSync(){
+  const el=$('sync');
+  el.hidden=!ORDERS_API; if(!ORDERS_API) return;
+  const t=new Date(synced);
+  el.classList.toggle('warn',failed);
+  el.textContent = failed ? 'Нет связи с общим заказом. Показано то, что сохранено на этом телефоне.'
+    : synced ? 'Заказы всех коллег · обновлено в '+pad(t.getHours())+':'+pad(t.getMinutes())
+    : 'Загружаю заказы коллег…';
+}
+
 /* ---------- tabs ---------- */
 let current='menu';
 function refresh(){
@@ -916,6 +991,7 @@ function go(v){
   ['menu','order','team'].forEach(k=>$('v-'+k).hidden=k!==v);
   refresh(); window.scrollTo({top:0});
   if(v==='order') getDownloads();
+  if(ORDERS_API&&v!=='menu'&&Date.now()-lastTry>10000) syncOrders();
   try{sessionStorage.setItem('pso:tab',v)}catch(e){}
 }
 document.querySelector('.tabs').addEventListener('click',e=>{const t=e.target.closest('.tab');if(t)go(t.dataset.v)});
@@ -928,21 +1004,29 @@ if(!roster.length) openAdd(false);
 let start='menu';try{start=sessionStorage.getItem('pso:tab')||'menu'}catch(e){}
 if(!['menu','order','team'].includes(start)) start='menu';
 go(start);
+showSync();
+if(ORDERS_API){
+  saveDirty(); if(!busy) syncOrders();
+  setInterval(()=>{if(document.visibilityState==='visible')syncOrders()},60000);
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')syncOrders()});
+  addEventListener('online',()=>syncOrders());
+}
 })();
 </script>
 
 <script>
-/* app on the home screen has no reload button: when it is reopened, pick up a newly published menu */
+/* app on the home screen has no reload button: when it is reopened, pick up a newly published menu or app version */
 (function(){
-const own=document.getElementById('menu-data').textContent.trim();
+const sig=doc=>[...doc.querySelectorAll('body > script:not([src])')].map(s=>s.textContent).join('\n\u0000\n');
+const own=sig(document);
 let last=0;
 document.addEventListener('visibilitychange',async()=>{
   if(document.visibilityState!=='visible'||Date.now()-last<60000) return;
   last=Date.now();
   try{
     const html=await (await fetch(location.pathname,{cache:'no-store'})).text();
-    const m=html.match(/<script type="application\/json" id="menu-data">([\s\S]*?)<\/script>/);
-    if(m&&m[1].trim()!==own) location.reload();
+    const doc=new DOMParser().parseFromString(html,'text/html');
+    if(doc.getElementById('menu-data')&&sig(doc)!==own) location.reload();
   }catch(e){}
 });
 })();
