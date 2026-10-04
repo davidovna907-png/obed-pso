@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#141918">
+<meta name="robots" content="noindex">
+<title>Обед ПСО — подключение таблицы</title>
+<style>
+:root{color-scheme:dark;--ground:#141918;--surface:#1D2422;--surface-2:#232B29;--ink:#E5EAE7;--muted:#9AA5A0;--line:#2F3A37;--accent:#96C1B3;--accent-ink:#11201B;--warn:#D9A866}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--ground);color:var(--ink);font:17px/1.45 -apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:560px;margin:0 auto;padding:24px 16px 40px}
+h1{font-size:24px;line-height:1.2;margin:0 0 8px}
+p{margin:0 0 16px;color:var(--muted)}
+.copy{display:block;width:100%;min-height:64px;border:0;border-radius:18px;background:var(--accent);color:var(--accent-ink);font-family:inherit;font-size:20px;font-weight:700;cursor:pointer}
+.copy:disabled{opacity:.5}
+.status{min-height:28px;margin:14px 0 20px;font-weight:600;text-align:center}
+.status.ok{color:var(--accent)}
+.status.err{color:var(--warn)}
+details{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 14px}
+summary{cursor:pointer;color:var(--muted)}
+textarea{width:100%;height:50vh;margin-top:12px;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px;font:12px/1.4 ui-monospace,Menlo,monospace}
+</style>
+</head>
+<body>
+<main>
+  <h1>Подключение общего заказа</h1>
+  <p>Нажмите кнопку — код скрипта для Google Таблицы скопируется. Затем вернитесь в Apps Script и вставьте его.</p>
+  <button class="copy" id="copy" disabled>Загружаю код…</button>
+  <div class="status" id="status" role="status"></div>
+  <details>
+    <summary>Показать код</summary>
+    <textarea id="code" readonly></textarea>
+  </details>
+</main>
+<script>
+/* код берём из того же репозитория, чтобы на странице всегда была актуальная версия */
+const btn = document.getElementById('copy'), st = document.getElementById('status'), ta = document.getElementById('code');
+let code = '';
+const say = (t, cls) => { st.textContent = t; st.className = 'status ' + (cls || ''); };
+fetch('apps-script/Code.gs', { cache: 'no-store' })
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+  .then(t => { code = t; ta.value = t; btn.disabled = false; btn.textContent = 'Скопировать код'; })
+  .catch(() => { btn.textContent = 'Код не загрузился'; say('Обновите страницу', 'err'); });
+/* запасной способ для старых браузеров: выделить текст в поле и скопировать */
+function fallback() {
+  ta.closest('details').open = true;
+  ta.focus(); ta.select(); ta.setSelectionRange(0, code.length);
+  return document.execCommand && document.execCommand('copy');
+}
+btn.addEventListener('click', () => {
+  if (!code) return;
+  const done = () => say('✓ Код скопирован — вставьте его в Apps Script', 'ok');
+  const fail = () => fallback() ? done() : say('Не получилось. Откройте «Показать код», нажмите в поле и удерживайте → «Выбрать все» → «Скопировать»', 'err');
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(code).then(done, fail);
+  else fail();
+});
+</script>
+</body>
+</html>
