@@ -4,14 +4,15 @@
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
 
-/* сообщение приходит зашифрованным от Google Таблицы организатора: {title, body, tag} */
+/* сообщение приходит зашифрованным от Google Таблицы организатора: {title, body, tag}; tag — menu, summary (сводка в 21:00) или test */
 self.addEventListener('push', e => {
   let m = {};
   try { m = e.data ? e.data.json() : {}; } catch (err) {}
-  const tag = m.tag === 'test' ? 'test' : 'menu';
+  const tag = m.tag === 'test' || m.tag === 'summary' ? m.tag : 'menu';
   const shown = self.registration.showNotification(m.title || 'Обед ПСО: новое меню', {
     body: m.body || 'Откройте приложение и отметьте блюда.',
     tag: tag,
+    renotify: true,   /* новое уведомление с тем же тегом — снова со звуком (Android); Safari поле пропускает */
     icon: 'icons/icon-192.png',
     lang: 'ru',
     data: { url: './' }

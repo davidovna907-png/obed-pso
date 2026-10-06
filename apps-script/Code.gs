@@ -15,6 +15,7 @@
  * Если этот код потом поменяется:
  * 1. Заменить весь текст в редакторе новым кодом и нажать «Сохранить».
  * 2. Вверху выбрать функцию «setup» → «Выполнить» → разрешить доступ (нужно, если скрипт просит новые разрешения).
+ *    setup() заодно ставит расписание: каждый вечер около 21:00 — сводка заказов на телефоны организатора.
  * 3. «Начать развертывание» → «Управление развертываниями» → ✎ → версия «Новая версия» → «Начать развертывание»
  *    (адрес останется прежним).
  */
@@ -22,7 +23,7 @@ const SHEET_NAME = 'Заказы';
 const SETTINGS_NAME = 'Настройки';
 const SUBS_NAME = 'Уведомления';
 const HEAD = ['Дата меню', 'Участник', 'Заказ', 'Сумма, ₽', 'Обновлено', 'Данные для приложения'];
-const SUBS_HEAD = ['Адрес телефона для уведомлений', 'Ключ p256dh', 'Ключ auth', 'Добавлен', 'Последнее уведомление', 'Ответ службы'];
+const SUBS_HEAD = ['Адрес телефона для уведомлений', 'Ключ p256dh', 'Ключ auth', 'Добавлен', 'Последнее уведомление', 'Ответ службы', 'Организатор'];
 /* адрес приложения: отсюда скрипт узнаёт, что вышло новое меню */
 const APP_URL = 'https://davidovna907-png.github.io/obed-pso/';
 const ARCHIVE_DAYS = 120;   /* сколько последних дней заказов отдавать в архив */
@@ -42,8 +43,40 @@ function doGet() {
 /* Запустить один раз из редактора («Выполнить»), чтобы разрешить скрипту всё нужное: таблицу и отправку уведомлений */
 function setup() {
   locked_(() => { sheet_(); subsSheet_(); code_(); vapid_(); });
+  /* расписание сводки: одно на проект, каждый день 21:00–21:30 по Челябинску */
+  ScriptApp.getProjectTriggers().filter(t => t.getHandlerFunction() === 'eveningSummary').forEach(t => ScriptApp.deleteTrigger(t));
+  ScriptApp.newTrigger('eveningSummary').timeBased().atHour(21).nearMinute(15).everyDays(1).inTimezone(TZ).create();
+  PropertiesService.getScriptProperties().setProperty('summaryTrigger', '1');
   const menu = liveMenu_();
-  Logger.log('Обед ПСО: всё готово. Меню на сайте: ' + (menu ? menu.date : 'не удалось прочитать'));
+  Logger.log('Обед ПСО: всё готово. Меню на сайте: ' + (menu ? menu.date : 'не удалось прочитать') + '. Сводка организатору — каждый вечер около 21:00.');
+}
+
+/* по расписанию около 21:00: сбор на завтра закрыт — сводка на телефоны организатора */
+function eveningSummary() {
+  /* расписание Google может сработать на несколько минут раньше — дождёмся 21:00 */
+  const hm = Utilities.formatDate(new Date(), TZ, 'HH:mm');
+  if (hm < '21:00') {
+    const wait = ((21 * 60) - (Number(hm.slice(0, 2)) * 60 + Number(hm.slice(3)))) * 60000 + 30000;
+    if (wait > 270000) return;
+    Utilities.sleep(wait);
+  }
+  /* сбой сети (GitHub, служба уведомлений) — одна повторная попытка через 20 секунд */
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try { Logger.log(JSON.stringify(summary_(daysFromToday_(1), false))); return; }
+    catch (err) { Logger.log('Сводка, попытка ' + attempt + ': ' + err); if (attempt === 1) Utilities.sleep(20000); }
+  }
+}
+
+/* расписание сводки ставит setup(); если его не запускали — ставим при первой подписке организатора */
+function ensureTrigger_() {
+  try {
+    const props = PropertiesService.getScriptProperties();
+    if (props.getProperty('summaryTrigger') === '1') return;
+    if (!ScriptApp.getProjectTriggers().some(t => t.getHandlerFunction() === 'eveningSummary')) {
+      ScriptApp.newTrigger('eveningSummary').timeBased().atHour(21).nearMinute(15).everyDays(1).inTimezone(TZ).create();
+    }
+    props.setProperty('summaryTrigger', '1');
+  } catch (err) {}
 }
 
 /*
@@ -62,7 +95,12 @@ function doPost(e) {
   const action = String(req.action || '');
   try {
     if (action === 'push-key') return json_({ ok: true, key: locked_(() => vapid_().pub) });
-    if (action === 'subscribe') return json_(subscribe_(req.sub));
+    if (action === 'subscribe') return json_(subscribe_(req.sub, req.key));
+    if (action === 'summary') return json_((() => {
+      const k = locked_(() => keyCheck_(req.key));
+      if (k !== 'ok') return { ok: false, error: k };
+      return summary_(cleanDate_(req.date) || daysFromToday_(1), true, req.endpoint);
+    })());
     if (action === 'unsubscribe') return json_(unsubscribe_(req.endpoint));
     if (action === 'push-test') return json_(pushTest_(req.endpoint));
     if (action === 'notify') return json_(notify_());
@@ -217,8 +255,11 @@ function subsSheet_() {
   let sh = ss.getSheetByName(SUBS_NAME);
   if (!sh) {
     sh = ss.insertSheet(SUBS_NAME);
-    sh.getRange(1, 1, 1, SUBS_HEAD.length).setValues([SUBS_HEAD]).setFontWeight('bold');
     sh.setFrozenRows(1);
+  }
+  /* заголовки (в том числе новый столбец «Организатор» у листа, созданного раньше) */
+  if (sh.getRange(1, SUBS_HEAD.length).getValue() !== SUBS_HEAD[SUBS_HEAD.length - 1]) {
+    sh.getRange(1, 1, 1, SUBS_HEAD.length).setValues([SUBS_HEAD]).setFontWeight('bold');
   }
   return sh;
 }
@@ -227,7 +268,8 @@ function subs_(sh) {
   const n = sh.getLastRow() - 1;
   if (n < 1) return [];
   const s = v => String(v).replace(/^'/, '');
-  return sh.getRange(2, 1, n, 3).getValues().map((v, i) => ({ row: i + 2, endpoint: s(v[0]), p256dh: s(v[1]), auth: s(v[2]) }));
+  return sh.getRange(2, 1, n, SUBS_HEAD.length).getValues().map((v, i) =>
+    ({ row: i + 2, endpoint: s(v[0]), p256dh: s(v[1]), auth: s(v[2]), mark: s(v[6]) }));
 }
 
 /* принимаем только адреса настоящих служб уведомлений (Apple, Google, Mozilla, Microsoft) */
@@ -249,18 +291,58 @@ function cleanSub_(sub) {
   return { endpoint: endpoint, p256dh: p256dh, auth: auth };
 }
 
-function subscribe_(sub) {
+/* пометка телефона организатора — «да» и отпечаток текущего кода: смена кода в «Настройках» сразу снимает все пометки */
+function codeMark_() { return 'да ' + b64url_(sha256_('obed-pso:' + normCode_(code_()))).slice(0, 8); }
+
+/* подписка с верным кодом организатора — этот телефон получает и вечернюю сводку; без кода — только новое меню */
+function subscribe_(sub, key) {
   const s = cleanSub_(sub);
   if (!s) return { ok: false, error: 'endpoint' };
   return locked_(() => {
+    const k = key != null && key !== '' ? keyCheck_(key) : 'none', mark = k === 'ok' ? codeMark_() : '';
     const sh = subsSheet_(), all = subs_(sh), old = all.find(r => r.endpoint === s.endpoint);
-    if (old) sh.getRange(old.row, 2, 1, 2).setValues([[txt_(s.p256dh), txt_(s.auth)]]);
-    else {
+    if (old) {
+      sh.getRange(old.row, 2, 1, 2).setValues([[txt_(s.p256dh), txt_(s.auth)]]);
+      if (k !== 'wait') sh.getRange(old.row, 7).setValue(mark);   /* во время паузы проверки кода пометку не трогаем */
+    } else {
       if (all.length >= MAX_SUBS) return { ok: false, error: 'full' };
-      sh.appendRow([txt_(s.endpoint), txt_(s.p256dh), txt_(s.auth), new Date(), '', '']);
+      sh.appendRow([txt_(s.endpoint), txt_(s.p256dh), txt_(s.auth), new Date(), '', '', mark]);
     }
-    return { ok: true };
+    if (k === 'ok') ensureTrigger_();
+    return { ok: true, org: k === 'ok' ? true : k === 'wait' ? null : false };
   });
+}
+
+/* сводка заказов на дату — только на телефоны организатора; manual — по кнопке в приложении (только на этот телефон) */
+function summary_(date, manual, endpoint) {
+  const rows = locked_(() => rows_(sheet_()).filter(r => r.date === date && r.name));
+  const n = rows.length, sum = rows.reduce((t, r) => t + r.sum, 0);
+  if (!n && !manual) {
+    /* заказов нет: если на эту дату нет и меню (выходные), молчим */
+    const menu = liveMenu_();
+    if (!menu || menu.date !== date) return { ok: true, date: date, n: 0, sum: 0, sent: 0, skipped: true };
+  }
+  const ep = manual ? cleanEndpoint_(endpoint) : '';
+  const subs = locked_(() => { const cur = codeMark_(); return subs_(subsSheet_()).filter(x => x.mark === cur && (!manual || x.endpoint === ep)); });
+  const msg = summaryMessage_(date, n, sum, manual);
+  if (!subs.length) return { ok: true, date: date, n: n, sum: sum, sent: 0, total: 0, text: msg.body };
+  const statuses = send_(subs, msg);
+  report_(subs.map((x, i) => ({ endpoint: x.endpoint, status: statuses[i] })));
+  return { ok: true, date: date, n: n, sum: sum, sent: statuses.filter(c => c >= 200 && c < 300).length, total: subs.length, text: msg.body };
+}
+
+/* «Заказ на среду 07.10: 12 человек, 4 560 ₽. Откройте «Заказы», чтобы отправить в кафе.» */
+function summaryMessage_(date, n, sum, manual) {
+  const p = date.split('-').map(Number), day = new Date(Date.UTC(p[0], p[1] - 1, p[2]));
+  const when = WD_ACC[day.getUTCDay()] + ' ' + ('0' + p[2]).slice(-2) + '.' + ('0' + p[1]).slice(-2);
+  const m = n % 100, m1 = n % 10, people = (m > 10 && m < 20) || m1 === 0 || m1 > 4 ? 'человек' : m1 === 1 ? 'человек' : 'человека';
+  const rub = String(sum).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0') + '\u00a0₽';
+  return {
+    title: manual ? 'Обед ПСО: заказы сейчас' : 'Обед ПСО: сбор закрыт',
+    body: n ? 'Заказ на ' + when + ': ' + n + ' ' + people + ', ' + rub + '. Откройте «Заказы», чтобы отправить в кафе.'
+      : 'На ' + when + ' пока никто не заказал.',
+    tag: 'summary'
+  };
 }
 
 function unsubscribe_(endpoint) {
@@ -328,7 +410,9 @@ function menuMessage_(menu) {
 
 /* меню, которое сейчас опубликовано на сайте приложения: {date, collectBy} */
 function liveMenu_() {
-  const r = UrlFetchApp.fetch(APP_URL + '?menu=' + Date.now(), { muteHttpExceptions: true, followRedirects: true });
+  let r;
+  try { r = UrlFetchApp.fetch(APP_URL + '?menu=' + Date.now(), { muteHttpExceptions: true, followRedirects: true }); }
+  catch (err) { return null; }   /* сеть недоступна */
   if (r.getResponseCode() !== 200) return null;
   const m = r.getContentText('UTF-8').match(/id="menu-data"[^>]*>([\s\S]*?)<\/script>/);
   if (!m) return null;
@@ -339,8 +423,9 @@ function liveMenu_() {
   } catch (err) { return null; }
 }
 
+const TZ = 'Asia/Yekaterinburg';   /* Челябинск */
 function daysFromToday_(n) {
-  return Utilities.formatDate(new Date(Date.now() + n * 864e5), 'Asia/Yekaterinburg', 'yyyy-MM-dd');
+  return Utilities.formatDate(new Date(Date.now() + n * 864e5), TZ, 'yyyy-MM-dd');
 }
 
 /* отправка: каждому телефону — своё зашифрованное сообщение; ответ службы — код HTTP (201 — принято) */

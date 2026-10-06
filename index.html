@@ -1120,7 +1120,7 @@ function leaveOrganizer(msg){
   adminKey=''; store.set('pso:admin','');
   /* на телефоне остаются только свои участники */
   Object.keys(orders).forEach(nm=>{if(!roster.includes(nm)&&!dirty.has(nm))delete orders[nm]});
-  saveOrders(); applyRole(); syncMenu(); renderChips(); refresh(); showSync(); toast(msg);
+  saveOrders(); applyRole(); syncMenu(); renderChips(); refresh(); showSync(); toast(msg); resubscribe();
 }
 function orgLogin(){
   const w=document.createElement('div'); w.className='sheet';
@@ -1145,7 +1145,7 @@ function orgLogin(){
     if(!j||!j.ok||!j.admin||!j.orders){say('Нет связи. Попробуйте ещё раз.');return}
     adminKey=code; store.set('pso:admin',code); w.remove();
     failed=false; synced=Date.now();
-    applyRole(); applyServer(j.orders,null); go('order'); showSync(); toast('Режим организатора включён');
+    applyRole(); applyServer(j.orders,null); go('order'); showSync(); toast('Режим организатора включён'); resubscribe();
     if(dirty.size) syncOrders();
   });
   document.body.appendChild(w); inp.focus();
@@ -1175,7 +1175,7 @@ function deadlineText(){
 /* приложение открыли — снять значок с иконки и уже показанные уведомления о меню */
 function clearBadge(){
   try{if(navigator.clearAppBadge)navigator.clearAppBadge().catch(()=>{})}catch(e){}
-  if(swReg&&swReg.getNotifications) swReg.getNotifications({tag:'menu'}).then(l=>l.forEach(n=>n.close())).catch(()=>{});
+  if(swReg&&swReg.getNotifications) swReg.getNotifications().then(l=>l.forEach(n=>{if(n.tag==='menu'||n.tag==='summary')n.close()})).catch(()=>{});
 }
 /* приложение открыто долго: раз в 5 минут смотрим, не вышло ли новое меню */
 async function checkFresh(){
@@ -1191,7 +1191,19 @@ async function checkFresh(){
 const isIOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 const standalone=navigator.standalone===true||!!(window.matchMedia&&matchMedia('(display-mode: standalone)').matches);
 const pushOK=!!(ORDERS_API&&'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window);
-const K_ASK='pso:pushAsk';
+const K_ASK='pso:pushAsk', K_PSYNC='pso:pushSync2';
+/* подписка телефона; с кодом организатора таблица присылает сюда и вечернюю сводку заказов */
+const subReq=()=>Object.assign({action:'subscribe',sub:pushSub.toJSON()},adminKey?{key:adminKey}:{});
+/* вошли или вышли из режима организатора — сообщить таблице, нужна ли этому телефону сводка */
+/* отметку «сверено» ставим, только когда таблица подтвердила роль (старый скрипт код не читает — тогда спросим снова) */
+const subOk=j=>!!(j&&j.ok&&(!adminKey||j.org===true));
+/* ответ таблицы на подписку: запомнить, подтверждена ли сводка организатора (старый скрипт поля org не знает) */
+function afterSub(j){
+  if(subOk(j)) store.set(K_PSYNC,todayISO());
+  if(j&&j.ok&&j.org!==null){store.set('pso:pushOrg',j.org===true);renderPush()}
+}
+/* отметку «сверено» сбрасываем до запроса: если он не дойдёт, телефон переспросит при следующем открытии */
+function resubscribe(){if(pushSub&&pushState==='on'){store.set(K_PSYNC,'');post(subReq()).then(afterSub).catch(()=>{})}}
 /* состояние: none — не показываем; install — iPhone без значка на экране «Домой»; off, busy, on, denied */
 let swReg=null, pushSub=null, pushKey=String(store.get('pso:pushKey','')||''), pushState='none';
 const b64uBytes=s=>{s=s.replace(/-/g,'+').replace(/_/g,'/');const b=atob(s+'==='.slice((s.length+3)%4));return Uint8Array.from(b,c=>c.charCodeAt(0))};
@@ -1213,7 +1225,7 @@ async function initPush(){
   else if(pushSub&&Notification.permission==='granted'){
     pushState='on';
     /* раз в день напоминаем таблице об этом телефоне: вдруг его строку удалили */
-    if(store.get('pso:pushSync','')!==todayISO()) post({action:'subscribe',sub:pushSub.toJSON()}).then(j=>{if(j&&j.ok)store.set('pso:pushSync',todayISO())}).catch(()=>{});
+    if(store.get(K_PSYNC,'')!==todayISO()) post(subReq()).then(afterSub).catch(()=>{});
   }
   else pushState='off';
   renderPush();
@@ -1230,9 +1242,9 @@ async function enablePush(){
     if(!swReg) swReg=await navigator.serviceWorker.register('sw.js');
     await navigator.serviceWorker.ready;
     pushSub=await swReg.pushManager.getSubscription()||await swReg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64uBytes(key)});
-    const j=await post({action:'subscribe',sub:pushSub.toJSON()});
+    const j=await post(subReq());
     if(!j||!j.ok) throw new Error(j&&j.error||'reply');
-    pushState='on'; store.set('pso:pushSync',todayISO()); store.set(K_ASK,todayISO());
+    pushState='on'; afterSub(j); store.set(K_ASK,todayISO());
     toast('Уведомления включены');
   }catch(e){
     pushState=Notification.permission==='denied'?'denied':'off';
@@ -1251,7 +1263,7 @@ async function testPush(btn){
   btn.dataset.busy='1';
   try{
     let j=await post({action:'push-test',endpoint:pushSub.endpoint});
-    if(j&&j.error==='unknown'){await post({action:'subscribe',sub:pushSub.toJSON()});toast('Телефон заново записан. Нажмите «Проверить» через 20 секунд');return}
+    if(j&&j.error==='unknown'){afterSub(await post(subReq()));toast('Телефон заново записан. Нажмите «Проверить» через 20 секунд');return}
     if(j&&j.ok) toast('Отправлено — уведомление придёт через несколько секунд');
     else if(j&&j.error==='wait') toast('Подождите 20 секунд и нажмите ещё раз');
     else toast('Служба уведомлений не приняла сообщение'+(j&&j.status?' (код '+j.status+')':''));
@@ -1269,19 +1281,34 @@ async function notifyAll(btn){
   }catch(e){toast('Нет связи')}
   finally{delete btn.dataset.busy}
 }
+async function summaryNow(btn){
+  if(btn.dataset.busy) return;
+  btn.dataset.busy='1';
+  try{
+    const req=()=>post({action:'summary',key:adminKey,endpoint:pushSub?pushSub.endpoint:''});
+    let j=await req();
+    if(j&&j.ok&&!j.total&&pushSub){afterSub(await post(subReq()));j=await req()}
+    if(j&&j.error==='key'){leaveOrganizer('Код организатора изменился — войдите снова');return}
+    if(!j||!j.ok) toast(j&&j.error==='action'?'Сводка заработает после обновления скрипта в таблице':'Не получилось. Попробуйте позже');
+    else if(j.sent) toast('Сводка отправлена — придёт через несколько секунд');
+    else toast(j.text||'Нет телефонов организатора с уведомлениями');
+  }catch(e){toast('Нет связи')}
+  finally{delete btn.dataset.busy}
+}
 function renderPush(){
-  const card=$('push-card'), org=!colleague();
+  const card=$('push-card'), org=!colleague(), orgOk=org&&store.get('pso:pushOrg',false)===true;
+  const sumLine=!org?'':orgOk?' Около 21:00 придёт сводка: сколько человек заказало и на какую сумму.':pushState==='on'?' Сводка заказов в 21:00 заработает после обновления скрипта в таблице.':' А вам как организатору около 21:00 придёт сводка: сколько человек заказало и на какую сумму.';
   const deny=isIOS?'Разрешите их: «Настройки» телефона → «Уведомления» → «Обед ПСО».':'Разрешите их в настройках браузера: значок слева от адреса → «Уведомления».';
   const body={
     install:`<p class="hint" style="margin:0">На iPhone уведомления работают, когда приложение добавлено на экран «Домой»: в Safari нажмите «Поделиться» <b>⬆︎</b> → <b>«На экран „Домой“»</b>, откройте «Обед ПСО» со значка и включите их здесь.</p>`,
-    off:`<p class="hint" style="margin:0">Телефон сообщит, когда появится меню на следующий день.</p><div class="btns"><button class="btn primary" data-push="on">Включить уведомления</button></div>`,
+    off:`<p class="hint" style="margin:0">Телефон сообщит, когда появится меню на следующий день.${sumLine}</p><div class="btns"><button class="btn primary" data-push="on">Включить уведомления</button></div>`,
     busy:`<p class="hint" style="margin:0">Включаю…</p>`,
-    on:`<p class="hint" style="margin:0">Телефон сообщит, когда появится новое меню.</p><div class="btn-row" style="margin-top:14px"><button class="btn" data-push="test">Проверить</button><button class="btn" data-push="off">Выключить</button></div>`,
+    on:`<p class="hint" style="margin:0">Телефон сообщит, когда появится новое меню.${sumLine}</p><div class="btn-row" style="margin-top:14px"><button class="btn" data-push="test">Проверить</button><button class="btn" data-push="off">Выключить</button></div>`,
     denied:`<p class="hint" style="margin:0">Уведомления для «Обед ПСО» запрещены в настройках. ${deny}</p>`
   }[pushState];
   card.hidden=!body&&!(org&&pushKey);
   card.innerHTML=(body?`<span class="lbl">${pushState==='on'?'🔔 Уведомления включены':pushState==='denied'?'🔕 Уведомления выключены':'🔔 Уведомления о новом меню'}</span>${body}`:'')+
-    (org&&pushKey?`<div class="btns"><button class="btn ghost" data-push="all">Сообщить всем о новом меню</button></div>`:'');
+    (org&&pushKey?`<div class="btns">${pushState==='on'?'<button class="btn" data-push="sum">Прислать сводку сейчас</button>':''}<button class="btn ghost" data-push="all">Сообщить всем о новом меню</button></div>`:'');
   renderNotes();
 }
 
@@ -1300,7 +1327,7 @@ function renderNotes(){
 }
 document.addEventListener('click',e=>{
   const p=e.target.closest('[data-push]');
-  if(p){const a=p.dataset.push;if(a==='on')enablePush();else if(a==='off')disablePush();else if(a==='test')testPush(p);else if(a==='all')notifyAll(p);return}
+  if(p){const a=p.dataset.push;if(a==='on')enablePush();else if(a==='off')disablePush();else if(a==='test')testPush(p);else if(a==='all')notifyAll(p);else if(a==='sum')summaryNow(p);return}
   const n=e.target.closest('[data-note]');
   if(n){if(n.dataset.note==='new')markSeen();else{store.set(K_ASK,todayISO());renderNotes()}return}
   if(e.target.closest('[data-reload]')) location.reload();
