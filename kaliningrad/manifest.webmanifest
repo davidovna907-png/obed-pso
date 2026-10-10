@@ -1,0 +1,17 @@
+{
+  "id": "./",
+  "name": "Калининград: знакомство с областью",
+  "short_name": "Калининград",
+  "description": "Путеводитель по программе экскурсий 11–17 октября 2026",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a0f14",
+  "theme_color": "#0a0f14",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
