@@ -10,6 +10,8 @@
   • день берёт из --day, иначе из даты съёмки (10–17.10.2026, 10.10 — день 0); город — ближайший к геометке (до 15 км);
   • --write сохраняет фото и дописывает их в JSON album-data в kaliningrad/album/index.html;
     без него ничего не записывает, только показывает, что получится.
+  • видео (.mov, .mp4): переводит в MP4 (H.264, до 1280 px), HDR с iPhone — в обычный цвет,
+    убирает геометку и данные телефона, делает обложку и превью; нужен ffmpeg.
 --place, --memory и --title относятся ко всем фото этого запуска: для разных подписей запускайте по одному фото.
 """
 import argparse
@@ -18,6 +20,7 @@ import json
 import math
 import os
 import re
+import subprocess
 import sys
 
 from PIL import Image, ImageOps
@@ -37,6 +40,11 @@ TOWNS = {
     "kos": (20.86, 55.18), "bal": (19.91, 54.65), "yan": (19.94, 54.87), "svg": (20.15, 54.94),
     "sov": (21.88, 55.08), "che": (21.81, 54.63), "pra": (21.01, 54.44), "zhe": (21.31, 54.36),
 }
+VIDEO_EXT = (".mov", ".mp4", ".m4v")
+VIDEO_MAX = 1280  # длинная сторона видео
+# HLG/PQ с iPhone → обычный цвет BT.709 (без этого видео в браузере выглядит выцветшим)
+TONEMAP = ("zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,"
+           "tonemap=hable:desat=0,zscale=t=bt709:m=bt709:r=tv,format=yuv420p")
 BLOCK = re.compile(r'(<script type="application/json" id="album-data">)(.*?)(</script>)', re.S)
 
 
@@ -64,6 +72,42 @@ def exif_info(im):
     except Exception:
         pass
     return shot, where
+
+
+def video_info(path):
+    """Длительность, HDR и дата съёмки (местное время телефона) из метаданных видео."""
+    out = subprocess.run(["ffprobe", "-v", "error", "-print_format", "json", "-show_format", "-show_streams", path],
+                         capture_output=True, text=True, check=True).stdout
+    info = json.loads(out)
+    v = next(st for st in info["streams"] if st.get("codec_type") == "video")
+    tags = info.get("format", {}).get("tags", {})
+    shot = None
+    raw = tags.get("com.apple.quicktime.creationdate")
+    if raw:
+        shot = datetime.datetime.fromisoformat(raw[:19])
+    hdr = v.get("color_transfer") in ("arib-std-b67", "smpte2084")
+    return float(info["format"].get("duration", 0)), hdr, shot
+
+
+def make_video(path, out_mp4, poster, thumb_path, write):
+    dur, hdr, shot = video_info(path)
+    scale = f"scale='if(gt(iw,ih),{VIDEO_MAX},-2)':'if(gt(iw,ih),-2,{VIDEO_MAX})'"
+    vf = (TONEMAP + "," if hdr else "") + scale + ",format=yuv420p"
+    if write:
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", path, "-map", "0:v:0", "-map", "0:a:0?", "-vf", vf,
+                        "-c:v", "libx264", "-preset", "slow", "-crf", "24", "-profile:v", "high",
+                        "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709",
+                        "-c:a", "aac", "-b:a", "96k", "-ac", "2",
+                        "-map_metadata", "-1", "-map_chapters", "-1", "-movflags", "+faststart", out_mp4], check=True)
+        t = min(0.6, dur / 3)
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{t:.2f}", "-i", out_mp4, "-frames:v", "1", "-q:v", "3", poster], check=True)
+        im = Image.open(poster).convert("RGB")
+        w, h = im.size
+        im.thumbnail((THUMB, THUMB), Image.LANCZOS)
+        im.save(thumb_path, "JPEG", quality=QUALITY, optimize=True, progressive=True)
+    else:
+        w, h = 0, 0
+    return dur, shot, w, h
 
 
 def nearest_town(where):
@@ -119,8 +163,13 @@ def main():
 
     new = []
     for path in a.files:
-        im = Image.open(path)
-        shot, where = exif_info(im)
+        is_video = path.lower().endswith(VIDEO_EXT)
+        if is_video:
+            im, where = None, None
+            shot = video_info(path)[2]
+        else:
+            im = Image.open(path)
+            shot, where = exif_info(im)
         day = a.day
         if day is None and shot:
             n = (shot.date() - TRIP_START).days + 1
@@ -132,6 +181,23 @@ def main():
             k += 1
         pid = f"d{day}-{k:02d}"
         used.add(pid)
+
+        if is_video:
+            dur, shot, vw, vh = make_video(path, os.path.join(photos_dir, pid + ".mp4"), os.path.join(photos_dir, pid + ".jpg"),
+                                           os.path.join(thumbs_dir, pid + ".jpg"), a.write)
+            e = {"id": pid, "day": day, "type": "video", "src": f"photos/{pid}.mp4", "poster": f"photos/{pid}.jpg",
+                 "thumb": f"photos/t/{pid}.jpg", "w": vw, "h": vh, "dur": round(dur, 1)}
+            for k_, v_ in (("place", a.place), ("town", a.town), ("title", a.title)):
+                if v_:
+                    e[k_] = v_
+            e["date"] = shot.date().isoformat() if shot else (TRIP_START + datetime.timedelta(days=day - 1)).isoformat()
+            if shot:
+                e["time"] = shot.strftime("%H:%M")
+            if a.memory:
+                e["memory"] = a.memory
+            new.append(e)
+            print(f"{path} → {pid}.mp4 ({vw}×{vh}, {dur:.1f} с), день {day}" + (f", снято {shot:%d.%m %H:%M}" if shot else ""))
+            continue
 
         im = ImageOps.exif_transpose(im)
         icc = im.info.get("icc_profile")
@@ -169,8 +235,11 @@ def main():
         print(json.dumps(new, ensure_ascii=False, indent=1))
         return
     data.setdefault("photos", []).extend(new)
-    # по дням; внутри дня — по времени съёмки, фото без времени сохраняют порядок из JSON (новые — в конец дня)
-    data["photos"].sort(key=lambda p: (p.get("day", 0), p.get("time") or ""))
+    # по дням; внутри дня — по времени съёмки, только если оно известно у всех кадров дня,
+    # иначе порядок из JSON (новые — в конец дня)
+    timed = {d for d in {p.get("day", 0) for p in data["photos"]}
+             if all(p.get("time") for p in data["photos"] if p.get("day", 0) == d)}
+    data["photos"].sort(key=lambda p: (p.get("day", 0), p.get("time") if p.get("day", 0) in timed else ""))
     block = dump(data)
     json.loads(block)  # проверка
     html = html[:m.start(2)] + "\n" + block + "\n" + html[m.end(2):]

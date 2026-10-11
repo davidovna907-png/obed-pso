@@ -12,6 +12,8 @@ self.addEventListener("fetch", e => {
   const req = e.request;
   if (req.method !== "GET") return;
   const url = new URL(req.url);
+  /* видео браузер грузит кусками (Range): их не перехватываем и не сохраняем */
+  if (req.headers.has("range") || /\.(mp4|m4v|mov)$/i.test(url.pathname)) return;
   const fonts = url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com";
   if (url.origin !== location.origin && !fonts) return;
   if (url.origin === location.origin && !url.pathname.startsWith(new URL("./", self.registration.scope).pathname)) return;
