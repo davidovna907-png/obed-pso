@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bg" cx="0.75" cy="0.1" r="1">
+      <stop offset="0" stop-color="#123a3a"/><stop offset="0.6" stop-color="#0a0f14"/>
+    </radialGradient>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1c1630"/><stop offset="0.55" stop-color="#e9773f"/><stop offset="1" stop-color="#ffcf86"/>
+    </linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1d4d55"/><stop offset="1" stop-color="#08161d"/>
+    </linearGradient>
+    <radialGradient id="amb" cx="0.38" cy="0.4" r="0.8">
+      <stop offset="0" stop-color="#fff2c6"/><stop offset="0.45" stop-color="#ffb648"/><stop offset="1" stop-color="#b5461f"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <g transform="translate(256 262) scale(0.9) rotate(-7) translate(-256 -256)">
+    <rect x="100" y="86" width="312" height="352" rx="10" fill="#f4ecda"/>
+    <rect x="122" y="108" width="268" height="240" fill="url(#sky)"/>
+    <circle cx="256" cy="262" r="48" fill="#ffe2a2"/>
+    <rect x="122" y="262" width="268" height="86" fill="url(#sea)"/>
+    <path d="M196 282h120M214 302h84M232 322h48" stroke="#ffd38a" stroke-width="7" stroke-linecap="round" opacity="0.85"/>
+    <path d="M140 398c18-14 34-14 50 0s32 14 48 0 30-12 46 0" fill="none" stroke="#3a4b8a" stroke-width="7" stroke-linecap="round" opacity="0.75"/>
+    <path d="M356 362c11 16 24 27 24 43a24 24 0 0 1-48 0c0-16 13-27 24-43z" fill="url(#amb)"/>
+  </g>
+</svg>
