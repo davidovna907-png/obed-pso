@@ -7,7 +7,7 @@
 Что делает:
   • разворачивает фото по EXIF и уменьшает: 2000 px по длинной стороне, превью 800 px;
   • сохраняет БЕЗ EXIF и геометок: kaliningrad/album/photos/<id>.jpg и photos/t/<id>.jpg;
-  • день берёт из --day, иначе из даты съёмки (11–17.10.2026); город — ближайший к геометке (до 15 км);
+  • день берёт из --day, иначе из даты съёмки (10–17.10.2026, 10.10 — день 0); город — ближайший к геометке (до 15 км);
   • --write сохраняет фото и дописывает их в JSON album-data в kaliningrad/album/index.html;
     без него ничего не записывает, только показывает, что получится.
 --place, --memory и --title относятся ко всем фото этого запуска: для разных подписей запускайте по одному фото.
@@ -28,7 +28,7 @@ try:  # фото с iPhone в формате HEIC
 except Exception:
     pass
 
-TRIP_START = datetime.date(2026, 10, 11)
+TRIP_START = datetime.date(2026, 10, 11)  # день 1; день 0 — приезд 10.10 (extraDays в album-data)
 TRIP_DAYS = 7
 FULL, THUMB, QUALITY = 2000, 800, 82
 # Города с карты путеводителя (kaliningrad/index.html, TOWNS)
@@ -99,7 +99,7 @@ def dump(data):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("files", nargs="+")
-    ap.add_argument("--day", type=int, help="день поездки 1–7")
+    ap.add_argument("--day", type=int, help="день поездки: 0 — приезд 10.10, 1–7 — дни программы")
     ap.add_argument("--place", help="id места из путеводителя, например korol, tower, kosa")
     ap.add_argument("--town", help="ключ города, если места нет: kgd, zel, kos, bal, yan, svg, sov, che, pra, zhe")
     ap.add_argument("--title", help="своя подпись к кадру")
@@ -122,10 +122,10 @@ def main():
         im = Image.open(path)
         shot, where = exif_info(im)
         day = a.day
-        if not day and shot:
+        if day is None and shot:
             n = (shot.date() - TRIP_START).days + 1
-            day = n if 1 <= n <= TRIP_DAYS else None
-        if not day:
+            day = n if 0 <= n <= TRIP_DAYS else None
+        if day is None:
             sys.exit(f"{path}: не понятно, к какому дню поездки относится фото, укажите --day")
         k = 1
         while f"d{day}-{k:02d}" in used:

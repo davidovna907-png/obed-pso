@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Фотоальбом «Калининград»</title>
-<meta name="description" content="Фотоальбом поездки «Знакомство с Калининградской областью», 11–17 октября 2026: фильм с музыкой, открытки с историями, карта воспоминаний">
+<meta name="description" content="Фотоальбом поездки «Знакомство с Калининградской областью», 10–17 октября 2026: фильм с музыкой, открытки с историями, карта воспоминаний">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -125,6 +125,7 @@ img{max-width:100%}
 .chap-meta b{color:var(--c);font-weight:600}
 .fact{font-size:14px;padding:11px 13px;border-radius:14px;background:color-mix(in srgb,var(--c) 11%,transparent);border:1px solid color-mix(in srgb,var(--c) 22%,transparent)}
 .fact b{color:var(--c);font-weight:600}
+.chap-note{margin:0;font:500 clamp(21px,5vw,25px)/1.2 var(--hand);color:var(--amber-2)}
 .empty{
   display:grid;gap:6px;padding:16px;border-radius:16px;border:1px dashed color-mix(in srgb,var(--c) 45%,var(--line));
   color:#c9d5da;font-size:14px;background:rgba(255,255,255,.02)
@@ -232,7 +233,7 @@ img{max-width:100%}
 }
 .ft-sub{margin:0;font:400 clamp(24px,5.6vw,46px)/1.1 var(--display);text-shadow:0 2px 20px rgba(0,0,0,.7)}
 .ft-mono{font:400 clamp(12px,2.6vw,15px)/1.4 var(--mono);color:#e9eef0;letter-spacing:.06em;text-shadow:0 1px 10px rgba(0,0,0,.8)}
-.ft-day{font:400 clamp(70px,19vw,180px)/.82 var(--display);color:var(--c);text-shadow:0 4px 40px rgba(0,0,0,.55)}
+.ft-day{font:400 clamp(70px,19vw,180px)/.82 var(--display);color:var(--c);text-shadow:0 4px 40px rgba(0,0,0,.55);padding-bottom:.12em}
 .ft-h{margin:0;max-width:20ch;font:400 clamp(28px,6.4vw,56px)/1.08 var(--display);text-wrap:balance;text-shadow:0 2px 24px rgba(0,0,0,.7)}
 .ft-p{margin:0;max-width:44ch;font-size:clamp(14px,2.8vw,18px);color:#e7eef0;text-shadow:0 1px 12px rgba(0,0,0,.8)}
 .ft-hint{font:500 clamp(18px,4vw,26px)/1.2 var(--hand);color:var(--amber-2)}
@@ -350,7 +351,7 @@ img{max-width:100%}
     </button>
   </div>
   <div class="cover-in">
-    <div class="eyebrow">Фотоальбом · 11–17 октября 2026</div>
+    <div class="eyebrow" id="a-eyebrow">Фотоальбом · 10–17 октября 2026</div>
     <h1 id="a-title">Калининград</h1>
     <p class="sub" id="a-sub">Янтарные воспоминания</p>
     <div class="meta" id="meta"></div>
@@ -497,7 +498,25 @@ img{max-width:100%}
  "author": "ND",
  "cast": [],
  "dayScenes": {},
+ "extraDays": [{"n": 0, "label": "Приезд", "date": "2026-10-10", "title": "Приезд в Калининград", "kind": "Прилёт и вечерняя прогулка", "towns": ["Храброво", "Калининград"], "route": ["khr", "kgd"], "hex": "#6fa8ff", "scene": "plane", "note": "Приезд в Калининград, вечерняя прогулка по острову Канта, Кафедральный собор, Рыбная деревня и мост влюблённых"}],
+ "dayNotes": {},
  "photos": [
+ {"id": "d0-01", "day": 0, "src": "photos/d0-01.jpg", "thumb": "photos/t/d0-01.jpg", "w": 1500, "h": 2000, "town": "khr", "title": "В полёте", "date": "2026-10-10"},
+ {"id": "d0-02", "day": 0, "src": "photos/d0-02.jpg", "thumb": "photos/t/d0-02.jpg", "w": 1500, "h": 2000, "town": "khr", "title": "Над облаками", "date": "2026-10-10"},
+ {"id": "d0-03", "day": 0, "src": "photos/d0-03.jpg", "thumb": "photos/t/d0-03.jpg", "w": 1500, "h": 2000, "town": "khr", "title": "Сквозь облака", "date": "2026-10-10"},
+ {"id": "d0-04", "day": 0, "src": "photos/d0-04.jpg", "thumb": "photos/t/d0-04.jpg", "w": 1643, "h": 2000, "town": "khr", "title": "Под крылом — Балтика", "date": "2026-10-10"},
+ {"id": "d0-05", "day": 0, "src": "photos/d0-05.jpg", "thumb": "photos/t/d0-05.jpg", "w": 1500, "h": 2000, "place": "khrab", "title": "Аэропорт Храброво", "date": "2026-10-10"},
+ {"id": "d0-06", "day": 0, "src": "photos/d0-06.jpg", "thumb": "photos/t/d0-06.jpg", "w": 1500, "h": 2000, "town": "kgd", "title": "Дорога в Калининград", "date": "2026-10-10"},
+ {"id": "d0-07", "day": 0, "src": "photos/d0-07.jpg", "thumb": "photos/t/d0-07.jpg", "w": 1500, "h": 2000, "town": "kgd", "title": "Въезд в Калининград", "date": "2026-10-10"},
+ {"id": "d0-08", "day": 0, "src": "photos/d0-08.jpg", "thumb": "photos/t/d0-08.jpg", "w": 1500, "h": 2000, "place": "preg", "title": "Мост влюблённых", "date": "2026-10-10"},
+ {"id": "d0-09", "day": 0, "src": "photos/d0-09.jpg", "thumb": "photos/t/d0-09.jpg", "w": 1500, "h": 2000, "place": "kant", "title": "Кафедральный собор ночью", "date": "2026-10-10"},
+ {"id": "d0-10", "day": 0, "src": "photos/d0-10.jpg", "thumb": "photos/t/d0-10.jpg", "w": 1500, "h": 2000, "place": "kant", "title": "У Кафедрального собора", "date": "2026-10-10"},
+ {"id": "d0-11", "day": 0, "src": "photos/d0-11.jpg", "thumb": "photos/t/d0-11.jpg", "w": 1500, "h": 2000, "place": "kant", "title": "Вечер у собора", "date": "2026-10-10"},
+ {"id": "d0-12", "day": 0, "src": "photos/d0-12.jpg", "thumb": "photos/t/d0-12.jpg", "w": 1500, "h": 2000, "place": "kant", "title": "Силуэт у собора", "date": "2026-10-10"},
+ {"id": "d0-13", "day": 0, "src": "photos/d0-13.jpg", "thumb": "photos/t/d0-13.jpg", "w": 1500, "h": 2000, "place": "kant", "title": "Вместе у собора", "date": "2026-10-10"},
+ {"id": "d0-14", "day": 0, "src": "photos/d0-14.jpg", "thumb": "photos/t/d0-14.jpg", "w": 1500, "h": 2000, "place": "kant", "title": "Башня Кафедрального собора", "date": "2026-10-10"},
+ {"id": "d0-15", "day": 0, "src": "photos/d0-15.jpg", "thumb": "photos/t/d0-15.jpg", "w": 1500, "h": 2000, "place": "kant", "title": "Рыцарь у стен собора", "date": "2026-10-10"},
+ {"id": "d0-16", "day": 0, "src": "photos/d0-16.jpg", "thumb": "photos/t/d0-16.jpg", "w": 1500, "h": 2000, "town": "kgd", "title": "Вечерняя прогулка", "date": "2026-10-10"}
  ]
 }
 </script>
@@ -539,6 +558,20 @@ const plural = (n, a, b, c) => { const m10 = n%10, m100 = n%100; return m10===1 
 /* ---------- Альбом ---------- */
 let ALBUM = {title:"Калининград", subtitle:"Янтарные воспоминания", author:"ND", cast:[], dayScenes:{}, photos:[]};
 try { ALBUM = Object.assign(ALBUM, JSON.parse($("#album-data").textContent)); } catch(e){}
+/* Дни вне программы путеводителя (например, приезд 10.10) и заметки к дням словами автора */
+(ALBUM.extraDays || []).forEach(x => {
+  if (!x || !x.date || DAYS.some(d => d.n === +x.n)) return;
+  DAYS.push({n:+x.n, date:x.date, title:x.title || "", kind:x.kind || "", towns:x.towns || [], route:(x.route || []).filter(k => TOWNS[k]),
+    hex:x.hex || "#6fa8ff", free:false, label:x.label || "", scene:x.scene || "", note:x.note || ""});
+});
+DAYS.sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : a.n - b.n);
+DAYS.forEach(d => { const nt = (ALBUM.dayNotes || {})[d.n]; if (nt) d.note = nt; });
+const dayLabel = d => d.label || ("День " + d.n);
+function tripRange(){
+  const a = parse(DAYS[0].date), b = parse(DAYS[DAYS.length-1].date);
+  return a.getMonth() === b.getMonth() ? `${a.getDate()}–${b.getDate()} ${MONTHS[b.getMonth()]} ${b.getFullYear()}`
+    : `${a.getDate()} ${MONTHS[a.getMonth()]} – ${b.getDate()} ${MONTHS[b.getMonth()]} ${b.getFullYear()}`;
+}
 const PHOTOS = (ALBUM.photos || []).filter(p => p && p.src).map((p, i) => {
   const ph = Object.assign({}, p, {i, dayN: +p.day || 0});
   ph.dayObj = DAYS.find(d => d.n === ph.dayN) || null;
@@ -549,7 +582,7 @@ const PHOTOS = (ALBUM.photos || []).filter(p => p && p.src).map((p, i) => {
   return ph;
 });
 const photosOfDay = n => PHOTOS.filter(p => p.dayN === n);
-const sceneOf = d => (d && ALBUM.dayScenes && ALBUM.dayScenes[d.n]) || (d && SCENE_OF_DAY[d.n]) || "sea";
+const sceneOf = d => (d && ALBUM.dayScenes && ALBUM.dayScenes[d.n]) || (d && d.scene) || (d && SCENE_OF_DAY[d.n]) || "sea";
 
 const set = Object.assign({music:"waltz", sea:true, speed:3}, store.get("alb-set", {}));
 const saveSet = () => store.set("alb-set", set);
@@ -756,6 +789,7 @@ function renderCover(){
   $("#a-title").textContent = ALBUM.title || "Калининград";
   $("#a-sub").textContent = ALBUM.subtitle || "Янтарные воспоминания";
   $("#cover-art").src = sceneURL("sea", "#37cbb8");
+  $("#a-eyebrow").textContent = "Фотоальбом · " + tripRange();
   const n = PHOTOS.length, days = new Set(PHOTOS.map(p => p.dayN)).size, places = new Set(PHOTOS.map(p => p.place).filter(Boolean)).size;
   $("#meta").innerHTML = n
     ? `<span><b>${n}</b> ${plural(n,"кадр","кадра","кадров")}</span><span><b>${days}</b> ${plural(days,"день","дня","дней")}</span>${places ? `<span><b>${places}</b> ${plural(places,"место","места","мест")}</span>` : ""}`
@@ -770,10 +804,10 @@ function renderCover(){
     html = `До поездки ${k} ${plural(k,"день","дня","дней")}. Главы альбома уже ждут кадров.`;
   } else if (today){
     color = today.hex;
-    html = `Сегодня день ${today.n}: ${esc(today.title)}. Присылайте фото дня, они появятся в альбоме. <button type="button" data-goto="${today.n}">К главе дня</button>`;
+    html = `Сегодня ${esc(dayLabel(today).toLowerCase())}: ${esc(today.title)}. Присылайте фото дня, они появятся в альбоме. <button type="button" data-goto="${today.n}">К главе дня</button>`;
   } else if (ann && years > 0){
     color = ann.hex;
-    html = `Ровно ${years} ${plural(years,"год","года","лет")} назад: день ${ann.n}, ${esc(ann.title)}. <button type="button" data-film-day="${ann.n}">Вспомнить этот день</button>`;
+    html = `Ровно ${years} ${plural(years,"год","года","лет")} назад: ${esc(dayLabel(ann).toLowerCase())}, ${esc(ann.title)}. <button type="button" data-film-day="${ann.n}">Вспомнить этот день</button>`;
   } else if (todayIso > last){
     html = n ? `Поездка позади, а воспоминания здесь: ${n} ${plural(n,"кадр","кадра","кадров")}.` : `Поездка позади. Пришлите фото, и альбом оживёт.`;
   }
@@ -798,7 +832,7 @@ function renderStrip(){
   $("#strip").innerHTML = DAYS.map(d => {
     const n = photosOfDay(d.n).length, dt = parse(d.date);
     return `<button type="button" class="${d.date === todayIso ? "now" : ""}" style="--c:${d.hex}" data-goto="${d.n}">
-      <span class="d">${String(dt.getDate()).padStart(2,"0")}.10</span><span class="w">${n ? n + " фото" : "день " + d.n}</span></button>`;
+      <span class="d">${String(dt.getDate()).padStart(2,"0")}.${String(dt.getMonth()+1).padStart(2,"0")}</span><span class="w">${n ? n + " фото" : esc(dayLabel(d).toLowerCase())}</span></button>`;
   }).join("");
 }
 function renderAlbum(){
@@ -813,10 +847,11 @@ function renderAlbum(){
     else if (state === "today") body = `<div class="empty"><strong>Сегодня этот день!</strong>Присылайте фото в чат с пометкой «в альбом», и они появятся здесь. Пара слов о кадре станет историей на обороте открытки.</div>`;
     else body = `<div class="empty"><strong>Кадров пока нет</strong>Если фото этого дня есть, пришлите их, и глава оживёт.</div>`;
     return `<article class="chap ${state === "today" ? "today" : ""}" id="day-${d.n}" style="--c:${d.hex}">
-      <div class="chap-art">${sceneImg(d, "")}<div class="chap-cap"><div class="chap-num">День ${d.n}</div><div class="chap-date">${fmtDay(d.date)}</div></div></div>
+      <div class="chap-art">${sceneImg(d, "")}<div class="chap-cap"><div class="chap-num">${esc(dayLabel(d))}</div><div class="chap-date">${fmtDay(d.date)}</div></div></div>
       <div class="chap-body">
         <h3>${esc(d.title)}</h3>
         <div class="chap-meta"><span>${esc(d.kind)}</span><span>${esc(towns.join(", "))}</span>${ph.length ? `<b>${ph.length} ${plural(ph.length,"кадр","кадра","кадров")}</b>` : ""}</div>
+        ${d.note ? `<p class="chap-note">${esc(d.note)}</p>` : ""}
         ${f ? `<div class="fact"><b>Знаете ли вы?</b> ${esc(f.fact)}</div>` : ""}
         ${body}
         ${ph.length ? `<div class="chap-actions"><button type="button" class="btn" data-film-day="${d.n}">${I_PLAY}Фильм этого дня</button></div>` : ""}
@@ -847,7 +882,7 @@ function renderMap(){
       <text class="lbl" ${lblAttr(t)} y="${y+7}">${esc(t.name)}</text></g>`;
   });
   $("#map").innerHTML = h;
-  $("#legend").innerHTML = DAYS.filter(d => dayRoute(d).length > 1).map(d => `<span style="--c:${d.hex}"><i></i>День ${d.n}</span>`).join("");
+  $("#legend").innerHTML = DAYS.filter(d => dayRoute(d).length > 1).map(d => `<span style="--c:${d.hex}"><i></i>${esc(dayLabel(d))}</span>`).join("");
   const t = TOWNS[mapSel], list = PHOTOS.filter(p => p.townKey === mapSel);
   $("#town-card").innerHTML = `<h4>${esc(t.name)}</h4>` + (list.length ? gridHTML(list, "t" + mapSel) : `<p class="note" style="margin:0">Фото отсюда пока нет.</p>`);
 }
@@ -1104,12 +1139,12 @@ function buildFrames(opts){
 const barsOf = f => ({title:4, chapter:3, route:3, fact:4, photo:+set.speed || 3, credits:10}[f.t]);
 function frameHTML(f){
   if (f.t === "title") return `<img class="bg kb" src="${sceneURL("sea", "#37cbb8")}" alt=""><div class="shade"></div>
-    <div class="ft"><div class="ft-eyebrow">Фильм-воспоминание</div><h1 class="ft-title">${esc(ALBUM.title)}</h1><p class="ft-sub">${esc(ALBUM.subtitle)}</p><div class="ft-mono">11–17 октября 2026</div>${f.demo ? `<div class="ft-hint">Пока без ваших фото: так будет выглядеть фильм</div>` : ""}</div>`;
+    <div class="ft"><div class="ft-eyebrow">Фильм-воспоминание</div><h1 class="ft-title">${esc(ALBUM.title)}</h1><p class="ft-sub">${esc(ALBUM.subtitle)}</p><div class="ft-mono">${tripRange()}</div>${f.demo ? `<div class="ft-hint">Пока без ваших фото: так будет выглядеть фильм</div>` : ""}</div>`;
   if (f.t === "chapter"){
     const d = f.d, ph = photosOfDay(d.n);
     const towns = d.free && ph.length ? [...new Set(ph.map(p => TOWNS[p.townKey].name))] : d.towns;
     return `${sceneImg(d, "bg kb")}<div class="shade"></div>
-      <div class="ft" style="--c:${d.hex}"><div class="ft-day">День ${d.n}</div><div class="ft-mono">${fmtDay(d.date)}</div><h2 class="ft-h">${esc(d.title)}</h2><p class="ft-p">${esc(d.kind)} · ${esc(towns.join(", "))}</p>${f.demo ? `<div class="ft-hint">Здесь будут ваши кадры этого дня</div>` : ""}</div>`;
+      <div class="ft" style="--c:${d.hex}"><div class="ft-day">${esc(dayLabel(d))}</div><div class="ft-mono">${fmtDay(d.date)}</div><h2 class="ft-h">${esc(d.title)}</h2><p class="ft-p">${esc(d.kind)} · ${esc(towns.join(", "))}</p>${d.note && !f.demo ? `<div class="ft-hint">${esc(d.note)}</div>` : ""}${f.demo ? `<div class="ft-hint">Здесь будут ваши кадры этого дня</div>` : ""}</div>`;
   }
   if (f.t === "route"){
     const d = f.d, r = f.r, uniq = [...new Set(r)];
@@ -1120,7 +1155,7 @@ function frameHTML(f){
     const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2 + vh * .1, u = vw / innerWidth;
     const pins = uniq.map((k, j) => { const t = TOWNS[k], y = MY(t.lat); return `<g class="pin" style="animation-delay:${.6 + j*.7}s"><circle cx="${MX(t.lon)}" cy="${y}" r="${(7*u).toFixed(1)}" fill="${d.hex}" stroke="#071016" stroke-width="${(2.5*u).toFixed(1)}"/><text ${lblAttr(t, 11*u)} y="${(y + 6*u).toFixed(1)}" font-family="Golos Text, sans-serif" font-size="${(17*u).toFixed(1)}" font-weight="600" fill="#fff" paint-order="stroke" stroke="#071016" stroke-width="${(4*u).toFixed(1)}">${esc(t.name)}</text></g>`; }).join("");
     return `<div class="f-map"><svg viewBox="${(cx - vw/2).toFixed(1)} ${(cy - vh/2).toFixed(1)} ${vw.toFixed(1)} ${vh.toFixed(1)}" aria-hidden="true">${mapBase()}<path class="draw" d="${routeD(r)}" pathLength="1" stroke="${d.hex}" stroke-width="${(4*u).toFixed(1)}" style="color:${d.hex}"/>${pins}</svg></div>
-      <div class="f-map-cap" style="--c:${d.hex}"><div class="ft-mono">День ${d.n} · путь по карте</div><div class="f-km">≈ ${routeKm(r)} км</div><div class="ft-p">по прямой: ${uniq.map(k => esc(TOWNS[k].name)).join(" → ")}${r[r.length-1] === r[0] && r.length > 2 ? " → обратно" : ""}</div></div>`;
+      <div class="f-map-cap" style="--c:${d.hex}"><div class="ft-mono">${esc(dayLabel(d))} · путь по карте</div><div class="f-km">≈ ${routeKm(r)} км</div><div class="ft-p">по прямой: ${uniq.map(k => esc(TOWNS[k].name)).join(" → ")}${r[r.length-1] === r[0] && r.length > 2 ? " → обратно" : ""}</div></div>`;
   }
   if (f.t === "fact") return `${sceneImg(f.d, "bg dim kb")}<div class="ft" style="--c:${f.d.hex}"><div class="ft-eyebrow">Знаете ли вы?</div><p class="ft-fact">${esc(f.f.fact)}</p><div class="ft-mono">${esc(f.f.name)}</div></div>`;
   if (f.t === "photo"){
@@ -1184,7 +1219,7 @@ function go(i){
   if (!film.playing) film.anims.forEach(a => a.pause());
   $("#f-bar").style.width = (film.frames.length > 1 ? i / (film.frames.length - 1) * 100 : 100) + "%";
   const d = f.d || (f.p && f.p.dayObj);
-  $("#f-lbl").textContent = d ? "День " + d.n + " · " + fmtDay(d.date).split(",")[0] : "";
+  $("#f-lbl").textContent = d ? dayLabel(d) + " · " + fmtDay(d.date).split(",")[0] : "";
   const nx = film.frames[i + 1];
   if (nx && nx.t === "photo"){ const im = new Image(); im.src = nx.p.src; }
 }
@@ -1290,12 +1325,12 @@ function backHTML(p){
   const old = pl ? [pl.old, pl.year].filter(Boolean).join(" · ") : "";
   return `<div class="pc">
     <div class="pc-stamp" style="--c:${d ? d.hex : "#c4561f"}">${sceneImg(d, "")}<span>${esc(town.name)}</span></div>
-    <div class="pc-mark"><span>${esc(town.name.toUpperCase().slice(0, 13))}</span><b>${date ? date.split("-").reverse().join(".") : "2026"}</b><span>${d ? "ДЕНЬ " + d.n : ""}</span></div>
+    <div class="pc-mark"><span>${esc(town.name.toUpperCase().slice(0, 13))}</span><b>${date ? date.split("-").reverse().join(".") : "2026"}</b><span>${d ? esc(dayLabel(d).toUpperCase()) : ""}</span></div>
     <h3 class="pc-title">${esc(p.name)}</h3>
     ${old ? `<div class="pc-old">${esc(old)}</div>` : ""}
     <div class="pc-memory">${p.memory ? esc(p.memory) : `<span class="ph-hint">Здесь будет ваша история этого кадра. Расскажите её в чате с Claude, и она появится на обороте.</span>`}</div>
     ${pl && pl.fact ? `<p class="pc-fact"><b>Знаете ли вы?</b> ${esc(pl.fact)}</p>` : ""}
-    <div class="pc-foot">${d ? "День " + d.n + " · " : ""}${date ? esc(fmtDate(date)) : ""}${p.time ? " · " + esc(p.time) : ""} · ${esc(town.name)}</div></div>`;
+    <div class="pc-foot">${d ? esc(dayLabel(d)) + " · " : ""}${date ? esc(fmtDate(date)) : ""}${p.time ? " · " + esc(p.time) : ""} · ${esc(town.name)}</div></div>`;
 }
 /* Карточка как полароид: фото, под ним подпись от руки; на телефоне не ниже 430 px, чтобы оборот читался */
 function sizeCard(){
