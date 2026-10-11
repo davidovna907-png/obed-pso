@@ -169,7 +169,8 @@ def main():
         print(json.dumps(new, ensure_ascii=False, indent=1))
         return
     data.setdefault("photos", []).extend(new)
-    data["photos"].sort(key=lambda p: (p.get("day", 0), p.get("time") or "99:99", p.get("id", "")))
+    # по дням; внутри дня — по времени съёмки, фото без времени сохраняют порядок из JSON (новые — в конец дня)
+    data["photos"].sort(key=lambda p: (p.get("day", 0), p.get("time") or ""))
     block = dump(data)
     json.loads(block)  # проверка
     html = html[:m.start(2)] + "\n" + block + "\n" + html[m.end(2):]
