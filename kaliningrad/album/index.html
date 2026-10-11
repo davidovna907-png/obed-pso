@@ -88,6 +88,26 @@ img{max-width:100%}
 .status i{flex:0 0 auto;width:9px;height:9px;margin-top:6px;border-radius:50%;background:var(--sc,var(--amber));box-shadow:0 0 0 4px color-mix(in srgb,var(--sc,var(--amber)) 22%,transparent)}
 .status button{border:0;background:none;padding:0;color:var(--amber-2);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-weight:500}
 .cover-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.inst-banner{
+  display:flex;align-items:center;gap:12px;width:100%;max-width:460px;text-align:left;cursor:pointer;
+  padding:10px 14px 10px 10px;border-radius:16px;border:1px solid rgba(244,166,58,.5);background:rgba(22,34,43,.88);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.inst-banner img{width:46px;height:46px;border-radius:12px;flex:0 0 auto}
+.inst-banner b{display:block;font-weight:600;font-size:15px}
+.inst-banner small{display:block;color:var(--mist);font-size:12.5px;line-height:1.35}
+.inst-banner .ic{margin-left:auto;color:var(--amber)}
+.status.news{--sc:var(--sea)}
+.sheet{position:fixed;inset:0;z-index:60;background:rgba(3,6,9,.72);display:grid;align-items:end;justify-items:center;padding:16px}
+.sheet-card{
+  position:relative;width:100%;max-width:440px;background:var(--deep);border:1px solid var(--line);border-radius:22px;
+  padding:20px 18px calc(18px + env(safe-area-inset-bottom,0px));display:grid;gap:12px;box-shadow:0 20px 60px rgba(0,0,0,.6);
+}
+.sheet-card h3{margin:0;font:400 26px/1.1 var(--display);padding-right:44px}
+.sheet-card ol{margin:0;padding-left:22px;display:grid;gap:9px;color:#d5e0e4;font-size:15px}
+.sheet-card ol b{color:var(--amber-2);font-weight:600}
+.sheet-ic{width:58px;height:58px;border-radius:15px}
+.sheet-x{position:absolute;top:12px;right:12px}
 
 /* Обёртка и разделы */
 .wrap{max-width:860px;margin:0 auto;padding-inline:16px;padding-block:0 calc(var(--nav-h) + 40px + env(safe-area-inset-bottom,0px))}
@@ -148,6 +168,8 @@ img{max-width:100%}
 .tile .play{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;display:grid;place-items:center;
   background:rgba(10,15,20,.55);border:1.5px solid rgba(255,255,255,.75);color:#fff;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
 .tile .play svg{width:20px;height:20px;margin-left:3px;fill:currentColor}
+.tile .new{position:absolute;top:7px;left:7px;font:700 10.5px/1 var(--body);letter-spacing:.06em;text-transform:uppercase;background:var(--sea);color:#06201c;border-radius:6px;padding:4px 6px}
+.tile .new + .pen{top:31px}
 .tile .pen{position:absolute;top:7px;left:7px;font:700 15px/1 var(--hand);color:#fff;background:rgba(10,15,20,.55);border-radius:8px;padding:3px 7px 4px}
 
 /* Карта */
@@ -359,12 +381,18 @@ img{max-width:100%}
     <p class="sub" id="a-sub">Янтарные воспоминания</p>
     <div class="meta" id="meta"></div>
     <div class="status" id="status"></div>
+    <div class="status news" id="news" hidden></div>
     <div class="cover-actions">
       <button type="button" class="btn solid big" id="play-film">
         <svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>Смотреть фильм
       </button>
       <button type="button" class="btn big ghost" id="to-album">Листать альбом</button>
     </div>
+    <button type="button" class="inst-banner" id="inst-banner" hidden>
+      <img src="icons/icon-192.png" alt="">
+      <span><b>Установить альбом на телефон</b><small>Значок на экране «Домой», открывается как приложение, новые фото появляются сами</small></span>
+      <svg class="ic" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+    </button>
   </div>
 </header>
 
@@ -423,7 +451,8 @@ img{max-width:100%}
       </div>
       <div class="box" style="--c:var(--brick)" id="install">
         <h4>Установить на телефон</h4>
-        <p id="inst-wrap" hidden><button type="button" class="btn solid" id="inst-btn">Установить альбом</button></p>
+        <p id="inst-state"></p>
+        <p id="inst-wrap"><button type="button" class="btn solid" id="inst-btn">Установить альбом</button></p>
         <p>Адрес альбома:<br><span class="addr" id="addr">https://davidovna907-png.github.io/obed-pso/kaliningrad/album/</span></p>
         <div class="row"><button type="button" class="btn" id="copy-addr">Скопировать адрес</button></div>
         <ul>
@@ -488,6 +517,16 @@ img{max-width:100%}
     <button type="button" class="btn" id="lb-fav" aria-pressed="false"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3c3 4.6 5.5 7.4 5.5 10.6a5.5 5.5 0 0 1-11 0C6.5 10.4 9 7.6 12 3z"/></svg><span>В шкатулку</span></button>
     <button type="button" class="btn" id="lb-share"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg><span>Открыткой</span></button>
     <button type="button" class="btn lb-nav" id="lb-next" aria-label="Следующее фото"><svg class="ic" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+
+<div class="sheet" id="inst-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="inst-h">
+  <div class="sheet-card">
+    <button type="button" class="icon-btn sheet-x" id="inst-x" aria-label="Закрыть"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <img class="sheet-ic" src="icons/icon-192.png" alt="">
+    <h3 id="inst-h">Альбом на экран «Домой»</h3>
+    <ol id="inst-steps"></ol>
+    <p class="mini">Значок «Альбом» появится рядом с другими приложениями. Альбом откроется на весь экран, без адресной строки. Новые фото подтягиваются сами, когда вы открываете альбом.</p>
   </div>
 </div>
 
@@ -595,7 +634,8 @@ img{max-width:100%}
  {"id": "d1-62", "day": 1, "src": "photos/d1-62.jpg", "thumb": "photos/t/d1-62.jpg", "w": 1500, "h": 2000, "place": "sinag", "title": "Рассказ в молельном зале", "date": "2026-10-11"},
  {"id": "d1-65", "day": 1, "src": "photos/d1-65.jpg", "thumb": "photos/t/d1-65.jpg", "w": 1500, "h": 2000, "place": "sinag", "title": "Тора и молитвенник", "date": "2026-10-11"},
  {"id": "d1-63", "day": 1, "src": "photos/d1-63.jpg", "thumb": "photos/t/d1-63.jpg", "w": 1469, "h": 2000, "place": "sinag", "title": "Витраж со звездой Давида", "date": "2026-10-11"},
- {"id": "d1-64", "day": 1, "src": "photos/d1-64.jpg", "thumb": "photos/t/d1-64.jpg", "w": 1500, "h": 2000, "place": "sinag", "title": "Селфи с мамулей в синагоге", "date": "2026-10-11"}
+ {"id": "d1-64", "day": 1, "src": "photos/d1-64.jpg", "thumb": "photos/t/d1-64.jpg", "w": 1500, "h": 2000, "place": "sinag", "title": "Селфи с мамулей в синагоге", "date": "2026-10-11"},
+ {"id": "d1-67", "day": 1, "type": "video", "src": "photos/d1-67.mp4", "poster": "photos/d1-67.jpg", "thumb": "photos/t/d1-67.jpg", "w": 720, "h": 1280, "dur": 6.4, "town": "svg", "title": "Балтийское море в Светлогорске", "date": "2026-10-11"}
  ]
 }
 </script>
@@ -669,6 +709,21 @@ const PHOTOS = (ALBUM.photos || []).filter(p => p && p.src).map((p, i) => {
 const photosOfDay = n => PHOTOS.filter(p => p.dayN === n);
 const mmss = sec => { sec = Math.round(sec || 0); return Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0"); };
 const sceneOf = d => (d && ALBUM.dayScenes && ALBUM.dayScenes[d.n]) || (d && d.scene) || (d && SCENE_OF_DAY[d.n]) || "sea";
+
+/* Новые кадры с прошлого открытия альбома на этом телефоне */
+const seenBefore = store.get("alb-seen", null);
+const NEW = new Set(seenBefore ? PHOTOS.filter(p => !seenBefore.includes(p.id)).map(p => p.id) : []);
+const markSeen = () => store.set("alb-seen", PHOTOS.map(p => p.id));
+if (!seenBefore) markSeen();
+addEventListener("pagehide", markSeen);
+document.addEventListener("visibilitychange", () => { if (document.hidden) markSeen(); });
+/* Города дня: из программы, а в днях без поездок по программе — ещё и города с фото (например, Светлогорск) */
+function dayTowns(d, ph){
+  const fromPh = [...new Set(ph.map(p => (TOWNS[p.townKey] || TOWNS.kgd).name))];
+  if (d.free && ph.length) return fromPh;
+  if (d.route.length < 2) return [...new Set([...d.towns, ...fromPh])];
+  return d.towns;
+}
 
 const set = Object.assign({music:"waltz", sea:true, speed:3}, store.get("alb-set", {}));
 const saveSet = () => store.set("alb-set", set);
@@ -901,6 +956,9 @@ function renderCover(){
   $("#status").style.setProperty("--sc", color);
   $("#status").innerHTML = `<i></i><span>${html}</span>`;
   $("#status").hidden = !html;
+  const nl = PHOTOS.filter(p => NEW.has(p.id)), k = nl.length;
+  $("#news").hidden = !k;
+  if (k) $("#news").innerHTML = `<i></i><span>Новое в альбоме: ${k} ${plural(k,"кадр","кадра","кадров")}. <button type="button" id="news-film">Смотреть фильм из новых</button></span>`;
 }
 
 /* ---------- Альбом: главы по дням ---------- */
@@ -908,7 +966,7 @@ function tile(p, list, wide){
   return `<button type="button" class="tile ${wide ? "wide" : ""}" data-ph="${p.i}" data-list="${list}" aria-label="${esc(p.name)}">
     <img src="${esc(p.thumb || p.src)}" alt="" loading="lazy" decoding="async">
     ${p.isVideo ? `<span class="play"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span>` : ""}
-    ${p.memory ? `<span class="pen">история</span>` : ""}${amber.has(p.id) ? GEM : ""}<span class="tc">${p.isVideo ? "Видео " + mmss(p.dur) + " · " : ""}${esc(p.name)}</span></button>`;
+    ${NEW.has(p.id) ? `<span class="new">новое</span>` : ""}${p.memory ? `<span class="pen">история</span>` : ""}${amber.has(p.id) ? GEM : ""}<span class="tc">${p.isVideo ? "Видео " + mmss(p.dur) + " · " : ""}${esc(p.name)}</span></button>`;
 }
 function gridHTML(list, key){
   return `<div class="grid">` + list.map((p, k) => {
@@ -928,7 +986,7 @@ function renderAlbum(){
     const ph = photosOfDay(d.n);
     const state = d.date > todayIso ? "future" : d.date === todayIso ? "today" : "past";
     const f = chapFact(d, ph);
-    const towns = d.free && ph.length ? [...new Set(ph.map(p => TOWNS[p.townKey].name))] : d.towns;
+    const towns = dayTowns(d, ph);
     let body;
     if (ph.length) body = gridHTML(ph, "d" + d.n);
     else if (state === "future") body = `<div class="empty"><strong>Этот день ещё впереди</strong>${fmtDay(d.date)}. Здесь появятся кадры дня, а в фильме — своя глава.</div>`;
@@ -1231,7 +1289,7 @@ function frameHTML(f){
     <div class="ft"><div class="ft-eyebrow">Фильм-воспоминание</div><h1 class="ft-title">${esc(ALBUM.title)}</h1><p class="ft-sub">${esc(ALBUM.subtitle)}</p><div class="ft-mono">${tripRange()}</div>${f.demo ? `<div class="ft-hint">Пока без ваших фото: так будет выглядеть фильм</div>` : ""}</div>`;
   if (f.t === "chapter"){
     const d = f.d, ph = photosOfDay(d.n);
-    const towns = d.free && ph.length ? [...new Set(ph.map(p => TOWNS[p.townKey].name))] : d.towns;
+    const towns = dayTowns(d, ph);
     return `${sceneImg(d, "bg kb")}<div class="shade"></div>
       <div class="ft" style="--c:${d.hex}"><div class="ft-day">${esc(dayLabel(d))}</div><div class="ft-mono">${fmtDay(d.date)}</div><h2 class="ft-h">${esc(d.title)}</h2><p class="ft-p">${esc(d.kind)} · ${esc(towns.join(", "))}</p>${d.note && !f.demo ? `<div class="ft-hint">${esc(d.note)}</div>` : ""}${f.demo ? `<div class="ft-hint">Здесь будут ваши кадры этого дня</div>` : ""}</div>`;
   }
@@ -1581,6 +1639,7 @@ $("#box-film").onclick = () => { const l = favList(); if (l.length) openFilm({ph
 document.addEventListener("click", e => {
   const t = e.target.closest("[data-ph]");
   if (t){ const list = listFor(t.dataset.list); openLB(list, list.findIndex(p => p.i === +t.dataset.ph)); return; }
+  if (e.target.closest("#news-film")){ const l = PHOTOS.filter(p => NEW.has(p.id)); if (l.length) openFilm({photos:l}); return; }
   const fd = e.target.closest("[data-film-day]");
   if (fd){ openFilm({day: +fd.dataset.filmDay}); return; }
   const g = e.target.closest("[data-goto]");
@@ -1601,8 +1660,64 @@ document.addEventListener("keydown", e => {
 
 /* ---------- Установка на телефон ---------- */
 let installEvt = null;
-addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; $("#inst-wrap").hidden = false; });
-$("#inst-btn").onclick = async () => { if (!installEvt) return; installEvt.prompt(); try { await installEvt.userChoice; } catch(e){} installEvt = null; $("#inst-wrap").hidden = true; };
+const UA = navigator.userAgent;
+const isIOS = /iPad|iPhone|iPod/.test(UA) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const isAndroid = /Android/i.test(UA);
+const isStandalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const INSTALL_STEPS = {
+  ios: [
+    "Откройте альбом в <b>Safari</b>. Если он открыт из Telegram или WhatsApp, нажмите «…» или значок компаса → «Открыть в Safari».",
+    "Нажмите <b>«Поделиться»</b>: квадрат со стрелкой вверх. В новых iOS он прячется под кнопкой <b>«…»</b> внизу справа.",
+    "Пролистайте список и выберите <b>«На экран „Домой“»</b>.",
+    "Оставьте включённым «Открыть как веб-приложение» и нажмите <b>«Добавить»</b>."
+  ],
+  android: [
+    "Откройте альбом в <b>Chrome</b>.",
+    "Нажмите меню <b>⋮</b> вверху справа.",
+    "Выберите <b>«Установить приложение»</b> или <b>«Добавить на главный экран»</b> → <b>«Установить»</b>."
+  ],
+  other: [
+    "Откройте альбом на телефоне по адресу из раздела «Музыка» → «Установить на телефон».",
+    "На компьютере в Chrome или Edge: значок установки в адресной строке → <b>«Установить»</b>."
+  ]
+};
+function renderInstall(){
+  const inst = isStandalone();
+  $("#inst-banner").hidden = inst;
+  $("#inst-wrap").hidden = inst;
+  $("#inst-state").textContent = inst ? "Альбом уже установлен на этот телефон: он открывается со значка «Альбом»." : "";
+}
+async function installFlow(){
+  if (installEvt){
+    const ev = installEvt; installEvt = null;
+    ev.prompt();
+    try { const c = await ev.userChoice; if (c && c.outcome === "accepted") toast("Альбом появится на экране «Домой»"); } catch(e){}
+    return;
+  }
+  $("#inst-steps").innerHTML = INSTALL_STEPS[isIOS ? "ios" : isAndroid ? "android" : "other"].map(t => `<li>${t}</li>`).join("");
+  $("#inst-sheet").hidden = false;
+}
+const closeSheet = () => { $("#inst-sheet").hidden = true; };
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; });
+addEventListener("appinstalled", () => { installEvt = null; $("#inst-banner").hidden = true; toast("Альбом установлен"); });
+$("#inst-btn").onclick = installFlow;
+$("#inst-banner").onclick = installFlow;
+$("#inst-x").onclick = closeSheet;
+$("#inst-sheet").addEventListener("click", e => { if (e.target.id === "inst-sheet") closeSheet(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#inst-sheet").hidden) closeSheet(); });
+
+/* Новые фото без переустановки: если альбом долго был в фоне, при возвращении проверяем, не обновился ли он */
+let hiddenAt = Date.now();
+document.addEventListener("visibilitychange", async () => {
+  if (document.hidden){ hiddenAt = Date.now(); return; }
+  if (Date.now() - hiddenAt < 5 * 60 * 1000 || !$("#film").hidden || !$("#lb").hidden) return;
+  try {
+    const r = await fetch(location.pathname, {cache:"no-store"});
+    if (!r.ok) return;
+    const m = (await r.text()).match(/<script type="application\/json" id="album-data">([\s\S]*?)<\/script>/);
+    if (m && m[1].trim() !== $("#album-data").textContent.trim()) location.reload();
+  } catch(e){}
+});
 $("#copy-addr").onclick = () => {
   const b = $("#copy-addr"), t = $("#addr").textContent;
   const ok = () => { b.textContent = "Адрес скопирован"; setTimeout(() => b.textContent = "Скопировать адрес", 2000); };
@@ -1615,7 +1730,7 @@ if ("serviceWorker" in navigator && /github\.io$/.test(location.hostname)){
 }
 
 /* ---------- Старт ---------- */
-renderCover(); renderStrip(); renderAlbum(); renderMap(); renderBox(); renderSettings(); updateMusicUI(); setPlayIcon();
+renderCover(); renderStrip(); renderAlbum(); renderMap(); renderBox(); renderSettings(); renderInstall(); updateMusicUI(); setPlayIcon();
 const hashTab = (location.hash || "").slice(1);
 showTab(["album","map","box","set"].includes(hashTab) ? hashTab : store.get("alb-tab", "album"));
 Dust.start();
