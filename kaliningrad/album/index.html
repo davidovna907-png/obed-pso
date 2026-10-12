@@ -541,8 +541,10 @@ img{max-width:100%}
  "cast": ["Мамуля"],
  "dayScenes": {},
  "extraDays": [{"n": 0, "label": "Приезд", "date": "2026-10-10", "title": "Приезд в Калининград", "kind": "Прилёт и вечерняя прогулка", "towns": ["Храброво", "Калининград"], "route": ["khr", "kgd"], "hex": "#6fa8ff", "scene": "plane", "note": "Приезд в Калининград, вечерняя прогулка по острову Канта, Кафедральный собор, Рыбная деревня и мост влюблённых"}],
- "dayNotes": {"1": "Королевские ворота, район Амалиенау, улица Фрунзе — по программе экскурсии первого дня. Виллы в Амалиенау, марципановый музей"},
- "extraPlaces": {"sinag": {"name": "Новая синагога", "old": "Neue Synagoge", "year": "1896 / 2018", "town": "kgd", "day": 1, "fact": "Синагогу Кёнигсберга сожгли в Хрустальную ночь 1938 года. На её месте по старым чертежам построили новое здание, оно открылось в 2018 году."}},
+ "dayNotes": {"1": "Королевские ворота, район Амалиенау, улица Фрунзе — по программе экскурсии первого дня. Виллы в Амалиенау, марципановый музей", "2": "Замок Нойхаузен, Шаакен, сыроварня, Зеленоградск, Балтийское море — по маршруту второго дня"},
+ "dayRoutes": {"2": ["kgd", "gur", "sha", "zel", "kgd"]},
+ "extraTowns": {"gur": ["Гурьевск", 20.603, 54.77]},
+ "extraPlaces": {"sinag": {"name": "Новая синагога", "old": "Neue Synagoge", "year": "1896 / 2018", "town": "kgd", "day": 1, "fact": "Синагогу Кёнигсберга сожгли в Хрустальную ночь 1938 года. На её месте по старым чертежам построили новое здание, оно открылось в 2018 году."}, "neuh": {"name": "Замок Нойхаузен", "old": "Neuhausen", "year": "", "town": "gur", "day": 2, "fact": ""}},
  "photos": [
  {"id": "d0-01", "day": 0, "src": "photos/d0-01.jpg", "thumb": "photos/t/d0-01.jpg", "w": 1500, "h": 2000, "town": "khr", "title": "В полёте", "date": "2026-10-10"},
  {"id": "d0-02", "day": 0, "src": "photos/d0-02.jpg", "thumb": "photos/t/d0-02.jpg", "w": 1500, "h": 2000, "town": "khr", "title": "Над облаками", "date": "2026-10-10"},
@@ -635,7 +637,23 @@ img{max-width:100%}
  {"id": "d1-65", "day": 1, "src": "photos/d1-65.jpg", "thumb": "photos/t/d1-65.jpg", "w": 1500, "h": 2000, "place": "sinag", "title": "Тора и молитвенник", "date": "2026-10-11"},
  {"id": "d1-63", "day": 1, "src": "photos/d1-63.jpg", "thumb": "photos/t/d1-63.jpg", "w": 1469, "h": 2000, "place": "sinag", "title": "Витраж со звездой Давида", "date": "2026-10-11"},
  {"id": "d1-64", "day": 1, "src": "photos/d1-64.jpg", "thumb": "photos/t/d1-64.jpg", "w": 1500, "h": 2000, "place": "sinag", "title": "Селфи с мамулей в синагоге", "date": "2026-10-11"},
- {"id": "d1-67", "day": 1, "type": "video", "src": "photos/d1-67.mp4", "poster": "photos/d1-67.jpg", "thumb": "photos/t/d1-67.jpg", "w": 720, "h": 1280, "dur": 6.4, "town": "svg", "title": "Балтийское море в Светлогорске", "date": "2026-10-11"}
+ {"id": "d1-67", "day": 1, "type": "video", "src": "photos/d1-67.mp4", "poster": "photos/d1-67.jpg", "thumb": "photos/t/d1-67.jpg", "w": 720, "h": 1280, "dur": 6.4, "town": "svg", "title": "Балтийское море в Светлогорске", "date": "2026-10-11"},
+ {"id": "d2-01", "day": 2, "src": "photos/d2-01.jpg", "thumb": "photos/t/d2-01.jpg", "w": 1200, "h": 854, "place": "neuh", "title": "Замок Нойхаузен", "date": "2026-10-12"},
+ {"id": "d2-02", "day": 2, "src": "photos/d2-02.jpg", "thumb": "photos/t/d2-02.jpg", "w": 1280, "h": 960, "place": "neuh", "title": "Двор замка Нойхаузен", "date": "2026-10-12"},
+ {"id": "d2-03", "day": 2, "src": "photos/d2-03.jpg", "thumb": "photos/t/d2-03.jpg", "w": 1500, "h": 2000, "town": "gur", "title": "Кирха 1292 года", "date": "2026-10-12"},
+ {"id": "d2-04", "day": 2, "src": "photos/d2-04.jpg", "thumb": "photos/t/d2-04.jpg", "w": 1500, "h": 2000, "town": "gur", "title": "Вход в кирху 1292 года", "date": "2026-10-12"},
+ {"id": "d2-05", "day": 2, "src": "photos/d2-05.jpg", "thumb": "photos/t/d2-05.jpg", "w": 1500, "h": 2000, "town": "gur", "title": "Башня кирхи", "date": "2026-10-12"},
+ {"id": "d2-06", "day": 2, "src": "photos/d2-06.jpg", "thumb": "photos/t/d2-06.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "Стены замка из валунов", "date": "2026-10-12"},
+ {"id": "d2-07", "day": 2, "src": "photos/d2-07.jpg", "thumb": "photos/t/d2-07.jpg", "w": 2000, "h": 1500, "place": "neuh", "title": "Валуны и кирпич замка", "date": "2026-10-12"},
+ {"id": "d2-08", "day": 2, "src": "photos/d2-08.jpg", "thumb": "photos/t/d2-08.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "Мамуля у стены замка", "date": "2026-10-12"},
+ {"id": "d2-09", "day": 2, "src": "photos/d2-09.jpg", "thumb": "photos/t/d2-09.jpg", "w": 1514, "h": 2000, "place": "neuh", "title": "Мамуля у древней стены", "date": "2026-10-12"},
+ {"id": "d2-10", "day": 2, "src": "photos/d2-10.jpg", "thumb": "photos/t/d2-10.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "Мамуля и валуны замка", "date": "2026-10-12"},
+ {"id": "d2-11", "day": 2, "src": "photos/d2-11.jpg", "thumb": "photos/t/d2-11.jpg", "w": 1671, "h": 2000, "place": "neuh", "title": "Я у стены замка", "date": "2026-10-12"},
+ {"id": "d2-12", "day": 2, "src": "photos/d2-12.jpg", "thumb": "photos/t/d2-12.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "Я у стены замка, чёрно-белое", "date": "2026-10-12"},
+ {"id": "d2-13", "day": 2, "src": "photos/d2-13.jpg", "thumb": "photos/t/d2-13.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "Мамуля у Мюнхгаузена на ядре", "date": "2026-10-12"},
+ {"id": "d2-14", "day": 2, "src": "photos/d2-14.jpg", "thumb": "photos/t/d2-14.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "Мамуля и барон Мюнхгаузен", "date": "2026-10-12"},
+ {"id": "d2-15", "day": 2, "src": "photos/d2-15.jpg", "thumb": "photos/t/d2-15.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "Я у Мюнхгаузена на ядре", "date": "2026-10-12"},
+ {"id": "d2-16", "day": 2, "src": "photos/d2-16.jpg", "thumb": "photos/t/d2-16.jpg", "w": 1225, "h": 2000, "place": "neuh", "title": "Я и барон Мюнхгаузен", "date": "2026-10-12"}
  ]
 }
 </script>
@@ -677,6 +695,10 @@ const plural = (n, a, b, c) => { const m10 = n%10, m100 = n%100; return m10===1 
 /* ---------- Альбом ---------- */
 let ALBUM = {title:"Калининград", subtitle:"Янтарные воспоминания", author:"ND", cast:[], dayScenes:{}, photos:[]};
 try { ALBUM = Object.assign(ALBUM, JSON.parse($("#album-data").textContent)); } catch(e){}
+/* Города, которых нет в путеводителе: {key: [название, долгота, широта]} */
+Object.entries(ALBUM.extraTowns || {}).forEach(([k, t]) => {
+  if (!TOWNS[k] && Array.isArray(t) && t.length === 3) TOWNS[k] = {k, name:t[0], lon:+t[1], lat:+t[2]};
+});
 /* Места, которых нет в путеводителе (например, синагога): {id: {name, old, year, town, day, fact}} */
 Object.entries(ALBUM.extraPlaces || {}).forEach(([id, p]) => {
   if (!PLACES[id] && p && p.name) PLACES[id] = {id, name:p.name, old:p.old || "", year:p.year || "", town:TOWNS[p.town] ? p.town : "kgd", day:+p.day || 0, fact:p.fact || ""};
@@ -689,6 +711,11 @@ Object.entries(ALBUM.extraPlaces || {}).forEach(([id, p]) => {
 });
 DAYS.sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : a.n - b.n);
 DAYS.forEach(d => { const nt = (ALBUM.dayNotes || {})[d.n]; if (nt) d.note = nt; });
+/* Настоящий маршрут дня, если он отличался от программы: {"2": ["kgd","gur","sha","zel","kgd"]} */
+DAYS.forEach(d => {
+  const r = ((ALBUM.dayRoutes || {})[d.n] || []).filter(k => TOWNS[k]);
+  if (r.length > 1){ d.route = r; d.towns = [...new Set(r.filter(k => k !== "kgd").map(k => TOWNS[k].name))]; }
+});
 const dayLabel = d => d.label || ("День " + d.n);
 function tripRange(){
   const a = parse(DAYS[0].date), b = parse(DAYS[DAYS.length-1].date);
@@ -918,7 +945,7 @@ const mapBase = () => `<rect x="-2000" y="-2000" width="4800" height="4460" fill
   <polyline points="${pts(PREGOLYA)}" fill="none" stroke="#2f6e78" stroke-width="2"/>
   <g font-family="IBM Plex Mono, monospace" font-size="15" letter-spacing="2" fill="#5b8191"><text x="34" y="70">БАЛТИЙСКОЕ МОРЕ</text><text x="640" y="56">ЛИТВА</text><text x="560" y="452">ПОЛЬША</text></g>`;
 const routeD = r => "M" + r.map(k => MX(TOWNS[k].lon) + " " + MY(TOWNS[k].lat)).join("L");
-const lblAttr = (t, off) => { off = off || 13; return t.lon >= 20 && t.lon < 20.3 ? `x="${MX(t.lon)-off}" text-anchor="end"` : `x="${MX(t.lon)+off}"`; };
+const lblAttr = (t, off) => { off = off || 13; return (t.lon >= 20 && t.lon < 20.3) || t.k === "khr" ? `x="${MX(t.lon)-off}" text-anchor="end"` : `x="${MX(t.lon)+off}"`; };
 
 /* ---------- Значки ---------- */
 const GEM = `<svg class="gem" viewBox="0 0 24 30"><defs><radialGradient id="gg" cx=".38" cy=".4" r=".8"><stop offset="0" stop-color="#fff2c6"/><stop offset=".45" stop-color="#ffb648"/><stop offset="1" stop-color="#b5461f"/></radialGradient></defs><path d="M12 1c4 6 9 10.5 9 16.5a9 9 0 0 1-18 0C3 11.5 8 7 12 1z" fill="url(#gg)"/></svg>`;
