@@ -429,6 +429,7 @@ img{max-width:100%}
     <div class="boxes">
       <div class="box" style="--c:var(--amber)">
         <h4>Музыка фильма</h4>
+        <label class="opt"><input type="radio" name="music" value="days"><span><b>По дням поездки</b><small id="days-music">У каждого дня своя мелодия, в общем фильме она плавно меняется на границе дней.</small></span></label>
         <label class="opt"><input type="radio" name="music" value="breeze"><span><b>«Ветер с Балтики»</b><small>Энергичная мелодия с ритмом. Сочинена для этого альбома и играет прямо в телефоне, кадры меняются в такт.</small></span></label>
         <label class="opt"><input type="radio" name="music" value="waltz"><span><b>«Балтийский вальс»</b><small>Спокойный вальс, тоже сочинён для альбома.</small></span></label>
         <label class="opt"><input type="radio" name="music" value="own"><span><b>Своя мелодия</b><small id="own-name">Любимая песня из памяти телефона.</small></span></label>
@@ -547,6 +548,7 @@ img{max-width:100%}
  "author": "ND",
  "cast": ["Мамуля"],
  "dayScenes": {},
+ "dayMusic": {"0": "waltz", "1": "waltz", "2": "breeze"},
  "extraDays": [{"n": 0, "label": "Приезд", "date": "2026-10-10", "title": "Приезд в Калининград", "kind": "Прилёт и вечерняя прогулка", "towns": ["Храброво", "Калининград"], "route": ["khr", "kgd"], "hex": "#6fa8ff", "scene": "plane", "note": "Приезд в Калининград, вечерняя прогулка по острову Канта, Кафедральный собор, Рыбная деревня и мост влюблённых"}],
  "dayNotes": {"1": "Королевские ворота, район Амалиенау, улица Фрунзе — по программе экскурсии первого дня. Виллы в Амалиенау, марципановый музей", "2": "Замок Нойхаузен, Шаакен, сыроварня, Зеленоградск, Балтийское море — по маршруту второго дня"},
  "dayRoutes": {"2": ["kgd", "gur", "sha", "zel", "kgd"]},
@@ -586,8 +588,8 @@ img{max-width:100%}
  {"id": "d1-04", "day": 1, "src": "photos/d1-04.jpg", "thumb": "photos/t/d1-04.jpg", "w": 1500, "h": 2000, "town": "kgd", "title": "Я у стены с Бабушкой Мартой", "date": "2026-10-11"},
  {"id": "d1-05", "day": 1, "src": "photos/d1-05.jpg", "thumb": "photos/t/d1-05.jpg", "w": 1500, "h": 2000, "town": "kgd", "title": "Бабушка Марта — взгляд сквозь стену", "date": "2026-10-11"},
  {"id": "d1-06", "day": 1, "src": "photos/d1-06.jpg", "thumb": "photos/t/d1-06.jpg", "w": 1500, "h": 2000, "place": "oz", "title": "Экскурсия у Верхнего озера", "date": "2026-10-11"},
- {"id": "d1-08", "day": 1, "type": "video", "src": "photos/d1-08.mp4", "poster": "photos/d1-08.jpg", "thumb": "photos/t/d1-08.jpg", "w": 720, "h": 1280, "dur": 8.0, "place": "oz", "title": "Шаг за шагом вдоль озера", "date": "2026-10-11", "time": "10:24"},
- {"id": "d1-09", "day": 1, "type": "video", "src": "photos/d1-09.mp4", "poster": "photos/d1-09.jpg", "thumb": "photos/t/d1-09.jpg", "w": 720, "h": 1280, "dur": 5.9, "place": "oz", "title": "Мамуля распахнула руки озеру", "date": "2026-10-11", "time": "10:25"},
+ {"id": "d1-08", "day": 1, "type": "video", "src": "photos/d1-08.mp4", "poster": "photos/d1-08.jpg", "thumb": "photos/t/d1-08.jpg", "w": 720, "h": 1280, "dur": 8.0, "place": "oz", "title": "Шаг за шагом вдоль озера", "date": "2026-10-11", "time": "10:24", "muted": true},
+ {"id": "d1-09", "day": 1, "type": "video", "src": "photos/d1-09.mp4", "poster": "photos/d1-09.jpg", "thumb": "photos/t/d1-09.jpg", "w": 720, "h": 1280, "dur": 5.9, "place": "oz", "title": "Мамуля распахнула руки озеру", "date": "2026-10-11", "time": "10:25", "muted": true},
  {"id": "d1-10", "day": 1, "src": "photos/d1-10.jpg", "thumb": "photos/t/d1-10.jpg", "w": 1088, "h": 2000, "place": "oz", "title": "Мамуля смотрит из-под ладони", "date": "2026-10-11"},
  {"id": "d1-07", "day": 1, "src": "photos/d1-07.jpg", "thumb": "photos/t/d1-07.jpg", "w": 2000, "h": 1500, "place": "oz", "title": "Верхнее озеро", "date": "2026-10-11"},
  {"id": "d1-11", "day": 1, "src": "photos/d1-11.jpg", "thumb": "photos/t/d1-11.jpg", "w": 1512, "h": 2000, "place": "oz", "title": "Мамуля на ажурном мостике", "date": "2026-10-11"},
@@ -607,7 +609,7 @@ img{max-width:100%}
  {"id": "d1-25", "day": 1, "src": "photos/d1-25.jpg", "thumb": "photos/t/d1-25.jpg", "w": 1500, "h": 2000, "place": "amal", "title": "Кованые ворота с гербами", "date": "2026-10-11"},
  {"id": "d1-26", "day": 1, "src": "photos/d1-26.jpg", "thumb": "photos/t/d1-26.jpg", "w": 1500, "h": 2000, "place": "amal", "title": "Герб Гродно на ограде", "date": "2026-10-11"},
  {"id": "d1-27", "day": 1, "src": "photos/d1-27.jpg", "thumb": "photos/t/d1-27.jpg", "w": 1500, "h": 2000, "place": "amal", "title": "С мамулей по Амалиенау", "date": "2026-10-11"},
- {"id": "d1-28", "day": 1, "type": "video", "src": "photos/d1-28.mp4", "poster": "photos/d1-28.jpg", "thumb": "photos/t/d1-28.jpg", "w": 720, "h": 1280, "dur": 14.2, "place": "amal", "title": "Мамуля на прогулке по Амалиенау", "date": "2026-10-11", "time": "11:01"},
+ {"id": "d1-28", "day": 1, "type": "video", "src": "photos/d1-28.mp4", "poster": "photos/d1-28.jpg", "thumb": "photos/t/d1-28.jpg", "w": 720, "h": 1280, "dur": 14.2, "place": "amal", "title": "Мамуля на прогулке по Амалиенау", "date": "2026-10-11", "time": "11:01", "muted": true},
  {"id": "d1-29", "day": 1, "src": "photos/d1-29.jpg", "thumb": "photos/t/d1-29.jpg", "w": 1500, "h": 2000, "town": "kgd", "title": "Кирха из окна автобуса", "date": "2026-10-11"},
  {"id": "d1-30", "day": 1, "src": "photos/d1-30.jpg", "thumb": "photos/t/d1-30.jpg", "w": 1500, "h": 2000, "town": "kgd", "title": "Кирха среди деревьев", "date": "2026-10-11"},
  {"id": "d1-31", "day": 1, "src": "photos/d1-31.jpg", "thumb": "photos/t/d1-31.jpg", "w": 1500, "h": 2000, "place": "mira", "title": "Памятник космонавтам-калининградцам", "date": "2026-10-11"},
@@ -621,7 +623,7 @@ img{max-width:100%}
  {"id": "d1-39", "day": 1, "src": "photos/d1-39.jpg", "thumb": "photos/t/d1-39.jpg", "w": 1280, "h": 1707, "place": "kant", "title": "Группа у собора на острове Канта", "date": "2026-10-11"},
  {"id": "d1-40", "day": 1, "src": "photos/d1-40.jpg", "thumb": "photos/t/d1-40.jpg", "w": 1280, "h": 1707, "place": "kant", "title": "Прыжок радости у собора", "date": "2026-10-11"},
  {"id": "d1-41", "day": 1, "src": "photos/d1-41.jpg", "thumb": "photos/t/d1-41.jpg", "w": 1280, "h": 1707, "place": "kant", "title": "Круг вокруг каменного сердца", "date": "2026-10-11"},
- {"id": "d1-66", "day": 1, "type": "video", "src": "photos/d1-66.mp4", "poster": "photos/d1-66.jpg", "thumb": "photos/t/d1-66.jpg", "w": 720, "h": 1280, "dur": 13.7, "place": "kant", "title": "Карета на педалях у Кафедрального собора", "date": "2026-10-11", "time": "13:01"},
+ {"id": "d1-66", "day": 1, "type": "video", "src": "photos/d1-66.mp4", "poster": "photos/d1-66.jpg", "thumb": "photos/t/d1-66.jpg", "w": 720, "h": 1280, "dur": 13.7, "place": "kant", "title": "Карета на педалях у Кафедрального собора", "date": "2026-10-11", "time": "13:01", "muted": true},
  {"id": "d1-42", "day": 1, "src": "photos/d1-42.jpg", "thumb": "photos/t/d1-42.jpg", "w": 1500, "h": 2000, "place": "preg", "title": "Голуби на мосту над Преголей", "date": "2026-10-11"},
  {"id": "d1-43", "day": 1, "src": "photos/d1-43.jpg", "thumb": "photos/t/d1-43.jpg", "w": 1280, "h": 1707, "place": "preg", "title": "Бронзовый человечек в вязаном парике", "date": "2026-10-11"},
  {"id": "d1-44", "day": 1, "src": "photos/d1-44.jpg", "thumb": "photos/t/d1-44.jpg", "w": 1280, "h": 1707, "place": "preg", "title": "Хранитель замочков", "date": "2026-10-11"},
@@ -644,7 +646,7 @@ img{max-width:100%}
  {"id": "d1-65", "day": 1, "src": "photos/d1-65.jpg", "thumb": "photos/t/d1-65.jpg", "w": 1500, "h": 2000, "place": "sinag", "title": "Тора и молитвенник", "date": "2026-10-11"},
  {"id": "d1-63", "day": 1, "src": "photos/d1-63.jpg", "thumb": "photos/t/d1-63.jpg", "w": 1469, "h": 2000, "place": "sinag", "title": "Витраж со звездой Давида", "date": "2026-10-11"},
  {"id": "d1-64", "day": 1, "src": "photos/d1-64.jpg", "thumb": "photos/t/d1-64.jpg", "w": 1500, "h": 2000, "place": "sinag", "title": "Селфи с мамулей в синагоге", "date": "2026-10-11"},
- {"id": "d1-67", "day": 1, "type": "video", "src": "photos/d1-67.mp4", "poster": "photos/d1-67.jpg", "thumb": "photos/t/d1-67.jpg", "w": 720, "h": 1280, "dur": 6.4, "town": "svg", "title": "Балтийское море в Светлогорске", "date": "2026-10-11"},
+ {"id": "d1-67", "day": 1, "type": "video", "src": "photos/d1-67.mp4", "poster": "photos/d1-67.jpg", "thumb": "photos/t/d1-67.jpg", "w": 720, "h": 1280, "dur": 6.4, "town": "svg", "title": "Балтийское море в Светлогорске", "date": "2026-10-11", "sea": true},
  {"id": "d2-01", "day": 2, "src": "photos/d2-01.jpg", "thumb": "photos/t/d2-01.jpg", "w": 1200, "h": 854, "place": "neuh", "title": "Замок Нойхаузен", "date": "2026-10-12"},
  {"id": "d2-02", "day": 2, "src": "photos/d2-02.jpg", "thumb": "photos/t/d2-02.jpg", "w": 1280, "h": 960, "place": "neuh", "title": "Двор замка Нойхаузен", "date": "2026-10-12"},
  {"id": "d2-03", "day": 2, "src": "photos/d2-03.jpg", "thumb": "photos/t/d2-03.jpg", "w": 1500, "h": 2000, "town": "gur", "title": "Кирха 1292 года", "date": "2026-10-12"},
@@ -710,12 +712,12 @@ img{max-width:100%}
  {"id": "d2-63", "day": 2, "src": "photos/d2-63.jpg", "thumb": "photos/t/d2-63.jpg", "w": 1457, "h": 2000, "town": "zel", "title": "Я и бронзовая девушка с селфи", "date": "2026-10-12"},
  {"id": "d2-64", "day": 2, "src": "photos/d2-64.jpg", "thumb": "photos/t/d2-64.jpg", "w": 2000, "h": 1500, "place": "zel", "title": "Площадь у моря после дождя", "date": "2026-10-12"},
  {"id": "d2-65", "day": 2, "type": "video", "src": "photos/d2-65.mp4", "poster": "photos/d2-65.jpg", "thumb": "photos/t/d2-65.jpg", "w": 720, "h": 1280, "dur": 20.0, "muted": true, "place": "zel", "title": "Прогулка по набережной к колесу обозрения", "date": "2026-10-12", "time": "17:13"},
- {"id": "d2-66", "day": 2, "type": "video", "src": "photos/d2-66.mp4", "poster": "photos/d2-66.jpg", "thumb": "photos/t/d2-66.jpg", "w": 720, "h": 1280, "dur": 18.7, "muted": true, "place": "zel", "title": "Шторм на Балтике и мамуля с зонтом", "date": "2026-10-12", "time": "17:15"},
+ {"id": "d2-66", "day": 2, "type": "video", "src": "photos/d2-66.mp4", "poster": "photos/d2-66.jpg", "thumb": "photos/t/d2-66.jpg", "w": 720, "h": 1280, "dur": 18.7, "place": "zel", "title": "Шторм на Балтике и мамуля с зонтом", "date": "2026-10-12", "time": "17:15", "sea": true},
  {"id": "d2-67", "day": 2, "src": "photos/d2-67.jpg", "thumb": "photos/t/d2-67.jpg", "w": 1200, "h": 2913, "place": "zel", "title": "Мамуля и балтийский ветер", "date": "2026-10-12", "collage": true},
  {"id": "d2-68", "day": 2, "src": "photos/d2-68.jpg", "thumb": "photos/t/d2-68.jpg", "w": 1500, "h": 2000, "place": "zel", "title": "Мамуля раскинула руки ветру", "date": "2026-10-12"},
- {"id": "d2-69", "day": 2, "type": "video", "src": "photos/d2-69.mp4", "poster": "photos/d2-69.jpg", "thumb": "photos/t/d2-69.jpg", "w": 720, "h": 1280, "dur": 7.3, "muted": true, "place": "zel", "title": "Мамуля на ветреной набережной", "date": "2026-10-12", "time": "17:21"},
+ {"id": "d2-69", "day": 2, "type": "video", "src": "photos/d2-69.mp4", "poster": "photos/d2-69.jpg", "thumb": "photos/t/d2-69.jpg", "w": 720, "h": 1280, "dur": 7.3, "place": "zel", "title": "Мамуля на ветреной набережной", "date": "2026-10-12", "time": "17:21", "sea": true},
  {"id": "d2-70", "day": 2, "src": "photos/d2-70.jpg", "thumb": "photos/t/d2-70.jpg", "w": 1200, "h": 2913, "place": "zel", "title": "С мамулей у Балтики", "date": "2026-10-12", "collage": true},
- {"id": "d2-71", "day": 2, "type": "video", "src": "photos/d2-71.mp4", "poster": "photos/d2-71.jpg", "thumb": "photos/t/d2-71.jpg", "w": 720, "h": 1280, "dur": 17.8, "muted": true, "place": "zel", "title": "Я и зонтик против ветра", "date": "2026-10-12"},
+ {"id": "d2-71", "day": 2, "type": "video", "src": "photos/d2-71.mp4", "poster": "photos/d2-71.jpg", "thumb": "photos/t/d2-71.jpg", "w": 720, "h": 1280, "dur": 17.8, "place": "zel", "title": "Я и зонтик против ветра", "date": "2026-10-12", "sea": true},
  {"id": "d2-72", "day": 2, "src": "photos/d2-72.jpg", "thumb": "photos/t/d2-72.jpg", "w": 1500, "h": 2000, "town": "zel", "title": "Глинтвейн на всех: за Балтику!", "date": "2026-10-12"},
  {"id": "d2-73", "day": 2, "src": "photos/d2-73.jpg", "thumb": "photos/t/d2-73.jpg", "w": 865, "h": 1920, "town": "zel", "title": "Чёрные пельмени с икрой", "date": "2026-10-12"},
  {"id": "d2-74", "day": 2, "src": "photos/d2-74.jpg", "thumb": "photos/t/d2-74.jpg", "w": 865, "h": 1920, "town": "zel", "title": "Десерт с облепихой", "date": "2026-10-12"}
@@ -817,9 +819,11 @@ function dayTowns(d, ph){
   return d.towns;
 }
 
-const set = Object.assign({music:"breeze", sea:true, speed:3}, store.get("alb-set", {}));
+const set = Object.assign({music:"days", sea:true, speed:3}, store.get("alb-set", {}));
 /* с октября 2026 главная мелодия — энергичный «Ветер с Балтики» (по просьбе автора), вальс — на выбор */
 if (!store.get("alb-mv2", false)){ if (set.music === "waltz") set.music = "breeze"; store.set("alb-mv2", true); store.set("alb-set", set); }
+/* с 12.10.2026 по просьбе автора своя мелодия у каждого дня: 1 день — вальс, 2 день — «Ветер с Балтики» */
+if (!store.get("alb-mv3", false)){ if (set.music === "breeze" || set.music === "waltz") set.music = "days"; store.set("alb-mv3", true); store.set("alb-set", set); }
 const saveSet = () => store.set("alb-set", set);
 const amber = new Set(store.get("alb-amber", []));
 const saveAmber = () => store.set("alb-amber", [...amber]);
@@ -1196,6 +1200,9 @@ const TUNES = {
   breeze:{name:"«Ветер с Балтики»", bpm:124, beats:4, events:breezeEvents},
   waltz:{name:"«Балтийский вальс»", bpm:84, beats:3, events:waltzEvents}
 };
+/* мелодия дня: dayMusic в album-data, для остальных дней — «Ветер с Балтики» */
+const dayTune = n => { const k = (ALBUM.dayMusic || {})[n]; return TUNES[k] ? k : "breeze"; };
+const homeDay = () => { const d = DAYS.find(x => x.date === todayIso); return d ? d.n : 1; };
 /* длина такта звучащей (или выбранной) мелодии: в её такт меняются кадры фильма */
 const BAR = () => { const t = TUNES[Music.on ? Music.mode : set.music] || TUNES.breeze; return 60 / t.bpm * t.beats; };
 const ownAudio = new Audio();
@@ -1231,6 +1238,8 @@ const Music = {
   /* вызывать только из нажатия пальцем: иначе телефон не даст включить звук */
   play(mode){
     mode = mode || set.music;
+    this.pref = mode; this.duckOn = false;
+    if (mode === "days") mode = dayTune(this.day == null ? homeDay() : this.day);
     if (mode === "own" && !ownAudio.src) mode = "breeze";
     clearTimeout(this.stopT);
     const c = this.init();
@@ -1260,7 +1269,7 @@ const Music = {
   stop(fade){
     fade = fade || 1.2;
     if (!this.on) return;
-    this.on = false; this.onBar = null; clearInterval(this.timer);
+    this.on = false; this.onBar = null; clearInterval(this.timer); clearTimeout(this.swT); this.swTo = null; this.duckOn = false;
     const c = this.ctx;
     if (c){
       const t = c.currentTime;
@@ -1270,6 +1279,39 @@ const Music = {
     }
     this.stopT = setTimeout(() => { if (!this.on){ this.stopSea(); ownAudio.pause(); } }, c ? fade*1000 + 100 : 0);
     updateMusicUI();
+  },
+  /* фильм перешёл к другому дню: при выборе «по дням» мелодия плавно сменяется */
+  setDay(n){
+    this.day = n;
+    if (!this.on || this.pref !== "days") return;
+    const want = dayTune(n), c = this.ctx;
+    if (want === this.mode || !c || this.swTo === want) return;
+    this.swTo = want; clearTimeout(this.swT);
+    const t = c.currentTime;
+    this.master.gain.cancelScheduledValues(t);
+    this.master.gain.setValueAtTime(Math.max(this.master.gain.value, .0001), t);
+    this.master.gain.exponentialRampToValueAtTime(.0001, t + .9);
+    this.swT = setTimeout(() => {
+      this.swTo = null;
+      if (!this.on || this.pref !== "days") return;
+      clearInterval(this.timer);
+      const tn = this.tune = TUNES[want], t2 = c.currentTime;
+      this.mode = want; this.beat = 60 / tn.bpm; this.ev = tn.evs || (tn.evs = tn.events());
+      this.idx = 0; this.loop = 0; this.phraseStart = t2 + .1;
+      this.master.gain.cancelScheduledValues(t2); this.master.gain.setValueAtTime(.0001, t2);
+      this.master.gain.exponentialRampToValueAtTime(this.duckOn ? .18 : .9, t2 + 1.4);
+      this.timer = setInterval(() => this.schedule(), 60); this.schedule();
+    }, 950);
+  },
+  /* видео с морем: музыку приглушить, чтобы был слышен прибой */
+  duck(on){
+    if (this.duckOn === on) return;
+    this.duckOn = on;
+    const c = this.ctx; if (!c || !this.on || this.swTo) return;
+    const t = c.currentTime;
+    this.master.gain.cancelScheduledValues(t);
+    this.master.gain.setValueAtTime(Math.max(this.master.gain.value, .0001), t);
+    this.master.gain.exponentialRampToValueAtTime(on ? .18 : .9, t + .7);
   },
   pause(){ if (this.ctx && this.ctx.suspend) this.ctx.suspend(); if (this.mode === "own") ownAudio.pause(); },
   resume(){
@@ -1400,6 +1442,9 @@ $("#own-file").onchange = async e => {
 /* ---------- Настройки ---------- */
 function renderSettings(){
   $$('input[name="music"]').forEach(i => { i.checked = i.value === set.music; });
+  const byTune = {};
+  DAYS.filter(d => d.n <= 2 || photosOfDay(d.n).length).forEach(d => { (byTune[dayTune(d.n)] = byTune[dayTune(d.n)] || []).push(d.n === 0 ? "приезд" : d.n + " день"); });
+  $("#days-music").textContent = Object.entries(byTune).map(([k, ds]) => ds.join(", ") + " — " + TUNES[k].name).join("; ") + ". В общем фильме мелодия плавно меняется на границе дней.";
   $("#own-name").textContent = ownName ? "Выбрано: " + ownName : "Любимая песня из памяти телефона.";
   $("#sea-on").checked = !!set.sea;
   $$("#speed [data-speed]").forEach(b => b.setAttribute("aria-pressed", +b.dataset.speed === +set.speed));
@@ -1490,7 +1535,8 @@ function creditsHTML(list, demo){
   const km = days.reduce((s, d) => s + routeKm(dayRoute(d, demo ? null : list.filter(p => p.dayN === d.n))), 0);
   const places = new Set(list.map(p => p.place).filter(Boolean)).size;
   const cast = (ALBUM.cast || []).filter(Boolean);
-  const music = !Music.on ? "" : TUNES[Music.mode] ? TUNES[Music.mode].name + ", сочинён для этого альбома" : Music.mode === "own" ? esc(ownName.replace(/\.[^.]+$/, "") || "Своя мелодия") : "Шум Балтийского моря";
+  const usedTunes = [...new Set(days.map(d => dayTune(d.n)))].map(k => TUNES[k].name);
+  const music = !Music.on ? "" : Music.pref === "days" ? usedTunes.join(" и ") + (usedTunes.length > 1 ? ", сочинены" : ", сочинён") + " для этого альбома" : TUNES[Music.mode] ? TUNES[Music.mode].name + ", сочинён для этого альбома" : Music.mode === "own" ? esc(ownName.replace(/\.[^.]+$/, "") || "Своя мелодия") : "Шум Балтийского моря";
   const stat = (n, a, b, c) => `<div><b>${n}</b><span>${plural(n, a, b, c)}</span></div>`;
   return `<div class="roll">
     <p class="cr-t">${esc(ALBUM.title)}</p><p class="cr-s">${esc(ALBUM.subtitle)}</p>
@@ -1506,9 +1552,12 @@ function animateFrame(layer, f){
   const dur = (barsOf(f) * BAR() + 1.6) * 1000;
   const v = $("video", layer);
   if (v){
-    /* под музыку фильма видео идёт без звука, без музыки — со своим звуком */
-    v.muted = Music.on;
-    const pr = v.play(); if (pr && pr.catch) pr.catch(() => { v.muted = true; const p2 = v.play(); if (p2 && p2.catch) p2.catch(() => {}); });
+    /* под музыку видео идёт без звука; видео с морем — со своим шумом прибоя, музыка на это время тише */
+    const sea = !!(f.p && f.p.sea);
+    v.muted = Music.on && !sea;
+    const pr = v.play();
+    if (pr && pr.then) pr.then(() => { if (sea && !v.muted && film.frames[film.i] === f) Music.duck(true); })
+      .catch(() => { v.muted = true; const p2 = v.play(); if (p2 && p2.catch) p2.catch(() => {}); });
   }
   const kb = $(".kb", layer);
   if (kb && !reduce){ const a = kb.animate(KB[Math.floor(Math.random() * KB.length)], {duration:dur, easing:"linear", fill:"forwards"}); film.anims.push(a); }
@@ -1533,9 +1582,12 @@ function go(i){
   next.innerHTML = frameHTML(f);
   next.classList.remove("on"); void next.offsetWidth; next.classList.add("on");
   prev.classList.remove("on");
+  prev.querySelectorAll("video").forEach(v => { v.muted = true; });
   const prevTok = prev.dataset.tok;
   setTimeout(() => { if (prev.dataset.tok === prevTok && !prev.classList.contains("on")) prev.innerHTML = ""; }, 1500);
   film.cur ^= 1;
+  Music.duck(false);
+  const fd = f.d || (f.p && f.p.dayObj); if (fd) Music.setDay(fd.n);
   animateFrame(next, f);
   if (!film.playing) film.anims.forEach(a => a.pause());
   $("#f-bar").style.width = (film.frames.length > 1 ? i / (film.frames.length - 1) * 100 : 100) + "%";
@@ -1572,7 +1624,10 @@ function openFilm(opts){
   document.body.classList.add("noscroll");
   try { const el = document.documentElement; if (el.requestFullscreen){ const pr = el.requestFullscreen({navigationUI:"hide"}); if (pr && pr.catch) pr.catch(() => {}); } } catch(e){}
   lockWake();
-  if (set.music !== "none" || set.sea){ if (!Music.on || Music.mode !== set.music) Music.play(); }
+  const first = film.frames.find(x => x.d);
+  Music.day = first ? first.d.n : null;
+  const want = set.music === "days" ? dayTune(Music.day == null ? homeDay() : Music.day) : set.music;
+  if (set.music !== "none" || set.sea){ if (!Music.on || Music.mode !== want) Music.play(); else Music.pref = set.music; }
   else Music.stop(.5);
   Ticker.start();
   Dust.stop();
@@ -1591,7 +1646,7 @@ function endFilm(){
 function closeFilm(){
   film.playing = false;
   Ticker.stop();
-  Music.stop(1.2);
+  Music.stop(1.2); Music.day = null;
   film.anims.forEach(a => { try { a.cancel(); } catch(e){} }); film.anims = [];
   $("#film").hidden = true;
   $("#fl0").innerHTML = $("#fl1").innerHTML = "";
