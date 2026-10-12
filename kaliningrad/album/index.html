@@ -88,6 +88,16 @@ img{max-width:100%}
 .status i{flex:0 0 auto;width:9px;height:9px;margin-top:6px;border-radius:50%;background:var(--sc,var(--amber));box-shadow:0 0 0 4px color-mix(in srgb,var(--sc,var(--amber)) 22%,transparent)}
 .status button{border:0;background:none;padding:0;color:var(--amber-2);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-weight:500}
 .cover-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px}
+.pick-lbl{font:500 11px/1.3 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mist);margin-top:4px}
+.pick{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 0}
+.pick::-webkit-scrollbar{display:none}
+.pick button{
+  flex:0 0 auto;display:grid;gap:2px;justify-items:center;padding:8px 14px;border-radius:12px;cursor:pointer;font-weight:600;font-size:14.5px;
+  border:1px solid rgba(255,255,255,.2);background:rgba(10,15,20,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.pick button small{font:400 11px var(--mono);color:var(--mist)}
+.pick button[aria-pressed="true"]{background:var(--c,var(--amber));color:#14100a;border-color:transparent}
+.pick button[aria-pressed="true"] small{color:rgba(20,16,10,.72)}
 .inst-banner{
   display:flex;align-items:center;gap:12px;width:100%;max-width:460px;text-align:left;cursor:pointer;
   padding:10px 14px 10px 10px;border-radius:16px;border:1px solid rgba(244,166,58,.5);background:rgba(22,34,43,.88);
@@ -124,6 +134,9 @@ img{max-width:100%}
 .strip .d{font:500 17px/1 var(--mono);color:var(--c)}
 .strip .w{font-size:11px;color:var(--mist);white-space:nowrap}
 .strip button.now{border-color:var(--c);background:color-mix(in srgb,var(--c) 14%,var(--deep))}
+.strip button[aria-pressed="true"]{background:var(--c);border-color:transparent}
+.strip button[aria-pressed="true"] .d,.strip button[aria-pressed="true"] .w{color:#14100a}
+.btn.day-play{background:var(--c);color:#14100a;border-color:transparent;font-weight:600}
 
 /* Главы */
 .chapters{display:grid;gap:18px;margin-top:10px}
@@ -388,9 +401,11 @@ img{max-width:100%}
     <div class="meta" id="meta"></div>
     <div class="status" id="status"></div>
     <div class="status news" id="news" hidden></div>
+    <div class="pick-lbl">Какой день смотреть</div>
+    <div class="pick" id="pick" role="group" aria-label="Какой день смотреть"></div>
     <div class="cover-actions">
       <button type="button" class="btn solid big" id="play-film">
-        <svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>Смотреть фильм
+        <svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg><span id="play-lbl">Смотреть фильм</span>
       </button>
       <button type="button" class="btn big ghost" id="to-album">Листать альбом</button>
     </div>
@@ -501,7 +516,8 @@ img{max-width:100%}
     <h2>Конец фильма</h2>
     <p id="f-end-p">Спасибо, что вспомнили эту поездку вместе с альбомом.</p>
     <div class="row">
-      <button type="button" class="btn solid big" id="f-again">Смотреть снова</button>
+      <button type="button" class="btn solid big" id="f-next-day" hidden></button>
+      <button type="button" class="btn big" id="f-again">Смотреть снова</button>
       <button type="button" class="btn big" id="f-done">Закрыть</button>
     </div>
   </div>
@@ -1075,7 +1091,7 @@ function gridHTML(list, key){
 function renderStrip(){
   $("#strip").innerHTML = DAYS.map(d => {
     const n = photosOfDay(d.n).length, dt = parse(d.date);
-    return `<button type="button" class="${d.date === todayIso ? "now" : ""}" style="--c:${d.hex}" data-goto="${d.n}">
+    return `<button type="button" class="${d.date === todayIso ? "now" : ""}" style="--c:${d.hex}" data-goto="${d.n}" aria-pressed="${fday === d.n}">
       <span class="d">${String(dt.getDate()).padStart(2,"0")}.${String(dt.getMonth()+1).padStart(2,"0")}</span><span class="w">${n ? n + " " + plural(n,"кадр","кадра","кадров") : esc(dayLabel(d).toLowerCase())}</span></button>`;
   }).join("");
 }
@@ -1095,6 +1111,7 @@ function renderAlbum(){
       <div class="chap-body">
         <h3>${esc(d.title)}</h3>
         <div class="chap-meta"><span>${esc(d.kind)}</span><span>${esc(towns.join(", "))}</span>${ph.length ? `<b>${ph.length} ${plural(ph.length,"кадр","кадра","кадров")}</b>` : ""}</div>
+        ${ph.length ? `<div class="chap-actions"><button type="button" class="btn day-play" data-film-day="${d.n}">${I_PLAY}Смотреть ${esc(dayLabel(d).toLowerCase())}</button></div>` : ""}
         ${d.note ? `<p class="chap-note">${esc(d.note)}</p>` : ""}
         ${f ? `<div class="fact"><b>Знаете ли вы?</b> ${esc(f.fact)}</div>` : ""}
         ${body}
@@ -1468,11 +1485,12 @@ const KB = [
   [{transform:"scale(1.1) translate(0,2%)"}, {transform:"scale(1.1) translate(0,-2%)"}]
 ];
 function buildFrames(opts){
-  const list = opts.photos || (opts.day ? photosOfDay(opts.day) : PHOTOS);
+  const one = opts.day != null;
+  const list = opts.photos || (one ? photosOfDay(opts.day) : PHOTOS);
   const demo = !list.length;
-  const frames = [{t:"title", demo}];
+  const frames = one ? [] : [{t:"title", demo}];  /* фильм дня начинается сразу с его главы */
   DAYS.forEach(d => {
-    if (opts.day && d.n !== opts.day) return;
+    if (one && d.n !== opts.day) return;
     const ph = list.filter(p => p.dayN === d.n);
     if (!demo && !ph.length) return;
     frames.push({t:"chapter", d, demo});
@@ -1637,6 +1655,10 @@ function endFilm(){
   film.playing = false;
   Ticker.stop();
   Music.stop(5);
+  /* после фильма дня — кнопка следующего дня с фото */
+  const cur = film.opts.day, nd = cur != null ? filmDays().find(d => d.n > cur) : null;
+  $("#f-next-day").hidden = !nd;
+  if (nd){ $("#f-next-day").innerHTML = I_PLAY + "Смотреть " + esc(dayLabel(nd).toLowerCase()); $("#f-next-day").dataset.day = nd.n; }
   $("#f-end").hidden = false;
   $("#film").classList.remove("calm");
   setPlayIcon();
@@ -1667,6 +1689,7 @@ const fPrev = () => { go(film.i - 1); poke(); };
 $("#f-close").onclick = closeFilm;
 $("#f-done").onclick = closeFilm;
 $("#f-again").onclick = () => openFilm(film.opts);
+$("#f-next-day").onclick = () => { const n = +$("#f-next-day").dataset.day; pickDay(n); openFilm({day:n}); };
 $("#f-play").onclick = togglePlay;
 $("#f-next").onclick = fNext;
 $("#f-prev").onclick = fPrev;
@@ -1870,16 +1893,31 @@ function showTab(name){
 const toContent = () => window.scrollTo({top: $("#cover").offsetHeight - 10, behavior: reduce ? "auto" : "smooth"});
 document.querySelector(".nav").onclick = e => { const b = e.target.closest("[data-tab]"); if (!b) return; showTab(b.dataset.tab); toContent(); };
 $("#to-album").onclick = () => { showTab("album"); toContent(); };
-$("#play-film").onclick = () => openFilm({});
+/* Выбор дня для фильма: «Все дни» или один день — на обложке и в полоске дней */
+let fday = store.get("alb-fday", "all");
+const filmDays = () => DAYS.filter(d => photosOfDay(d.n).length);
+function renderPick(){
+  const ds = filmDays();
+  if (fday !== "all" && !ds.some(d => d.n === fday)) fday = "all";
+  const dm = s => s.slice(8) + "." + s.slice(5, 7);
+  $("#pick").innerHTML = `<button type="button" data-pick="all" aria-pressed="${fday === "all"}">Все дни<small>${dm(DAYS[0].date)}–${dm(DAYS[DAYS.length-1].date)}</small></button>`
+    + ds.map(d => `<button type="button" data-pick="${d.n}" style="--c:${d.hex}" aria-pressed="${fday === d.n}">${esc(dayLabel(d))}<small>${dm(d.date)}</small></button>`).join("");
+  const d = fday === "all" ? null : DAYS.find(x => x.n === fday);
+  $("#play-lbl").textContent = "Смотреть фильм · " + (d ? dayLabel(d).toLowerCase() : "все дни");
+  $$("#strip [data-goto]").forEach(b => b.setAttribute("aria-pressed", String(fday === +b.dataset.goto)));
+}
+function pickDay(v){ fday = v; store.set("alb-fday", v); renderPick(); }
+$("#pick").onclick = e => { const b = e.target.closest("[data-pick]"); if (!b) return; pickDay(b.dataset.pick === "all" ? "all" : +b.dataset.pick); };
+$("#play-film").onclick = () => openFilm(fday === "all" ? {} : {day:fday});
 $("#box-film").onclick = () => { const l = favList(); if (l.length) openFilm({photos:l}); };
 document.addEventListener("click", e => {
   const t = e.target.closest("[data-ph]");
   if (t){ const list = listFor(t.dataset.list); openLB(list, list.findIndex(p => p.i === +t.dataset.ph)); return; }
   if (e.target.closest("#news-film")){ const l = PHOTOS.filter(p => NEW.has(p.id)); if (l.length) openFilm({photos:l}); return; }
   const fd = e.target.closest("[data-film-day]");
-  if (fd){ openFilm({day: +fd.dataset.filmDay}); return; }
+  if (fd){ const n = +fd.dataset.filmDay; if (photosOfDay(n).length) pickDay(n); openFilm({day:n}); return; }
   const g = e.target.closest("[data-goto]");
-  if (g){ showTab("album"); const el = $("#day-" + g.dataset.goto); if (el) el.scrollIntoView({behavior: reduce ? "auto" : "smooth", block:"start"}); }
+  if (g){ if (photosOfDay(+g.dataset.goto).length) pickDay(+g.dataset.goto); showTab("album"); const el = $("#day-" + g.dataset.goto); if (el) el.scrollIntoView({behavior: reduce ? "auto" : "smooth", block:"start"}); }
 });
 document.addEventListener("keydown", e => {
   if (!$("#film").hidden){
@@ -1966,7 +2004,7 @@ if ("serviceWorker" in navigator && /github\.io$/.test(location.hostname)){
 }
 
 /* ---------- Старт ---------- */
-renderCover(); renderStrip(); renderAlbum(); renderMap(); renderBox(); renderSettings(); renderInstall(); updateMusicUI(); setPlayIcon();
+renderCover(); renderStrip(); renderAlbum(); renderMap(); renderBox(); renderSettings(); renderInstall(); renderPick(); updateMusicUI(); setPlayIcon();
 const hashTab = (location.hash || "").slice(1);
 showTab(["album","map","box","set"].includes(hashTab) ? hashTab : store.get("alb-tab", "album"));
 Dust.start();
