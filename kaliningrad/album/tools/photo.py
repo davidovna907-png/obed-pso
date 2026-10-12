@@ -89,15 +89,16 @@ def video_info(path):
     return float(info["format"].get("duration", 0)), hdr, shot
 
 
-def make_video(path, out_mp4, poster, thumb_path, write):
+def make_video(path, out_mp4, poster, thumb_path, write, mute=False):
     dur, hdr, shot = video_info(path)
     scale = f"scale='if(gt(iw,ih),{VIDEO_MAX},-2)':'if(gt(iw,ih),-2,{VIDEO_MAX})'"
     vf = (TONEMAP + "," if hdr else "") + scale + ",format=yuv420p"
     if write:
-        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", path, "-map", "0:v:0", "-map", "0:a:0?", "-vf", vf,
+        # mute — без звука (голоса): в альбоме и фильме поверх видео звучит музыка
+        audio = ["-an"] if mute else ["-map", "0:a:0?", "-c:a", "aac", "-b:a", "96k", "-ac", "2"]
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", path, "-map", "0:v:0", *audio, "-vf", vf,
                         "-c:v", "libx264", "-preset", "slow", "-crf", "24", "-profile:v", "high",
                         "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709",
-                        "-c:a", "aac", "-b:a", "96k", "-ac", "2",
                         "-map_metadata", "-1", "-map_chapters", "-1", "-movflags", "+faststart", out_mp4], check=True)
         t = min(0.6, dur / 3)
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{t:.2f}", "-i", out_mp4, "-frames:v", "1", "-q:v", "3", poster], check=True)
@@ -149,6 +150,7 @@ def main():
     ap.add_argument("--title", help="своя подпись к кадру")
     ap.add_argument("--memory", help="история кадра словами пользователя")
     ap.add_argument("--write", action="store_true", help="дописать в album-data")
+    ap.add_argument("--mute", action="store_true", help="видео без звука (убрать голоса)")
     ap.add_argument("--album", default=os.path.dirname(os.path.dirname(os.path.abspath(__file__))), help="папка альбома")
     a = ap.parse_args()
 
@@ -184,9 +186,11 @@ def main():
 
         if is_video:
             dur, shot, vw, vh = make_video(path, os.path.join(photos_dir, pid + ".mp4"), os.path.join(photos_dir, pid + ".jpg"),
-                                           os.path.join(thumbs_dir, pid + ".jpg"), a.write)
+                                           os.path.join(thumbs_dir, pid + ".jpg"), a.write, a.mute)
             e = {"id": pid, "day": day, "type": "video", "src": f"photos/{pid}.mp4", "poster": f"photos/{pid}.jpg",
                  "thumb": f"photos/t/{pid}.jpg", "w": vw, "h": vh, "dur": round(dur, 1)}
+            if a.mute:
+                e["muted"] = True
             for k_, v_ in (("place", a.place), ("town", a.town), ("title", a.title)):
                 if v_:
                     e[k_] = v_
