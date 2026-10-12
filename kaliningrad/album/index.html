@@ -1894,8 +1894,12 @@ const toContent = () => window.scrollTo({top: $("#cover").offsetHeight - 10, beh
 document.querySelector(".nav").onclick = e => { const b = e.target.closest("[data-tab]"); if (!b) return; showTab(b.dataset.tab); toContent(); };
 $("#to-album").onclick = () => { showTab("album"); toContent(); };
 /* Выбор дня для фильма: «Все дни» или один день — на обложке и в полоске дней */
-let fday = store.get("alb-fday", "all");
 const filmDays = () => DAYS.filter(d => photosOfDay(d.n).length);
+/* по умолчанию — один день, чтобы не уставать: сегодняшний, если в нём есть фото, иначе последний с фото;
+   свой выбор держится до конца дня, назавтра альбом снова откроется на новом дне */
+const defaultDay = () => { const ds = filmDays(), t = ds.find(d => d.date === todayIso); return t ? t.n : ds.length ? ds[ds.length-1].n : "all"; };
+const savedPick = store.get("alb-fday2", null);
+let fday = savedPick && savedPick.date === todayIso ? savedPick.v : defaultDay();
 function renderPick(){
   const ds = filmDays();
   if (fday !== "all" && !ds.some(d => d.n === fday)) fday = "all";
@@ -1906,7 +1910,7 @@ function renderPick(){
   $("#play-lbl").textContent = "Смотреть фильм · " + (d ? dayLabel(d).toLowerCase() : "все дни");
   $$("#strip [data-goto]").forEach(b => b.setAttribute("aria-pressed", String(fday === +b.dataset.goto)));
 }
-function pickDay(v){ fday = v; store.set("alb-fday", v); renderPick(); }
+function pickDay(v){ fday = v; store.set("alb-fday2", {v, date:todayIso}); renderPick(); }
 $("#pick").onclick = e => { const b = e.target.closest("[data-pick]"); if (!b) return; pickDay(b.dataset.pick === "all" ? "all" : +b.dataset.pick); };
 $("#play-film").onclick = () => openFilm(fday === "all" ? {} : {day:fday});
 $("#box-film").onclick = () => { const l = favList(); if (l.length) openFilm({photos:l}); };
