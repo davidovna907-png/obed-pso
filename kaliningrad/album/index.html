@@ -326,6 +326,10 @@ img{max-width:100%}
 .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:6px;overflow:hidden;box-shadow:0 30px 70px -20px rgba(0,0,0,.9)}
 .pc-front{background:linear-gradient(160deg,#fbf6ea,#efe4cc);padding:7px;display:flex;flex-direction:column}
 .pc-front img,.pc-front video{width:100%;flex:0 0 auto;object-fit:cover;display:block;border-radius:2px;background:#222}
+.pano{flex:0 0 auto;overflow-x:auto;overflow-y:hidden;border-radius:2px;background:#141b20;scrollbar-width:none;touch-action:pan-x}
+.pano::-webkit-scrollbar{display:none}
+.pano img{height:100%;width:auto;max-width:none;display:block}
+.pf-cap small{display:block;font:500 11px/1.3 var(--body);color:var(--paper-mist);letter-spacing:.04em}
 .pf-cap{flex:1;min-height:0;display:grid;place-items:center;padding:2px 10px;overflow:hidden;text-align:center;font:500 clamp(21px,4.8vw,30px)/1.05 var(--hand);color:#253064}
 .pc-back{transform:rotateY(180deg);background:var(--paper);color:var(--paper-ink);overflow:auto;
   background-image:radial-gradient(ellipse at 20% 0%,rgba(255,255,255,.55),transparent 60%),linear-gradient(135deg,var(--paper),var(--paper-2))}
@@ -544,7 +548,7 @@ img{max-width:100%}
  "dayNotes": {"1": "Королевские ворота, район Амалиенау, улица Фрунзе — по программе экскурсии первого дня. Виллы в Амалиенау, марципановый музей", "2": "Замок Нойхаузен, Шаакен, сыроварня, Зеленоградск, Балтийское море — по маршруту второго дня"},
  "dayRoutes": {"2": ["kgd", "gur", "sha", "zel", "kgd"]},
  "extraTowns": {"gur": ["Гурьевск", 20.603, 54.77]},
- "extraPlaces": {"sinag": {"name": "Новая синагога", "old": "Neue Synagoge", "year": "1896 / 2018", "town": "kgd", "day": 1, "fact": "Синагогу Кёнигсберга сожгли в Хрустальную ночь 1938 года. На её месте по старым чертежам построили новое здание, оно открылось в 2018 году."}, "neuh": {"name": "Замок Нойхаузен", "old": "Neuhausen", "year": "", "town": "gur", "day": 2, "fact": ""}},
+ "extraPlaces": {"sinag": {"name": "Новая синагога", "old": "Neue Synagoge", "year": "1896 / 2018", "town": "kgd", "day": 1, "fact": "Синагогу Кёнигсберга сожгли в Хрустальную ночь 1938 года. На её месте по старым чертежам построили новое здание, оно открылось в 2018 году."}, "neuh": {"name": "Замок Нойхаузен", "old": "Neuhausen", "year": "1292", "town": "gur", "day": 2, "fact": ""}},
  "photos": [
  {"id": "d0-01", "day": 0, "src": "photos/d0-01.jpg", "thumb": "photos/t/d0-01.jpg", "w": 1500, "h": 2000, "town": "khr", "title": "В полёте", "date": "2026-10-10"},
  {"id": "d0-02", "day": 0, "src": "photos/d0-02.jpg", "thumb": "photos/t/d0-02.jpg", "w": 1500, "h": 2000, "town": "khr", "title": "Над облаками", "date": "2026-10-10"},
@@ -653,7 +657,23 @@ img{max-width:100%}
  {"id": "d2-13", "day": 2, "src": "photos/d2-13.jpg", "thumb": "photos/t/d2-13.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "Мамуля у Мюнхгаузена на ядре", "date": "2026-10-12"},
  {"id": "d2-14", "day": 2, "src": "photos/d2-14.jpg", "thumb": "photos/t/d2-14.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "Мамуля и барон Мюнхгаузен", "date": "2026-10-12"},
  {"id": "d2-15", "day": 2, "src": "photos/d2-15.jpg", "thumb": "photos/t/d2-15.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "Я у Мюнхгаузена на ядре", "date": "2026-10-12"},
- {"id": "d2-16", "day": 2, "src": "photos/d2-16.jpg", "thumb": "photos/t/d2-16.jpg", "w": 1225, "h": 2000, "place": "neuh", "title": "Я и барон Мюнхгаузен", "date": "2026-10-12"}
+ {"id": "d2-16", "day": 2, "src": "photos/d2-16.jpg", "thumb": "photos/t/d2-16.jpg", "w": 1225, "h": 2000, "place": "neuh", "title": "Я и барон Мюнхгаузен", "date": "2026-10-12"},
+ {"id": "d2-17", "day": 2, "src": "photos/d2-17.jpg", "thumb": "photos/t/d2-17.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "Я как барон Мюнхгаузен", "date": "2026-10-12"},
+ {"id": "d2-18", "day": 2, "src": "photos/d2-18.jpg", "thumb": "photos/t/d2-18.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "С мамулей у Мюнхгаузена", "date": "2026-10-12"},
+ {"id": "d2-19", "day": 2, "src": "photos/d2-19.jpg", "thumb": "photos/t/d2-19.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "С мамулей: «Улыбайтесь, господа!»", "date": "2026-10-12"},
+ {"id": "d2-20", "day": 2, "src": "photos/d2-20.jpg", "thumb": "photos/t/d2-20.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "Селфи с мамулей во дворе Нойхаузена", "date": "2026-10-12"},
+ {"id": "d2-21", "day": 2, "src": "photos/d2-21.jpg", "thumb": "photos/t/d2-21.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "Арка ворот замка", "date": "2026-10-12"},
+ {"id": "d2-22", "day": 2, "src": "photos/d2-22.jpg", "thumb": "photos/t/d2-22.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "Проход в замковый двор", "date": "2026-10-12"},
+ {"id": "d2-23", "day": 2, "src": "photos/d2-23.jpg", "thumb": "photos/t/d2-23.jpg", "w": 2000, "h": 452, "place": "neuh", "title": "Панорама двора замка", "date": "2026-10-12"},
+ {"id": "d2-24", "day": 2, "src": "photos/d2-24.jpg", "thumb": "photos/t/d2-24.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "Рассказ гида в плаще", "date": "2026-10-12"},
+ {"id": "d2-25", "day": 2, "src": "photos/d2-25.jpg", "thumb": "photos/t/d2-25.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "Мамуля задумалась", "date": "2026-10-12"},
+ {"id": "d2-26", "day": 2, "src": "photos/d2-26.jpg", "thumb": "photos/t/d2-26.jpg", "w": 1398, "h": 2000, "place": "neuh", "title": "Мамуля у старого колодца", "date": "2026-10-12"},
+ {"id": "d2-27", "day": 2, "src": "photos/d2-27.jpg", "thumb": "photos/t/d2-27.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "Сувениры замка Н", "date": "2026-10-12"},
+ {"id": "d2-28", "day": 2, "src": "photos/d2-28.jpg", "thumb": "photos/t/d2-28.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "Колодец и таверна «Орден гуся»", "date": "2026-10-12"},
+ {"id": "d2-29", "day": 2, "src": "photos/d2-29.jpg", "thumb": "photos/t/d2-29.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "Мамуля с яблоком среди тыкв", "date": "2026-10-12"},
+ {"id": "d2-30", "day": 2, "src": "photos/d2-30.jpg", "thumb": "photos/t/d2-30.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "Я среди тыкв и сена", "date": "2026-10-12"},
+ {"id": "d2-31", "day": 2, "src": "photos/d2-31.jpg", "thumb": "photos/t/d2-31.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "С мамулей у парка альпак", "date": "2026-10-12"},
+ {"id": "d2-32", "day": 2, "src": "photos/d2-32.jpg", "thumb": "photos/t/d2-32.jpg", "w": 1500, "h": 2000, "place": "neuh", "title": "С мамулей у парка альпак, чёрно-белое", "date": "2026-10-12"}
  ]
 }
 </script>
@@ -1525,15 +1545,21 @@ function sizeCard(){
   const h = Math.max(ph + pad + cap, Math.min(H, 430));
   w = Math.max(w, Math.min(W, 320));
   $("#card").style.width = Math.round(w) + "px"; $("#card").style.height = Math.round(h) + "px";
+  /* панорама — во всю высоту фото, листается пальцем вбок */
+  const box = $("#lb-front .pano");
+  if (box){ box.style.height = Math.round(h - pad - cap) + "px"; box.scrollLeft = (box.scrollWidth - box.clientWidth) / 2; return; }
   const im = $("#lb-front img, #lb-front video"); if (im) im.style.height = Math.round(ph) + "px";
 }
+const isPano = p => !p.isVideo && p.w && p.h && p.w / p.h > 2;
 function renderLB(){
   const p = lb.list[lb.i];
   $("#card").classList.remove("flipped");
   const media = p.isVideo
     ? `<video src="${esc(p.src)}" poster="${esc(p.img)}" controls playsinline preload="metadata"></video>`
+    : isPano(p) ? `<div class="pano"><img src="${esc(p.src)}" alt="${esc(p.name)}"></div>`
     : `<img src="${esc(p.src)}" alt="${esc(p.name)}">`;
-  $("#lb-front").innerHTML = media + `<div class="pf-cap">${esc(p.name)}</div>`;
+  $("#lb-front").innerHTML = media + `<div class="pf-cap"><span>${esc(p.name)}${isPano(p) ? `<small>← листайте панораму пальцем →</small>` : ""}</span></div>`;
+  const pi = $("#lb-front .pano img"); if (pi) pi.addEventListener("load", sizeCard, {once:true});
   sizeCard();
   $("#lb-back").innerHTML = backHTML(p);
   $("#lb-title").textContent = p.name;
@@ -1560,7 +1586,7 @@ $("#lb-fav").onclick = () => {
 (function(){
   const st = $("#lb-stage"); let x0 = null, y0 = 0;
   /* на видео жесты отдаём его кнопкам (перемотка), листание — кнопками или по фото */
-  st.addEventListener("pointerdown", e => { if (e.target.closest("video")){ x0 = null; return; } x0 = e.clientX; y0 = e.clientY; });
+  st.addEventListener("pointerdown", e => { if (e.target.closest("video, .pano")){ x0 = null; return; } x0 = e.clientX; y0 = e.clientY; });
   st.addEventListener("pointerup", e => {
     if (x0 == null) return;
     const dx = e.clientX - x0, dy = e.clientY - y0; x0 = null;
