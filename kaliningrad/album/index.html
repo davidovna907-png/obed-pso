@@ -1024,11 +1024,26 @@ const LAND = [[19.63,54.45],[19.88,54.62],[19.9,54.66],[19.93,54.8],[19.94,54.87
 const CURONIAN = [[20.585,54.98],[20.83,55.15],[21.0,55.268],[21.15,55.26],[21.25,55.2],[21.2,55.05],[21.0,54.97],[20.72,54.95]];
 const VISTULA = [[19.66,54.455],[19.885,54.605],[20.0,54.65],[20.2,54.665],[20.36,54.672],[20.25,54.62],[20.05,54.55],[19.85,54.44]];
 const PREGOLYA = [[20.36,54.672],[20.51,54.705],[20.9,54.65],[21.2,54.62],[21.5,54.64],[21.81,54.63]];
-const mapBase = () => `<rect x="-2000" y="-2000" width="4800" height="4460" fill="#0c1820"/>
+/* подписи моря и соседей; на увеличенной карте фильма (view) — сдвигаются внутрь кадра, если их обрезает край,
+   и не показываются, если их место почти целиком вне кадра */
+const MAP_LABELS = [["БАЛТИЙСКОЕ МОРЕ", 34, 70], ["ЛИТВА", 640, 56], ["ПОЛЬША", 560, 452]];
+function mapLabels(view){
+  return MAP_LABELS.map(([t, x, y]) => {
+    if (view){
+      const w = t.length * 11.3, m = view.m;
+      if (y < view.y + 15 + m || y > view.y + view.h - m) return "";
+      const lo = view.x + m, hi = view.x + view.w - m - w;
+      const vis = Math.min(x + w, view.x + view.w) - Math.max(x, view.x);
+      if (x < lo || x > hi){ if (vis < w * .5 || hi < lo) return ""; x = Math.min(Math.max(x, lo), hi); }
+    }
+    return `<text x="${Math.round(x)}" y="${y}">${t}</text>`;
+  }).join("");
+}
+const mapBase = view => `<rect x="-2000" y="-2000" width="4800" height="4460" fill="#0c1820"/>
   <polygon points="${pts(LAND)}" fill="#172630" stroke="#2b4250" stroke-width="1.5"/>
   <polygon points="${pts(CURONIAN)}" fill="#0f2029" stroke="#2b4250"/><polygon points="${pts(VISTULA)}" fill="#0f2029" stroke="#2b4250"/>
   <polyline points="${pts(PREGOLYA)}" fill="none" stroke="#2f6e78" stroke-width="2"/>
-  <g font-family="IBM Plex Mono, monospace" font-size="15" letter-spacing="2" fill="#5b8191"><text x="34" y="70">БАЛТИЙСКОЕ МОРЕ</text><text x="640" y="56">ЛИТВА</text><text x="560" y="452">ПОЛЬША</text></g>`;
+  <g font-family="IBM Plex Mono, monospace" font-size="15" letter-spacing="2" fill="#5b8191">${mapLabels(view)}</g>`;
 const routeD = r => "M" + r.map(k => MX(TOWNS[k].lon) + " " + MY(TOWNS[k].lat)).join("L");
 const lblAttr = (t, off) => { off = off || 13; return (t.lon >= 20 && t.lon < 20.3) || t.k === "khr" ? `x="${MX(t.lon)-off}" text-anchor="end"` : `x="${MX(t.lon)+off}"`; };
 
@@ -1527,7 +1542,7 @@ function frameHTML(f){
     if (vw / vh < ar) vw = vh * ar; else vh = vw / ar;
     const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2 + vh * .1, u = vw / innerWidth;
     const pins = uniq.map((k, j) => { const t = TOWNS[k], y = MY(t.lat); return `<g class="pin" style="animation-delay:${.6 + j*.7}s"><circle cx="${MX(t.lon)}" cy="${y}" r="${(7*u).toFixed(1)}" fill="${d.hex}" stroke="#071016" stroke-width="${(2.5*u).toFixed(1)}"/><text ${lblAttr(t, 11*u)} y="${(y + 6*u).toFixed(1)}" font-family="Golos Text, sans-serif" font-size="${(17*u).toFixed(1)}" font-weight="600" fill="#fff" paint-order="stroke" stroke="#071016" stroke-width="${(4*u).toFixed(1)}">${esc(t.name)}</text></g>`; }).join("");
-    return `<div class="f-map"><svg viewBox="${(cx - vw/2).toFixed(1)} ${(cy - vh/2).toFixed(1)} ${vw.toFixed(1)} ${vh.toFixed(1)}" aria-hidden="true">${mapBase()}<path class="draw" d="${routeD(r)}" pathLength="1" stroke="${d.hex}" stroke-width="${(4*u).toFixed(1)}" style="color:${d.hex}"/>${pins}</svg></div>
+    return `<div class="f-map"><svg viewBox="${(cx - vw/2).toFixed(1)} ${(cy - vh/2).toFixed(1)} ${vw.toFixed(1)} ${vh.toFixed(1)}" aria-hidden="true">${mapBase({x:cx - vw/2, y:cy - vh/2, w:vw, h:vh, m:16 * u})}<path class="draw" d="${routeD(r)}" pathLength="1" stroke="${d.hex}" stroke-width="${(4*u).toFixed(1)}" style="color:${d.hex}"/>${pins}</svg></div>
       <div class="f-map-cap" style="--c:${d.hex}"><div class="ft-mono">${esc(dayLabel(d))} · путь по карте</div><div class="f-km">≈ ${routeKm(r)} км</div><div class="ft-p">по прямой: ${uniq.map(k => esc(TOWNS[k].name)).join(" → ")}${r[r.length-1] === r[0] && r.length > 2 ? " → обратно" : ""}</div></div>`;
   }
   if (f.t === "fact") return `${sceneImg(f.d, "bg dim kb")}<div class="ft" style="--c:${f.d.hex}"><div class="ft-eyebrow">Знаете ли вы?</div><p class="ft-fact">${esc(f.f.fact)}</p><div class="ft-mono">${esc(f.f.name)}</div></div>`;
