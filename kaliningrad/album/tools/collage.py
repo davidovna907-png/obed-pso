@@ -1,10 +1,12 @@
 """Фотоальбом «Калининград»: коллаж-скрапбук — три фото в рамках-полароидах на тёмном фоне альбома.
 
-  python3 kaliningrad/album/tools/collage.py [--column] ПАПКА_ШРИФТОВ выход.jpg "Заголовок" "подзаголовок" фото1 "подпись1" фото2 "подпись2" фото3 "подпись3"
+  python3 kaliningrad/album/tools/collage.py [--column|--menu] ПАПКА_ШРИФТОВ выход.jpg "Заголовок" "подзаголовок" фото1 "подпись1" фото2 "подпись2" фото3 "подпись3"
 
 Без --column — три карточки в ряд (широкая страница, подписи на рамках).
 С --column — «сверху — посередине — снизу»: карточки лесенкой по вертикали, подписи от руки
 со стрелкой на свободном месте рядом (высокая страница, удобна на телефоне).
+С --menu — страница-меню для еды и напитков: бумажная карточка с рамкой, сверху широкое фото, под ним
+два высоких рядом; подпись — «Название|пояснение от руки» (название шрифтом меню, пояснение рукой).
 У фото можно указать, что держать в кадре при обрезке до 3:4: путь@0.45,0.5 (доли ширины и высоты).
 
 Шрифты Caveat (подписи от руки) и Oranienbaum (заголовок) — .ttf с Google Fonts:
@@ -20,8 +22,8 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageOps
 
 args = sys.argv[1:]
-column = args[0] == "--column"
-if column:
+column, menu = args[0] == "--column", args[0] == "--menu"
+if column or menu:
     args = args[1:]
 FONTS, out, title, sub = args[:4]
 items = [(args[i], args[i + 1]) for i in range(4, len(args), 2)]
@@ -120,7 +122,61 @@ def note(bg, text, cx, cy, width, ang, arrow_to):
     return bg
 
 
-if column:
+if menu:
+    # страница-меню: карточка кафе, широкое фото сверху и два высоких снизу
+    W, H, M = 1500, 2960, 70
+    bg = background(W, H, [((244, 166, 58), 1300, 200, 1200, .22), ((55, 203, 184), 150, H - 200, 1200, .2)])
+    paper = Image.new("RGB", (W - 2 * M, H - 2 * M))
+    pd = ImageDraw.Draw(paper)
+    for y in range(paper.height):
+        t = y / paper.height
+        pd.line([(0, y), (paper.width, y)], fill=(int(249 - 12 * t), int(243 - 18 * t), int(229 - 28 * t)))
+    BROWN, DARK = (150, 106, 58), (40, 36, 50)
+    pd.rectangle([22, 22, paper.width - 23, paper.height - 23], outline=BROWN, width=3)
+    pd.rectangle([34, 34, paper.width - 35, paper.height - 35], outline=BROWN, width=1)
+    for cx, cy in [(22, 22), (paper.width - 23, 22), (22, paper.height - 23), (paper.width - 23, paper.height - 23)]:
+        pd.polygon([(cx, cy - 14), (cx + 14, cy), (cx, cy + 14), (cx - 14, cy)], fill=AMBER)
+    shadow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    ImageDraw.Draw(shadow).rectangle([M + 14, M + 24, W - M + 14, H - M + 24], fill=(0, 0, 0, 150))
+    base = bg.convert("RGBA"); base.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(22)))
+    bg = base.convert("RGB"); bg.paste(paper, (M, M))
+    d = ImageDraw.Draw(bg)
+    L, R = M + 60, W - M - 60
+    cap_f, head_f = ImageFont.truetype(DISP, 40), ImageFont.truetype(DISP, 124)
+    name_f, hand_f = ImageFont.truetype(DISP, 66), ImageFont.truetype(HAND, 70)
+    hdr = "  ".join(sub.upper())
+    d.text(((W - d.textlength(hdr, font=cap_f)) / 2, 150), hdr, font=cap_f, fill=BROWN)
+    d.text(((W - d.textlength(title, font=head_f)) / 2, 205), title, font=head_f, fill=DARK)
+    y = 372; d.line([(L + 120, y), (W / 2 - 40, y)], fill=AMBER, width=3); d.line([(W / 2 + 40, y), (R - 120, y)], fill=AMBER, width=3)
+    d.polygon([(W / 2, y - 18), (W / 2 + 13, y + 4), (W / 2, y + 18), (W / 2 - 13, y + 4)], fill=AMBER)
+
+    def framed(spec, box):
+        x0, y0, x1, y1 = box
+        ph = load(spec, (x1 - x0, y1 - y0))
+        mask = Image.new("L", ph.size, 0); ImageDraw.Draw(mask).rounded_rectangle([0, 0, ph.width - 1, ph.height - 1], 18, fill=255)
+        bg.paste(ph, (x0, y0), mask)
+        ImageDraw.Draw(bg).rounded_rectangle([x0, y0, x1 - 1, y1 - 1], 18, outline=(120, 90, 60), width=2)
+
+    def caption(text, x0, x1, y, center=False):
+        name, _, note_ = text.partition("|")
+        dd = ImageDraw.Draw(bg)
+        if center:
+            dd.text(((x0 + x1 - dd.textlength(name, font=name_f)) / 2, y), name, font=name_f, fill=DARK)
+            for i, ln in enumerate(wrap(dd, note_, hand_f, x1 - x0)):
+                dd.text(((x0 + x1 - dd.textlength(ln, font=hand_f)) / 2, y + 82 + i * 70), ln, font=hand_f, fill=INK)
+            return
+        nw, tw = dd.textlength(name, font=name_f), dd.textlength(note_, font=hand_f)
+        dd.text((x0, y), name, font=name_f, fill=DARK)
+        dd.text((x1 - tw, y + 2), note_, font=hand_f, fill=INK)
+        for x in range(int(x0 + nw + 24), int(x1 - tw - 20), 22):  # пунктир, как в меню
+            dd.ellipse([x, y + 50, x + 5, y + 55], fill=BROWN)
+
+    (s1, c1), (s2, c2), (s3, c3) = items[:3]
+    framed(s1, (L, 420, R, 1290)); caption(c1, L, R, 1312)
+    hw = (R - L - 40) // 2
+    framed(s2, (L, 1440, L + hw, 2560)); caption(c2, L, L + hw, 2584, True)
+    framed(s3, (R - hw, 1440, R, 2560)); caption(c3, R - hw, R, 2584, True)
+elif column:
     # «сверху — посередине — снизу»: лесенка из трёх карточек, подписи на свободной стороне
     W, PW, PH, B, BB, STEP, TOP = 1500, 820, 1093, 24, 44, 1000, 300
     card_h = PH + B + BB + 40

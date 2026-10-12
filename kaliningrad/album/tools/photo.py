@@ -181,9 +181,9 @@ def main():
             day = n if 0 <= n <= TRIP_DAYS else None
         if day is None:
             sys.exit(f"{path}: не понятно, к какому дню поездки относится фото, укажите --day")
-        k = 1
-        while f"d{day}-{k:02d}" in used:
-            k += 1
+        # следующий номер после самого большого: номера убранных кадров не занимать (по ним хранится «шкатулка»)
+        nums = [int(u.split("-")[1]) for u in used if u.startswith(f"d{day}-") and u.split("-")[1].isdigit()]
+        k = max(nums, default=0) + 1
         pid = f"d{day}-{k:02d}"
         used.add(pid)
 
