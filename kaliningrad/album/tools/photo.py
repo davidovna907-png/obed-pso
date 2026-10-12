@@ -89,10 +89,12 @@ def video_info(path):
     return float(info["format"].get("duration", 0)), hdr, shot
 
 
-def make_video(path, out_mp4, poster, thumb_path, write, mute=False):
+def make_video(path, out_mp4, poster, thumb_path, write, mute=False, turn=0):
     dur, hdr, shot = video_info(path)
     scale = f"scale='if(gt(iw,ih),{VIDEO_MAX},-2)':'if(gt(iw,ih),-2,{VIDEO_MAX})'"
-    vf = (TONEMAP + "," if hdr else "") + scale + ",format=yuv420p"
+    # turn — довернуть видео, если телефон записал поворот неверно (90 — против часовой, -90 — по часовой)
+    rot = {90: "transpose=2,", -90: "transpose=1,", 180: "hflip,vflip,"}.get(turn, "")
+    vf = (TONEMAP + "," if hdr else "") + rot + scale + ",format=yuv420p"
     if write:
         # mute — без звука (голоса): в альбоме и фильме поверх видео звучит музыка
         audio = ["-an"] if mute else ["-map", "0:a:0?", "-c:a", "aac", "-b:a", "96k", "-ac", "2"]
@@ -151,6 +153,7 @@ def main():
     ap.add_argument("--memory", help="история кадра словами пользователя")
     ap.add_argument("--write", action="store_true", help="дописать в album-data")
     ap.add_argument("--mute", action="store_true", help="видео без звука (убрать голоса)")
+    ap.add_argument("--turn", type=int, default=0, choices=[0, 90, -90, 180], help="довернуть видео: 90 — против часовой, -90 — по часовой")
     ap.add_argument("--album", default=os.path.dirname(os.path.dirname(os.path.abspath(__file__))), help="папка альбома")
     a = ap.parse_args()
 
@@ -186,7 +189,7 @@ def main():
 
         if is_video:
             dur, shot, vw, vh = make_video(path, os.path.join(photos_dir, pid + ".mp4"), os.path.join(photos_dir, pid + ".jpg"),
-                                           os.path.join(thumbs_dir, pid + ".jpg"), a.write, a.mute)
+                                           os.path.join(thumbs_dir, pid + ".jpg"), a.write, a.mute, a.turn)
             e = {"id": pid, "day": day, "type": "video", "src": f"photos/{pid}.mp4", "poster": f"photos/{pid}.jpg",
                  "thumb": f"photos/t/{pid}.jpg", "w": vw, "h": vh, "dur": round(dur, 1)}
             if a.mute:
