@@ -195,8 +195,11 @@ elif column:
     H = tops[-1] + heights[-1] + 140
     bg = background(W, H, [((55, 203, 184), 200, 200, 1100, .22), ((244, 166, 58), 1400, H - 300, 1300, .2), ((173, 144, 244), 300, H * .55, 900, .1)])
     d = ImageDraw.Draw(bg)
-    tf = ImageFont.truetype(DISP, 112)
-    d.text(((W - d.textlength(title, font=tf)) / 2, 60), title, font=tf, fill=AMBER)
+    fs = 112  # длинный заголовок — мельче, чтобы влез по ширине
+    while fs > 70 and d.textlength(title, font=ImageFont.truetype(DISP, fs)) > W - 120:
+        fs -= 4
+    tf = ImageFont.truetype(DISP, fs)
+    d.text(((W - d.textlength(title, font=tf)) / 2, 60 + (112 - fs) // 2), title, font=tf, fill=AMBER)
     sf = ImageFont.truetype(HAND, 76)
     d.text(((W - d.textlength(sub, font=sf)) / 2, 190), sub, font=sf, fill=AMBER2)
     for k, (spec, cap) in enumerate(items):
