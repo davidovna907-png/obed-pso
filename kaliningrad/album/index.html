@@ -236,6 +236,34 @@ img{max-width:100%}
 .nav button[aria-selected="true"]{color:var(--amber);background:rgba(244,166,58,.1)}
 
 /* Тост */
+/* Отбор для фильма: галочка «убрать» */
+.chap-actions .btn.pick-on{background:var(--brick);color:#fff;border-color:transparent}
+.chap.picking .tile .gem,.chap.picking .tile .new,.chap.picking .tile .pen{display:none}
+.tile .chk{position:absolute;top:7px;right:7px;width:32px;height:32px;border-radius:50%;border:2.5px solid #fff;background:rgba(10,15,20,.4);
+  display:grid;place-items:center;box-shadow:0 1px 6px rgba(0,0,0,.55);z-index:2}
+.tile .chk svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.tile .nb{position:absolute;top:7px;left:7px;min-width:30px;height:30px;padding:0 7px;border-radius:9px;background:var(--amber);color:#1d1206;
+  font:600 15px/30px var(--mono);text-align:center;z-index:2}
+.tile.out img{filter:grayscale(1) brightness(.4)}
+.tile.out .chk{background:var(--brick);border-color:var(--brick)}
+.tile.out .chk svg{opacity:1}
+.tile.out .play{display:none}
+.tile.out::after{content:"убрать из фильма";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;white-space:nowrap;
+  font:600 12.5px var(--body);color:#fff;background:rgba(236,100,80,.92);padding:5px 9px;border-radius:9px}
+.pickbar{
+  position:fixed;left:12px;right:12px;bottom:calc(var(--nav-h) + 12px + env(safe-area-inset-bottom,0px));z-index:19;max-width:560px;margin:0 auto;
+  background:rgba(22,34,43,.97);border:1px solid var(--brick);border-radius:18px;padding:12px 14px;display:grid;gap:8px;
+  box-shadow:0 14px 40px rgba(0,0,0,.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.pickbar .pb-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:2px 10px}
+.pickbar b{font:400 20px/1.15 var(--display)}
+.pickbar .pb-time{font:500 13.5px var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inset-bottom,0px))}
+.pickbar .pb-time.ok{color:var(--sea)}
+.pickbar .pb-time.over{color:var(--amber)}
+.pickbar .pb-hint{font-size:13px;color:#c9d5da}
+.pickbar .row{gap:8px}
+.pickbar .btn{flex:1}
 .toast{
   position:fixed;left:50%;bottom:calc(var(--nav-h) + 24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);z-index:70;
   background:var(--ink);color:var(--night);padding:10px 16px;border-radius:12px;font-size:14px;font-weight:500;
@@ -554,6 +582,15 @@ img{max-width:100%}
   </div>
 </div>
 
+<div class="pickbar" id="pickbar" hidden>
+  <div class="pb-top"><b id="pb-day"></b><span class="pb-time" id="pb-time"></span></div>
+  <div class="pb-hint" id="pb-hint"></div>
+  <div class="row">
+    <button type="button" class="btn" id="pb-copy">Отправить список</button>
+    <button type="button" class="btn solid" id="pb-done">Готово</button>
+  </div>
+</div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <!-- Содержимое альбома. Фото добавляет Claude: см. раздел «Фотоальбом» в CLAUDE.md. -->
@@ -818,6 +855,11 @@ const PHOTOS = (ALBUM.photos || []).filter(p => p && p.src).map((p, i) => {
   return ph;
 });
 const photosOfDay = n => PHOTOS.filter(p => p.dayN === n);
+/* Отбор для фильма: кадр с галочкой «убрать» остаётся в альбоме, но не идёт в фильм.
+   "film": false в album-data — для всех; отметки на этом телефоне — сразу, до публикации */
+const filmOut = (() => { try { return JSON.parse(localStorage.getItem("alb-filmout") || "{}"); } catch(e){ return {}; } })();
+const inFilm = p => p.id in filmOut ? !filmOut[p.id] : p.film !== false;
+let picking = null;
 const mmss = sec => { sec = Math.round(sec || 0); return Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0"); };
 const sceneOf = d => (d && ALBUM.dayScenes && ALBUM.dayScenes[d.n]) || (d && d.scene) || (d && SCENE_OF_DAY[d.n]) || "sea";
 
@@ -1092,18 +1134,20 @@ function renderCover(){
 }
 
 /* ---------- Альбом: главы по дням ---------- */
-function tile(p, list, wide){
+function tile(p, list, wide, num){
   /* коллаж — на всю ширину и целиком, без обрезки */
   const st = p.collage && p.w && p.h ? ` style="aspect-ratio:${p.w}/${p.h}"` : "";
-  return `<button type="button" class="tile ${wide || p.collage ? "wide" : ""}"${st} data-ph="${p.i}" data-list="${list}" aria-label="${esc(p.name)}">
+  const pk = num != null;
+  return `<button type="button" class="tile ${wide || p.collage ? "wide" : ""} ${pk && !inFilm(p) ? "out" : ""}"${st} data-ph="${p.i}" data-list="${list}" aria-label="${esc(p.name)}"${pk ? ` aria-pressed="${!inFilm(p)}"` : ""}>
+    ${pk ? `<span class="nb">${num}</span><span class="chk"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>` : ""}
     <img src="${esc(p.thumb || p.src)}" alt="" loading="lazy" decoding="async">
     ${p.isVideo ? `<span class="play"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg></span>` : ""}
     ${NEW.has(p.id) ? `<span class="new">новое</span>` : ""}${p.memory ? `<span class="pen">история</span>` : ""}${amber.has(p.id) ? GEM : ""}${p.collage ? "" : `<span class="tc">${p.isVideo ? "Видео " + mmss(p.dur) + " · " : ""}${esc(p.name)}</span>`}</button>`;
 }
-function gridHTML(list, key){
+function gridHTML(list, key, pick){
   return `<div class="grid">` + list.map((p, k) => {
     const r = p.w && p.h ? p.w / p.h : 1.33;
-    return tile(p, key, (k === 0 && r > 1.15 && list.length > 2) || r > 1.75);
+    return tile(p, key, (k === 0 && r > 1.15 && list.length > 2) || r > 1.75, pick ? k + 1 : null);
   }).join("") + `</div>`;
 }
 function renderStrip(){
@@ -1120,16 +1164,16 @@ function renderAlbum(){
     const f = chapFact(d, ph);
     const towns = dayTowns(d, ph);
     let body;
-    if (ph.length) body = gridHTML(ph, "d" + d.n);
+    if (ph.length) body = gridHTML(ph, "d" + d.n, picking === d.n);
     else if (state === "future") body = `<div class="empty"><strong>Этот день ещё впереди</strong>${fmtDay(d.date)}. Здесь появятся кадры дня, а в фильме — своя глава.</div>`;
     else if (state === "today") body = `<div class="empty"><strong>Сегодня этот день!</strong>Присылайте фото в чат с пометкой «в альбом», и они появятся здесь. Пара слов о кадре станет историей на обороте открытки.</div>`;
     else body = `<div class="empty"><strong>Кадров пока нет</strong>Если фото этого дня есть, пришлите их, и глава оживёт.</div>`;
-    return `<article class="chap ${state === "today" ? "today" : ""}" id="day-${d.n}" style="--c:${d.hex}">
+    return `<article class="chap ${state === "today" ? "today" : ""} ${picking === d.n ? "picking" : ""}" id="day-${d.n}" style="--c:${d.hex}">
       <div class="chap-art">${sceneImg(d, "")}<div class="chap-cap"><div class="chap-num">${esc(dayLabel(d))}</div><div class="chap-date">${fmtDay(d.date)}</div></div></div>
       <div class="chap-body">
         <h3>${esc(d.title)}</h3>
         <div class="chap-meta"><span>${esc(d.kind)}</span><span>${esc(towns.join(", "))}</span>${ph.length ? `<b>${ph.length} ${plural(ph.length,"кадр","кадра","кадров")}</b>` : ""}</div>
-        ${ph.length ? `<div class="chap-actions"><button type="button" class="btn day-play" data-film-day="${d.n}">${I_PLAY}Смотреть ${esc(dayLabel(d).toLowerCase())}</button></div>` : ""}
+        ${ph.length ? `<div class="chap-actions"><button type="button" class="btn day-play" data-film-day="${d.n}">${I_PLAY}Смотреть ${esc(dayLabel(d).toLowerCase())} · ${mmss(filmSeconds(d.n))}</button><button type="button" class="btn ${picking === d.n ? "pick-on" : ""}" data-pick-film="${d.n}">${picking === d.n ? "Готово" : "✓ Отобрать для фильма"}</button></div>` : ""}
         ${d.note ? `<p class="chap-note">${esc(d.note)}</p>` : ""}
         ${f ? `<div class="fact"><b>Знаете ли вы?</b> ${esc(f.fact)}</div>` : ""}
         ${body}
@@ -1492,7 +1536,7 @@ $("#sea-on").onchange = e => {
   if (!Music.on) return;
   if (set.sea) Music.startSea(); else if (Music.mode === "none") Music.stop(); else Music.stopSea();
 };
-$("#speed").onclick = e => { const b = e.target.closest("[data-speed]"); if (!b) return; set.speed = +b.dataset.speed; saveSet(); renderSettings(); };
+$("#speed").onclick = e => { const b = e.target.closest("[data-speed]"); if (!b) return; set.speed = +b.dataset.speed; saveSet(); renderSettings(); renderAlbum(); };
 
 /* ---------- Фильм ---------- */
 const film = {frames:[], i:0, left:0, playing:false, cur:0, anims:[], tok:0, calmT:0, wake:null, opts:{}};
@@ -1504,7 +1548,8 @@ const KB = [
 ];
 function buildFrames(opts){
   const one = opts.day != null;
-  const list = opts.photos || (one ? photosOfDay(opts.day) : PHOTOS);
+  const all = one ? photosOfDay(opts.day) : PHOTOS, kept = all.filter(inFilm);
+  const list = opts.photos || (kept.length ? kept : all);
   const demo = !list.length;
   const frames = one ? [] : [{t:"title", demo}];  /* фильм дня начинается сразу с его главы */
   DAYS.forEach(d => {
@@ -1907,10 +1952,69 @@ function showTab(name){
   $$(".nav [data-tab]").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === name));
   ["album","map","box","set"].forEach(t => { $("#p-" + t).hidden = t !== name; });
   store.set("alb-tab", name);
+  renderPickbar();
 }
 const toContent = () => window.scrollTo({top: $("#cover").offsetHeight - 10, behavior: reduce ? "auto" : "smooth"});
 document.querySelector(".nav").onclick = e => { const b = e.target.closest("[data-tab]"); if (!b) return; showTab(b.dataset.tab); toContent(); };
 $("#to-album").onclick = () => { showTab("album"); toContent(); };
+/* Длительность фильма дня (с учётом скорости показа и мелодии дня); цель — 3 минуты */
+const FILM_GOAL = 180;
+function filmSeconds(n){
+  const T = set.music === "days" ? TUNES[dayTune(n)] : TUNES[set.music] || TUNES.breeze;
+  const b = 60 / T.bpm * T.beats;
+  return Math.round(buildFrames({day:n}).reduce((sum, f) => sum + (f.t === "credits" ? 20
+    : (f.t === "video" ? Math.max(2, Math.ceil((f.p.dur || 6) / b)) : barsOf(f)) * b), 0));
+}
+function renderPickbar(){
+  const bar = $("#pickbar");
+  document.body.classList.toggle("picking", picking != null);
+  if (picking == null || $("#p-album").hidden){ bar.hidden = true; return; }
+  const d = DAYS.find(x => x.n === picking), ph = photosOfDay(picking), out = ph.filter(p => !inFilm(p)).length, sec = filmSeconds(picking);
+  const T = set.music === "days" ? TUNES[dayTune(picking)] : TUNES[set.music] || TUNES.breeze, per = (+set.speed || 3) * 60 / T.bpm * T.beats;
+  bar.hidden = false;
+  $("#pb-day").textContent = dayLabel(d) + ": убрано " + out + " из " + ph.length;
+  $("#pb-time").textContent = "фильм ≈ " + mmss(sec) + " из 3:00";
+  $("#pb-time").className = "pb-time " + (sec <= FILM_GOAL ? "ok" : "over");
+  $("#pb-hint").textContent = sec <= FILM_GOAL
+    ? "Укладывается в 3 минуты! Отмеченные кадры остаются в альбоме, но в фильм не идут. Нажмите «Отправить список» и вставьте его в чат с Claude, чтобы так стало у всех."
+    : "Чтобы уложиться в 3 минуты, уберите ещё ≈ " + Math.ceil((sec - FILM_GOAL) / per) + " " + plural(Math.ceil((sec - FILM_GOAL) / per), "фото", "фото", "фото") + ". Нажмите на кадр, чтобы поставить или снять галочку.";
+}
+function setPicking(n){
+  picking = picking === n ? null : n;
+  renderAlbum(); renderPickbar();
+  if (picking != null){ const el = $("#day-" + n + " .grid"); if (el) el.scrollIntoView({behavior: reduce ? "auto" : "smooth", block:"start"}); }
+}
+function togglePick(t){
+  const p = PHOTOS.find(x => x.i === +t.dataset.ph); if (!p) return;
+  filmOut[p.id] = inFilm(p);
+  if (filmOut[p.id] === (p.film === false)) delete filmOut[p.id];
+  store.set("alb-filmout", filmOut);
+  t.classList.toggle("out", !inFilm(p)); t.setAttribute("aria-pressed", String(!inFilm(p)));
+  const b = $("#day-" + p.dayN + " .day-play");
+  if (b) b.innerHTML = I_PLAY + "Смотреть " + esc(dayLabel(p.dayObj).toLowerCase()) + " · " + mmss(filmSeconds(p.dayN));
+  renderPickbar();
+}
+function pickText(){
+  const lines = [];
+  DAYS.forEach(d => {
+    const ph = photosOfDay(d.n), out = ph.map((p, k) => [k + 1, p]).filter(([, p]) => !inFilm(p));
+    if (!out.length) return;
+    lines.push(`${dayLabel(d)} (${fmtDay(d.date)}): убрать из фильма ${out.length} — № ${out.map(([k]) => k).join(", ")}`,
+      `id: ${out.map(([, p]) => p.id).join(" ")}`, `фильм дня ≈ ${mmss(filmSeconds(d.n))}`, "");
+  });
+  return lines.length ? "Фотоальбом «Калининград» — отбор для фильма\n" + lines.join("\n") : "";
+}
+$("#pb-done").onclick = () => setPicking(picking);
+$("#pb-copy").onclick = async () => {
+  const t = pickText();
+  if (!t){ toast("Пока ни один кадр не отмечен"); return; }
+  try { await navigator.clipboard.writeText(t); toast("Список скопирован. Вставьте его в чат с Claude"); }
+  catch(e){
+    if (navigator.share){ try { await navigator.share({text:t}); return; } catch(e2){ if (e2 && e2.name === "AbortError") return; } }
+    window.prompt("Скопируйте список и вставьте его в чат с Claude:", t);
+  }
+};
+
 /* Выбор дня для фильма: «Все дни» или один день — на обложке и в полоске дней */
 const filmDays = () => DAYS.filter(d => photosOfDay(d.n).length);
 /* по умолчанию — один день, чтобы не уставать: сегодняшний, если в нём есть фото, иначе последний с фото;
@@ -1934,6 +2038,9 @@ $("#play-film").onclick = () => openFilm(fday === "all" ? {} : {day:fday});
 $("#box-film").onclick = () => { const l = favList(); if (l.length) openFilm({photos:l}); };
 document.addEventListener("click", e => {
   const t = e.target.closest("[data-ph]");
+  if (t && picking != null && t.closest(".chap.picking")){ togglePick(t); return; }
+  const pf = e.target.closest("[data-pick-film]");
+  if (pf){ setPicking(+pf.dataset.pickFilm); return; }
   if (t){ const list = listFor(t.dataset.list); openLB(list, list.findIndex(p => p.i === +t.dataset.ph)); return; }
   if (e.target.closest("#news-film")){ const l = PHOTOS.filter(p => NEW.has(p.id)); if (l.length) openFilm({photos:l}); return; }
   const fd = e.target.closest("[data-film-day]");
