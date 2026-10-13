@@ -189,9 +189,11 @@ elif column:
     sizes = [card_size(spec) for spec, _ in items]
     heights = [ph + B + BB + 40 for _, ph in sizes]
     tops, y = [], TOP
-    for h in heights:
+    for k, h in enumerate(heights):
         tops.append(y)
-        y += int(h * .83)
+        # широкая карточка следом заходит на середину страницы — ей меньше нахлёста, чтобы не закрыть низ фото выше
+        wide_next = k + 1 < len(sizes) and sizes[k + 1][0] >= 1000
+        y += int(h * (.93 if wide_next else .83))
     H = tops[-1] + heights[-1] + 140
     bg = background(W, H, [((55, 203, 184), 200, 200, 1100, .22), ((244, 166, 58), 1400, H - 300, 1300, .2), ((173, 144, 244), 300, H * .55, 900, .1)])
     d = ImageDraw.Draw(bg)
