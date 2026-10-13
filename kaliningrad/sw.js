@@ -17,9 +17,14 @@ self.addEventListener("fetch", e => {
   const fonts = url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com";
   if (url.origin !== location.origin && !fonts) return;
   if (url.origin === location.origin && !url.pathname.startsWith(new URL("./", self.registration.scope).pathname)) return;
+  /* Страницы всегда сверяем с сайтом (иначе телефон до 10 минут показывает старую копию из памяти) */
+  let net = req;
+  if (url.origin === location.origin && (req.mode === "navigate" || /(\/|\.html)$/.test(url.pathname))) {
+    try { net = new Request(req, {cache: "no-cache"}); } catch (err) {}
+  }
   /* Сначала сеть (чтобы видеть обновления), без сети — сохранённая копия */
   e.respondWith(
-    fetch(req).then(res => {
+    fetch(net).then(res => {
       if (res && (res.ok || res.type === "opaque")) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }
       return res;
     }).catch(() => caches.match(req, {ignoreSearch: true}).then(r => r || (req.mode === "navigate" ? caches.match("./index.html") : undefined)))

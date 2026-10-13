@@ -239,6 +239,7 @@ img{max-width:100%}
 /* Отбор для фильма: галочка «убрать» */
 .chap-actions .btn.pick-on{background:var(--brick);color:#fff;border-color:transparent}
 .chap.picking .tile .gem,.chap.picking .tile .new,.chap.picking .tile .pen{display:none}
+.chap .grid{scroll-margin-top:76px}
 .tile .chk{position:absolute;top:7px;right:7px;width:32px;height:32px;border-radius:50%;border:2.5px solid #fff;background:rgba(10,15,20,.4);
   display:grid;place-items:center;box-shadow:0 1px 6px rgba(0,0,0,.55);z-index:2}
 .tile .chk svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;opacity:0}
@@ -436,6 +437,7 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
         <svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg><span id="play-lbl">Смотреть фильм</span>
       </button>
       <button type="button" class="btn big ghost" id="to-album">Листать альбом</button>
+      <button type="button" class="btn big ghost" id="pick-cover" hidden>✓ Отобрать кадры для фильма</button>
     </div>
     <button type="button" class="inst-banner" id="inst-banner" hidden>
       <img src="icons/icon-192.png" alt="">
@@ -1966,11 +1968,20 @@ function renderPick(){
     + ds.map(d => `<button type="button" data-pick="${d.n}" style="--c:${d.hex}" aria-pressed="${fday === d.n}">${esc(dayLabel(d))}<small>${dm(d.date)}</small></button>`).join("");
   const d = fday === "all" ? null : DAYS.find(x => x.n === fday);
   $("#play-lbl").textContent = "Смотреть фильм · " + (d ? dayLabel(d).toLowerCase() : "все дни");
+  $("#pick-cover").hidden = !d;
+  if (d) $("#pick-cover").textContent = "✓ Отобрать кадры для фильма · " + dayLabel(d).toLowerCase();
   $$("#strip [data-goto]").forEach(b => b.setAttribute("aria-pressed", String(fday === +b.dataset.goto)));
 }
 function pickDay(v){ fday = v; store.set("alb-fday2", {v, date:todayIso}); renderPick(); }
 $("#pick").onclick = e => { const b = e.target.closest("[data-pick]"); if (!b) return; pickDay(b.dataset.pick === "all" ? "all" : +b.dataset.pick); };
 $("#play-film").onclick = () => openFilm(fday === "all" ? {} : {day:fday});
+/* Отбор с обложки: сразу открыть день с галочками */
+$("#pick-cover").onclick = () => {
+  if (fday === "all") return;
+  showTab("album");
+  if (picking !== fday) setPicking(fday);
+  else { const el = $("#day-" + fday + " .grid"); if (el) el.scrollIntoView({behavior: reduce ? "auto" : "smooth", block:"start"}); }
+};
 $("#box-film").onclick = () => { const l = favList(); if (l.length) openFilm({photos:l}); };
 document.addEventListener("click", e => {
   const t = e.target.closest("[data-ph]");
@@ -2045,17 +2056,25 @@ $("#inst-x").onclick = closeSheet;
 $("#inst-sheet").addEventListener("click", e => { if (e.target.id === "inst-sheet") closeSheet(); });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#inst-sheet").hidden) closeSheet(); });
 
-/* Новые фото без переустановки: если альбом долго был в фоне, при возвращении проверяем, не обновился ли он */
-let hiddenAt = Date.now();
-document.addEventListener("visibilitychange", async () => {
-  if (document.hidden){ hiddenAt = Date.now(); return; }
-  if (Date.now() - hiddenAt < 5 * 60 * 1000 || !$("#film").hidden || !$("#lb").hidden) return;
+/* Новые фото без переустановки: при каждом запуске и при возвращении из фона (через минуту)
+   сверяем альбом с сайтом — телефон мог показать сохранённую копию страницы */
+async function checkFresh(){
+  if (!navigator.onLine) return;
   try {
-    const r = await fetch(location.pathname, {cache:"no-store"});
+    const r = await fetch(location.pathname, {cache:"no-cache"});
     if (!r.ok) return;
     const m = (await r.text()).match(/<script type="application\/json" id="album-data">([\s\S]*?)<\/script>/);
-    if (m && m[1].trim() !== $("#album-data").textContent.trim()) location.reload();
+    if (!m || m[1].trim() === $("#album-data").textContent.trim()) return;
+    if (!$("#film").hidden || !$("#lb").hidden || picking != null) return;
+    let last = 0; try { last = +sessionStorage.getItem("alb-fresh") || 0; sessionStorage.setItem("alb-fresh", String(Date.now())); } catch(e){}
+    if (Date.now() - last > 30000) location.reload();
   } catch(e){}
+}
+checkFresh();
+let hiddenAt = Date.now();
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden){ hiddenAt = Date.now(); return; }
+  if (Date.now() - hiddenAt >= 60 * 1000) checkFresh();
 });
 $("#copy-addr").onclick = () => {
   const b = $("#copy-addr"), t = $("#addr").textContent;
