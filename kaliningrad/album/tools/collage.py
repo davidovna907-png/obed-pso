@@ -177,10 +177,22 @@ if menu:
     framed(s2, (L, 1440, L + hw, 2560)); caption(c2, L, L + hw, 2584, True)
     framed(s3, (R - hw, 1440, R, 2560)); caption(c3, R - hw, R, 2584, True)
 elif column:
-    # «сверху — посередине — снизу»: лесенка из трёх карточек, подписи на свободной стороне
-    W, PW, PH, B, BB, STEP, TOP = 1500, 820, 1093, 24, 44, 1000, 300
-    card_h = PH + B + BB + 40
-    H = TOP + card_h + STEP * (len(items) - 1) + 140
+    # «сверху — посередине — снизу»: лесенка из карточек, подписи на свободной стороне.
+    # Размер карточки — по форме фото: высокое 3:4, квадратное, широкое 4:3 (чтобы не резать людей по краям)
+    W, B, BB, TOP = 1500, 24, 44, 300
+
+    def card_size(spec):
+        im = ImageOps.exif_transpose(Image.open(spec.partition("@")[0]))
+        r = im.width / im.height
+        return (820, 1093) if r < .9 else (900, 900) if r < 1.2 else (1000, 750)
+
+    sizes = [card_size(spec) for spec, _ in items]
+    heights = [ph + B + BB + 40 for _, ph in sizes]
+    tops, y = [], TOP
+    for h in heights:
+        tops.append(y)
+        y += int(h * .83)
+    H = tops[-1] + heights[-1] + 140
     bg = background(W, H, [((55, 203, 184), 200, 200, 1100, .22), ((244, 166, 58), 1400, H - 300, 1300, .2), ((173, 144, 244), 300, H * .55, 900, .1)])
     d = ImageDraw.Draw(bg)
     tf = ImageFont.truetype(DISP, 112)
@@ -188,12 +200,15 @@ elif column:
     sf = ImageFont.truetype(HAND, 76)
     d.text(((W - d.textlength(sub, font=sf)) / 2, 190), sub, font=sf, fill=AMBER2)
     for k, (spec, cap) in enumerate(items):
+        PW, PH = sizes[k]
         left = k % 2 == 0
-        cx, cy = (590 if left else 910), TOP + card_h // 2 + STEP * k
+        cx, cy = (590 if left else 910), tops[k] + heights[k] // 2
         ang = [-4, 4, -3][k % 3]
         bg = place(bg, polaroid(load(spec, (PW, PH)), B, BB), ang, cx, cy)
         edge_x = cx + (PW // 2 + B) + 10 if left else cx - (PW // 2 + B) - 10
-        bg = note(bg, cap, 1265 if left else 235, cy - 120, 400, 6 if left else -6, (edge_x, cy + 40))
+        nw = 400 if PW <= 820 else 340 if PW <= 900 else 300
+        nx = (edge_x + W) // 2 + 10 if left else edge_x // 2 - 10
+        bg = note(bg, cap, nx, cy - 120, nw, 6 if left else -6, (edge_x, cy + 40))
 else:
     # три карточки в ряд, подписи на рамках
     W, H, PW, PH, B, BB = 2400, 1400, 600, 800, 26, 132
