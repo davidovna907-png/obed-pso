@@ -878,10 +878,12 @@ function dayTowns(d, ph){
   return d.towns;
 }
 
-const set = Object.assign({music:"days", sea:true, speed:3}, store.get("alb-set", {}));
+const set = Object.assign({music:"days", sea:true, speed:2}, store.get("alb-set", {}));
 /* с октября 2026 главная мелодия — энергичный «Ветер с Балтики» (по просьбе автора), вальс — на выбор */
 if (!store.get("alb-mv2", false)){ if (set.music === "waltz") set.music = "breeze"; store.set("alb-mv2", true); store.set("alb-set", set); }
 /* с 12.10.2026 по просьбе автора своя мелодия у каждого дня: 1 день — вальс, 2 день — «Ветер с Балтики» */
+/* с 13.10.2026 по просьбе автора кадры идут быстро — по 4 секунды, чтобы фильм дня укладывался в 3 минуты */
+if (!store.get("alb-mv4", false)){ set.speed = 2; store.set("alb-mv4", true); store.set("alb-set", set); }
 if (!store.get("alb-mv3", false)){ if (set.music === "breeze" || set.music === "waltz") set.music = "days"; store.set("alb-mv3", true); store.set("alb-set", set); }
 const saveSet = () => store.set("alb-set", set);
 const amber = new Set(store.get("alb-amber", []));
@@ -1571,8 +1573,8 @@ function buildFrames(opts){
   return frames;
 }
 const barsOf = f => f.t === "video" ? Math.max(2, Math.ceil((f.p.dur || 6) / BAR()))
-  : f.t === "photo" && f.p.collage ? (+set.speed || 3) + 1
-  : ({title:4, chapter:3, route:3, fact:4, photo:+set.speed || 3, credits:10}[f.t]);
+  : f.t === "photo" && f.p.collage ? (+set.speed || 2) + 1
+  : ({title:4, chapter:3, route:3, fact:4, photo:+set.speed || 2, credits:10}[f.t]);
 function frameHTML(f){
   if (f.t === "title") return `<img class="bg kb" src="${sceneURL("sea", "#37cbb8")}" alt=""><div class="shade"></div>
     <div class="ft"><div class="ft-eyebrow">Фильм-воспоминание</div><h1 class="ft-title">${esc(ALBUM.title)}</h1><p class="ft-sub">${esc(ALBUM.subtitle)}</p><div class="ft-mono">${tripRange()}</div>${f.demo ? `<div class="ft-hint">Пока без ваших фото: так будет выглядеть фильм</div>` : ""}</div>`;
@@ -1970,7 +1972,7 @@ function renderPickbar(){
   document.body.classList.toggle("picking", picking != null);
   if (picking == null || $("#p-album").hidden){ bar.hidden = true; return; }
   const d = DAYS.find(x => x.n === picking), ph = photosOfDay(picking), out = ph.filter(p => !inFilm(p)).length, sec = filmSeconds(picking);
-  const T = set.music === "days" ? TUNES[dayTune(picking)] : TUNES[set.music] || TUNES.breeze, per = (+set.speed || 3) * 60 / T.bpm * T.beats;
+  const T = set.music === "days" ? TUNES[dayTune(picking)] : TUNES[set.music] || TUNES.breeze, per = (+set.speed || 2) * 60 / T.bpm * T.beats;
   bar.hidden = false;
   $("#pb-day").textContent = dayLabel(d) + ": убрано " + out + " из " + ph.length;
   $("#pb-time").textContent = "фильм ≈ " + mmss(sec) + " из 3:00";
