@@ -96,15 +96,19 @@ def wrap(draw, text, font, width):
 
 def note(bg, text, cx, cy, width, ang, arrow_to):
     """Подпись от руки на свободном месте и нарисованная стрелка к фото."""
-    font = ImageFont.truetype(HAND, 86)
     d = ImageDraw.Draw(bg)
+    size = 86  # длинное слово («благотворителей») не влезает — пишем мельче, чтобы не обрезалось краем страницы
+    while size > 56 and max(d.textlength(w, font=ImageFont.truetype(HAND, size)) for w in text.split()) > width:
+        size -= 4
+    font = ImageFont.truetype(HAND, size)
     lines = wrap(d, text, font, width)
-    lh = 92
+    lh = round(size * 1.07)
     layer = Image.new("RGBA", (width + 80, lh * len(lines) + 40), (0, 0, 0, 0))
     ld = ImageDraw.Draw(layer)
     for i, ln in enumerate(lines):
         ld.text(((layer.width - ld.textlength(ln, font=font)) / 2, 10 + i * lh), ln, font=font, fill=AMBER2)
     layer = layer.rotate(ang, expand=True, resample=Image.BICUBIC)
+    cx = min(max(cx, layer.width // 2), bg.width - layer.width // 2)
     base = bg.convert("RGBA")
     base.alpha_composite(layer, (cx - layer.width // 2, cy - layer.height // 2))
     bg = base.convert("RGB")
