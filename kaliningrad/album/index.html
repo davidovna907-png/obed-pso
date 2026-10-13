@@ -281,6 +281,10 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
 .layer .bg.dim{filter:brightness(.38) saturate(1.1) blur(3px);transform:scale(1.06)}
 .layer .ph{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;will-change:transform}
 .layer .ph.cover{object-fit:cover}
+/* высокая страница из 3 фото: во всю ширину, камера едет сверху вниз (без наезда, чтобы не срезать верх) */
+.layer .ph.page{overflow:hidden}
+.layer .ph.page img{display:block;width:100%;height:auto;will-change:transform}
+.layer .ph.page.still img{width:auto;height:100%;margin:0 auto}
 .shade{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 55%,rgba(0,0,0,.12),rgba(0,0,0,.62))}
 .ft{
   position:absolute;inset:0;display:grid;place-content:center;justify-items:center;text-align:center;gap:10px;
@@ -641,7 +645,7 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
  {"id": "d1-06", "day": 1, "src": "photos/d1-06.jpg", "thumb": "photos/t/d1-06.jpg", "w": 1500, "h": 2000, "place": "oz", "title": "Экскурсия у Верхнего озера", "date": "2026-10-11"},
  {"id": "d1-08", "day": 1, "type": "video", "src": "photos/d1-08.mp4?v=3", "poster": "photos/d1-08.jpg", "thumb": "photos/t/d1-08.jpg", "w": 720, "h": 1280, "dur": 5.5, "place": "oz", "title": "Шаг за шагом вдоль озера", "date": "2026-10-11", "time": "10:24", "muted": true},
  {"id": "d1-09", "day": 1, "type": "video", "src": "photos/d1-09.mp4?v=2", "poster": "photos/d1-09.jpg", "thumb": "photos/t/d1-09.jpg", "w": 720, "h": 1280, "dur": 5.9, "place": "oz", "title": "Мамуля распахнула руки озеру", "date": "2026-10-11", "time": "10:25", "muted": true},
- {"id": "d1-70", "day": 1, "src": "photos/d1-70.jpg", "thumb": "photos/t/d1-70.jpg", "w": 1200, "h": 2906, "place": "oz", "title": "Мамуля у Верхнего озера", "date": "2026-10-11", "collage": true},
+ {"id": "d1-70", "day": 1, "src": "photos/d1-70.jpg?v=2", "thumb": "photos/t/d1-70.jpg?v=2", "w": 1200, "h": 2906, "place": "oz", "title": "Мамуля у Верхнего озера", "date": "2026-10-11", "collage": true},
  {"id": "d1-71", "day": 1, "src": "photos/d1-71.jpg?v=2", "thumb": "photos/t/d1-71.jpg?v=2", "w": 1200, "h": 2775, "place": "oz", "title": "Верхнее озеро", "date": "2026-10-11", "collage": true},
  {"id": "d1-72", "day": 1, "src": "photos/d1-72.jpg?v=2", "thumb": "photos/t/d1-72.jpg?v=2", "w": 1200, "h": 2775, "place": "dona", "title": "Башня Дона", "date": "2026-10-11", "collage": true},
  {"id": "d1-73", "day": 1, "src": "photos/d1-73.jpg?v=2", "thumb": "photos/t/d1-73.jpg?v=2", "w": 1200, "h": 2110, "town": "kgd", "title": "Мамуля и осень", "date": "2026-10-11", "collage": true},
@@ -1536,8 +1540,10 @@ function frameHTML(f){
     const p = f.p, sr = innerWidth / innerHeight, pr = p.w && p.h ? p.w / p.h : sr;
     const cover = Math.abs(Math.log(pr / sr)) < .2;
     const old = p.pl ? [p.pl.old, p.pl.year].filter(Boolean).join(" · ") : "";
+    const page = !p.isVideo && p.collage && pr < sr;
     const media = p.isVideo
       ? `<video class="ph ${cover ? "cover" : ""}" src="${esc(p.src)}" poster="${esc(p.img)}" playsinline muted preload="auto"></video>`
+      : page ? `<div class="ph page ${reduce ? "still" : ""}"><img src="${esc(p.src)}" alt="${esc(p.name)}"></div>`
       : `<img class="ph kb ${cover ? "cover" : ""}" src="${esc(p.src)}" alt="${esc(p.name)}">`;
     return `<img class="bg blur" src="${esc(p.img)}" alt="">${media}
       <div class="cap" style="--c:${f.d.hex}"><div class="cap-place">${esc(p.name)}</div>${old ? `<div class="cap-old">${esc(old)}</div>` : ""}${p.memory ? `<div class="cap-hand">${esc(p.memory)}</div>` : ""}</div>`;
@@ -1578,6 +1584,17 @@ function animateFrame(layer, f){
   }
   const kb = $(".kb", layer);
   if (kb && !reduce){ const a = kb.animate(KB[Math.floor(Math.random() * KB.length)], {duration:dur, easing:"linear", fill:"forwards"}); film.anims.push(a); }
+  const pg = $(".ph.page img", layer);
+  if (pg && !reduce){
+    /* сначала верх страницы (заголовок и первое фото), потом плавно вниз до нижнего фото */
+    /* кадр может смениться уже через (такты − 1): к этому времени камера должна дойти до низа */
+    const dy = Math.max(0, layer.clientWidth * f.p.h / f.p.w - layer.clientHeight), vis = Math.max(1, barsOf(f) - 1) * BAR() * 1000;
+    film.anims.push(pg.animate([{transform:"translateY(0)"}, {transform:"translateY(0)", offset:.12 * vis / dur, easing:"ease-in-out"},
+      {transform:`translateY(${-dy}px)`, offset:.92 * vis / dur}, {transform:`translateY(${-dy}px)`}], {duration:dur, fill:"forwards"}));
+    /* подпись внизу уходит к концу спуска, чтобы не закрывать нижнее фото (название есть на самой странице) */
+    const cap = $(".cap", layer);
+    if (cap) film.anims.push(cap.animate([{opacity:1}, {opacity:0}], {delay:Math.max(1500, .92 * vis - 1200), duration:900, fill:"forwards"}));
+  }
   if (f.t === "credits"){
     const roll = $(".roll", layer), H = layer.clientHeight, h = roll.offsetHeight;
     const ms = Math.max(16000, (h + H * .55) / 46 * 1000);
