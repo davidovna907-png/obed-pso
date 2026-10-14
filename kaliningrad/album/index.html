@@ -608,12 +608,12 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
  "subtitle": "Янтарные воспоминания",
  "author": "ND",
  "cast": ["Мамуля"],
- "dayScenes": {},
+ "dayScenes": {"4": "city"},
  "dayMusic": {"0": "waltz", "1": "waltz", "2": "breeze", "3": "surf"},
  "extraDays": [{"n": 0, "label": "Приезд", "date": "2026-10-10", "title": "Приезд в Калининград", "kind": "Прилёт и вечерняя прогулка", "towns": ["Храброво", "Калининград"], "route": ["khr", "kgd"], "hex": "#6fa8ff", "scene": "plane", "note": "Приезд в Калининград, вечерняя прогулка по острову Канта, Кафедральный собор, Рыбная деревня и мост влюблённых"}],
- "dayNotes": {"1": "Королевские ворота, район Амалиенау, улица Фрунзе — по программе экскурсии первого дня. Виллы в Амалиенау, марципановый музей", "2": "Замок Нойхаузен, Шаакен, сыроварня, Зеленоградск, Балтийское море — по маршруту второго дня"},
- "dayRoutes": {"2": ["kgd", "gur", "sha", "zel", "kgd"], "3": ["kgd", "bal", "yan", "svg", "kgd"]},
- "dayInfo": {"3": {"title": "Янтарное побережье", "kind": "Экскурсия по побережью"}},
+ "dayNotes": {"1": "Королевские ворота, район Амалиенау, улица Фрунзе — по программе экскурсии первого дня. Виллы в Амалиенау, марципановый музей", "2": "Замок Нойхаузен, Шаакен, сыроварня, Зеленоградск, Балтийское море — по маршруту второго дня", "4": "Свободный день — от органной симфонии до подводной лодки"},
+ "dayRoutes": {"2": ["kgd", "gur", "sha", "zel", "kgd"], "3": ["kgd", "bal", "yan", "svg", "kgd"], "4": ["kgd"]},
+ "dayInfo": {"3": {"title": "Янтарное побережье", "kind": "Экскурсия по побережью"}, "4": {"title": "От органа до подводной лодки", "kind": "Свободный день"}},
  "extraTowns": {"gur": ["Гурьевск", 20.603, 54.77]},
  "extraPlaces": {"sinag": {"name": "Новая синагога", "old": "Neue Synagoge", "year": "1896 / 2018", "town": "kgd", "day": 1, "fact": "Синагогу Кёнигсберга сожгли в Хрустальную ночь 1938 года. На её месте по старым чертежам построили новое здание, оно открылось в 2018 году."}, "neuh": {"name": "Замок Нойхаузен", "old": "Neuhausen", "year": "1292", "town": "gur", "day": 2, "fact": ""}, "bk508": {"name": "Орудие бронекатера БК-508", "year": "1945", "town": "bal", "day": 3, "fact": "25 апреля 1945 года бронекатер БК-508 участвовал в высадке морского десанта на косу Фрише-Нерунг, а за штурм крепости Пиллау экипажу объявили благодарность Верховного Главнокомандующего. На катере стояла башня танка Т-34 с 76-мм орудием."}},
  "photos": [
@@ -752,7 +752,13 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
  {"id": "d3-31", "day": 3, "src": "photos/d3-31.jpg", "thumb": "photos/t/d3-31.jpg", "w": 1200, "h": 2110, "town": "svg", "title": "Светлогорск над морем", "date": "2026-10-13", "collage": true},
  {"id": "d3-32", "day": 3, "src": "photos/d3-32.jpg?v=2", "thumb": "photos/t/d3-32.jpg?v=2", "w": 1200, "h": 2520, "town": "svg", "title": "Всей группой в Светлогорске", "date": "2026-10-13", "collage": true},
  {"id": "d3-33", "day": 3, "src": "photos/d3-33.jpg", "thumb": "photos/t/d3-33.jpg", "w": 1200, "h": 2906, "town": "svg", "title": "Неспешный Светлогорск", "date": "2026-10-13", "collage": true},
- {"id": "d3-34", "day": 3, "src": "photos/d3-34.jpg", "thumb": "photos/t/d3-34.jpg", "w": 1200, "h": 2906, "place": "svetl", "title": "Водонапорная башня", "date": "2026-10-13", "collage": true}
+ {"id": "d3-34", "day": 3, "src": "photos/d3-34.jpg", "thumb": "photos/t/d3-34.jpg", "w": 1200, "h": 2906, "place": "svetl", "title": "Водонапорная башня", "date": "2026-10-13", "collage": true},
+ {"id": "d4-01", "day": 4, "src": "photos/d4-01.jpg", "thumb": "photos/t/d4-01.jpg", "w": 1200, "h": 2551, "place": "kant", "title": "Органный мини-концерт", "date": "2026-10-14", "collage": true},
+ {"id": "d4-02", "day": 4, "src": "photos/d4-02.jpg", "thumb": "photos/t/d4-02.jpg", "w": 1500, "h": 2000, "place": "kant", "title": "Звучит орган Кафедрального собора", "date": "2026-10-14"},
+ {"id": "d4-03", "day": 4, "type": "video", "src": "photos/d4-03.mp4", "poster": "photos/d4-03.jpg", "thumb": "photos/t/d4-03.jpg", "w": 720, "h": 1280, "dur": 6.0, "muted": true, "town": "kgd", "title": "Мамуля шагает по мосту к музею", "date": "2026-10-14", "time": "12:52"},
+ {"id": "d4-04", "day": 4, "src": "photos/d4-04.jpg", "thumb": "photos/t/d4-04.jpg", "w": 1200, "h": 2110, "place": "okean", "title": "К Музею Мирового океана", "date": "2026-10-14", "collage": true},
+ {"id": "d4-05", "day": 4, "src": "photos/d4-05.jpg", "thumb": "photos/t/d4-05.jpg", "w": 1200, "h": 2314, "place": "okean", "title": "Три судна — три билета", "date": "2026-10-14", "collage": true},
+ {"id": "d4-06", "day": 4, "src": "photos/d4-06.jpg", "thumb": "photos/t/d4-06.jpg", "w": 1200, "h": 2775, "place": "okean", "title": "Рыболовное судно СРТ-129", "date": "2026-10-14", "collage": true}
  ]
 }
 </script>
@@ -820,6 +826,7 @@ DAYS.forEach(d => {
 DAYS.forEach(d => {
   const r = ((ALBUM.dayRoutes || {})[d.n] || []).filter(k => TOWNS[k]);
   if (r.length > 1){ d.route = r; d.towns = [...new Set(r.filter(k => k !== "kgd").map(k => TOWNS[k].name))]; }
+  else if (r.length === 1){ d.route = []; d.towns = [TOWNS[r[0]].name]; } /* день в одном городе (например, весь день в Калининграде) */
 });
 const dayLabel = d => d.label || ("День " + d.n);
 function tripRange(){
