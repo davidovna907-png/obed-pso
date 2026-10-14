@@ -1701,6 +1701,7 @@ function go(i){
   film.i = i;
   const f = film.frames[i];
   film.left = barsOf(f);
+  film.waitFor = null; clearTimeout(film.waitT);
   const prev = $("#fl" + film.cur), next = $("#fl" + (film.cur ^ 1));
   const old = film.anims; film.anims = [];
   setTimeout(() => old.forEach(a => { try { a.cancel(); } catch(e){} }), 1500);
@@ -1725,7 +1726,25 @@ function go(i){
 }
 function tick(){
   if (!film.playing || $("#film").hidden) return;
-  if (--film.left <= 0) go(film.i + 1);
+  if (--film.left > 0) return;
+  /* видео досматриваем до конца (например, пока волна не смоет сердце на песке):
+     кадры меняются по тактам, и последний такт мог оборвать видео на полсекунды–секунду раньше */
+  const f = film.frames[film.i], v = f && f.t === "video" ? $("#fl" + film.cur + " video") : null;
+  if (film.waitFor === f) return;
+  if (v && !v.ended && !v.paused && !v.error){
+    film.waitFor = f;
+    const i = film.i, tok = film.tok;
+    const next = () => {
+      clearTimeout(film.waitT); v.onended = null;
+      if (film.tok !== tok) return;
+      if (!film.playing){ film.waitFor = null; return; } /* на паузе: после «Продолжить» снова ждём конца видео */
+      go(i + 1);
+    };
+    v.onended = next;
+    film.waitT = setTimeout(next, Math.max(500, ((v.duration || 0) - v.currentTime) * 1000 + 1500)); /* запас, если видео застрянет */
+    return;
+  }
+  go(film.i + 1);
 }
 const Ticker = {
   id:0,
