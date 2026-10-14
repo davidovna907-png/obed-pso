@@ -481,6 +481,7 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
         <h4>Музыка фильма</h4>
         <label class="opt"><input type="radio" name="music" value="days"><span><b>По дням поездки</b><small id="days-music">У каждого дня своя мелодия, в общем фильме она плавно меняется на границе дней.</small></span></label>
         <label class="opt"><input type="radio" name="music" value="breeze"><span><b>«Ветер с Балтики»</b><small>Энергичная мелодия с ритмом. Сочинена для этого альбома и играет прямо в телефоне, кадры меняются в такт.</small></span></label>
+        <label class="opt"><input type="radio" name="music" value="surf"><span><b>«Балтийский прибой»</b><small>Энергичная мелодия под шум волн, сочинена для дня в Балтийске.</small></span></label>
         <label class="opt"><input type="radio" name="music" value="waltz"><span><b>«Балтийский вальс»</b><small>Спокойный вальс, тоже сочинён для альбома.</small></span></label>
         <label class="opt"><input type="radio" name="music" value="own"><span><b>Своя мелодия</b><small id="own-name">Любимая песня из памяти телефона.</small></span></label>
         <div class="row"><button type="button" class="btn" id="own-pick">Выбрать файл с музыкой</button><span class="mini" id="own-note"></span></div>
@@ -608,12 +609,13 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
  "author": "ND",
  "cast": ["Мамуля"],
  "dayScenes": {},
- "dayMusic": {"0": "waltz", "1": "waltz", "2": "breeze"},
+ "dayMusic": {"0": "waltz", "1": "waltz", "2": "breeze", "3": "surf"},
  "extraDays": [{"n": 0, "label": "Приезд", "date": "2026-10-10", "title": "Приезд в Калининград", "kind": "Прилёт и вечерняя прогулка", "towns": ["Храброво", "Калининград"], "route": ["khr", "kgd"], "hex": "#6fa8ff", "scene": "plane", "note": "Приезд в Калининград, вечерняя прогулка по острову Канта, Кафедральный собор, Рыбная деревня и мост влюблённых"}],
  "dayNotes": {"1": "Королевские ворота, район Амалиенау, улица Фрунзе — по программе экскурсии первого дня. Виллы в Амалиенау, марципановый музей", "2": "Замок Нойхаузен, Шаакен, сыроварня, Зеленоградск, Балтийское море — по маршруту второго дня"},
- "dayRoutes": {"2": ["kgd", "gur", "sha", "zel", "kgd"]},
+ "dayRoutes": {"2": ["kgd", "gur", "sha", "zel", "kgd"], "3": ["kgd", "bal", "kgd"]},
+ "dayInfo": {"3": {"title": "Самый западный город России", "kind": "Экскурсия в Балтийск"}},
  "extraTowns": {"gur": ["Гурьевск", 20.603, 54.77]},
- "extraPlaces": {"sinag": {"name": "Новая синагога", "old": "Neue Synagoge", "year": "1896 / 2018", "town": "kgd", "day": 1, "fact": "Синагогу Кёнигсберга сожгли в Хрустальную ночь 1938 года. На её месте по старым чертежам построили новое здание, оно открылось в 2018 году."}, "neuh": {"name": "Замок Нойхаузен", "old": "Neuhausen", "year": "1292", "town": "gur", "day": 2, "fact": ""}},
+ "extraPlaces": {"sinag": {"name": "Новая синагога", "old": "Neue Synagoge", "year": "1896 / 2018", "town": "kgd", "day": 1, "fact": "Синагогу Кёнигсберга сожгли в Хрустальную ночь 1938 года. На её месте по старым чертежам построили новое здание, оно открылось в 2018 году."}, "neuh": {"name": "Замок Нойхаузен", "old": "Neuhausen", "year": "1292", "town": "gur", "day": 2, "fact": ""}, "bk508": {"name": "Орудие бронекатера БК-508", "year": "1945", "town": "bal", "day": 3, "fact": "25 апреля 1945 года бронекатер БК-508 участвовал в высадке морского десанта на косу Фрише-Нерунг, а за штурм крепости Пиллау экипажу объявили благодарность Верховного Главнокомандующего. На катере стояла башня танка Т-34 с 76-мм орудием."}},
  "photos": [
  {"id": "d0-01", "day": 0, "src": "photos/d0-01.jpg", "thumb": "photos/t/d0-01.jpg", "w": 1500, "h": 2000, "town": "khr", "title": "В полёте", "date": "2026-10-10"},
  {"id": "d0-02", "day": 0, "src": "photos/d0-02.jpg", "thumb": "photos/t/d0-02.jpg", "w": 1500, "h": 2000, "town": "khr", "title": "Над облаками", "date": "2026-10-10"},
@@ -715,7 +717,15 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
  {"id": "d2-70", "day": 2, "src": "photos/d2-70.jpg?v=2", "thumb": "photos/t/d2-70.jpg?v=2", "w": 1200, "h": 2679, "place": "zel", "title": "С мамулей у Балтики", "date": "2026-10-12", "collage": true},
  {"id": "d2-71", "day": 2, "type": "video", "src": "photos/d2-71.mp4?v=4", "poster": "photos/d2-71.jpg", "thumb": "photos/t/d2-71.jpg", "w": 720, "h": 1280, "dur": 17.8, "place": "zel", "title": "Я и зонтик против ветра", "date": "2026-10-12", "sea": true},
  {"id": "d2-79", "day": 2, "src": "photos/d2-79.jpg?v=2", "thumb": "photos/t/d2-79.jpg?v=2", "w": 1280, "h": 1707, "town": "zel", "title": "Всей группой за столом", "date": "2026-10-12"},
- {"id": "d2-75", "day": 2, "src": "photos/d2-75.jpg", "thumb": "photos/t/d2-75.jpg", "w": 1200, "h": 2368, "town": "zel", "title": "Меню нашего дня", "date": "2026-10-12", "collage": true}
+ {"id": "d2-75", "day": 2, "src": "photos/d2-75.jpg", "thumb": "photos/t/d2-75.jpg", "w": 1200, "h": 2368, "town": "zel", "title": "Меню нашего дня", "date": "2026-10-12", "collage": true},
+ {"id": "d3-01", "day": 3, "src": "photos/d3-01.jpg", "thumb": "photos/t/d3-01.jpg", "w": 1200, "h": 2906, "place": "pillau", "title": "Крепость Пиллау", "date": "2026-10-13", "collage": true},
+ {"id": "d3-02", "day": 3, "src": "photos/d3-02.jpg", "thumb": "photos/t/d3-02.jpg", "w": 1200, "h": 2110, "place": "bk508", "title": "Они сражались за Родину", "date": "2026-10-13", "collage": true},
+ {"id": "d3-03", "day": 3, "type": "video", "src": "photos/d3-03.mp4", "poster": "photos/d3-03.jpg", "thumb": "photos/t/d3-03.jpg", "w": 720, "h": 1280, "dur": 4.2, "muted": true, "town": "bal", "title": "По улицам Балтийска к парому", "date": "2026-10-13", "time": "10:21"},
+ {"id": "d3-04", "day": 3, "src": "photos/d3-04.jpg", "thumb": "photos/t/d3-04.jpg", "w": 1200, "h": 2906, "place": "kanal", "title": "Белые голуби Балтийска", "date": "2026-10-13", "collage": true},
+ {"id": "d3-05", "day": 3, "src": "photos/d3-05.jpg", "thumb": "photos/t/d3-05.jpg", "w": 1500, "h": 2000, "place": "kanal", "title": "Бронзовый морячок", "date": "2026-10-13"},
+ {"id": "d3-06", "day": 3, "type": "video", "src": "photos/d3-06.mp4", "poster": "photos/d3-06.jpg", "thumb": "photos/t/d3-06.jpg", "w": 720, "h": 1280, "dur": 3.7, "place": "kanal", "title": "Я и бронзовый морячок", "date": "2026-10-13", "time": "10:33", "sea": true},
+ {"id": "d3-07", "day": 3, "src": "photos/d3-07.jpg", "thumb": "photos/t/d3-07.jpg", "w": 1200, "h": 2679, "place": "kanal", "title": "Порт Балтийска", "date": "2026-10-13", "collage": true},
+ {"id": "d3-08", "day": 3, "src": "photos/d3-08.jpg", "thumb": "photos/t/d3-08.jpg", "w": 1500, "h": 2000, "place": "kanal", "title": "Я у надписи «Здесь начинается Россия!»", "date": "2026-10-13"}
  ]
 }
 </script>
@@ -773,6 +783,12 @@ Object.entries(ALBUM.extraPlaces || {}).forEach(([id, p]) => {
 });
 DAYS.sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : a.n - b.n);
 DAYS.forEach(d => { const nt = (ALBUM.dayNotes || {})[d.n]; if (nt) d.note = nt; });
+/* День прошёл не так, как в путеводителе (свободный день стал экскурсией): {"3": {"title", "kind"}} */
+DAYS.forEach(d => {
+  const o = (ALBUM.dayInfo || {})[d.n]; if (!o) return;
+  ["title", "kind", "label"].forEach(k => { if (o[k]) d[k] = o[k]; });
+  d.free = false;
+});
 /* Настоящий маршрут дня, если он отличался от программы: {"2": ["kgd","gur","sha","zel","kgd"]} */
 DAYS.forEach(d => {
   const r = ((ALBUM.dayRoutes || {})[d.n] || []).filter(k => TOWNS[k]);
@@ -1172,7 +1188,7 @@ function listFor(key){
   return PHOTOS;
 }
 
-/* ---------- Музыка: две мелодии альбома и шум моря (Web Audio) ---------- */
+/* ---------- Музыка: мелодии альбома и шум моря (Web Audio) ---------- */
 /* «Балтийский вальс» — спокойный, 3/4, ля минор */
 const CH = {Am:[45,[57,60,64]], F:[41,[53,57,60]], C:[48,[55,60,64]], G:[43,[55,59,62]], Dm:[50,[53,57,62]], E:[40,[56,59,64]]};
 const PROG = ["Am","F","C","G","Am","Dm","E","Am","F","G","C","Am","Dm","G","E","Am"];
@@ -1216,8 +1232,36 @@ function breezeEvents(){
   });
   return ev.sort((a, b) => a.t - b.t);
 }
+/* «Балтийский прибой» — энергичная, 4/4, ми минор: ровная бочка, скачущий бас, арпеджио шестнадцатыми,
+   звонкая мелодия и волны прибоя каждые два такта (накат — гребень — откат) */
+const SCH = {Em:[40,[64,67,71]], C:[36,[64,67,72]], G:[43,[62,67,71]], D:[38,[62,66,69]], Am:[45,[64,69,72]], B:[47,[63,66,71]]};
+const SPROG = ["Em","C","G","D","Em","C","G","D","Am","C","G","D","C","D","B","Em"];
+const SMEL = [
+  [[71,.5],[74,.5],[76,1],[79,.5],[76,.5],[74,1]], [[72,.5],[76,.5],[79,1],[76,2]],
+  [[74,.5],[79,.5],[83,1],[81,.5],[79,.5],[74,1]], [[78,1],[76,.5],[74,.5],[74,2]],
+  [[71,.5],[74,.5],[76,1],[79,.5],[81,.5],[83,1]], [[84,1],[83,.5],[79,.5],[76,2]],
+  [[79,.5],[78,.5],[79,.5],[83,.5],[81,1],[79,1]], [[78,1.5],[74,.5],[78,2]],
+  [[76,.5],[81,.5],[84,1],[81,.5],[79,.5],[76,1]], [[79,1],[76,.5],[72,.5],[76,2]],
+  [[74,.5],[79,.5],[83,.5],[86,.5],[83,1],[79,1]], [[81,1],[78,1],[74,2]],
+  [[76,.5],[79,.5],[84,1],[83,.5],[79,.5],[76,1]], [[78,.5],[81,.5],[86,1],[84,.5],[81,.5],[78,1]],
+  [[78,1],[75,.5],[78,.5],[83,2]], [[79,1],[76,1],[71,2]]
+];
+function surfEvents(){
+  const ev = [];
+  SPROG.forEach((c, b) => {
+    const [bass, ch] = SCH[c], t0 = b * 4, arp = [ch[0], ch[1], ch[2], ch[0] + 12];
+    ev.push({t:t0, k:"bar"}, {t:t0+1, k:"snare"}, {t:t0+3, k:"snare"}, {t:t0, k:"chord", m:ch});
+    for (let i = 0; i < 4; i++) ev.push({t:t0 + i, k:"kick"}, {t:t0 + i + .5, k:"hat", acc:1});
+    if (b % 2 === 0) ev.push({t:t0, k:"wave", d:8});
+    [0, .75, 1.5, 2, 2.75, 3.5].forEach((x, i) => ev.push({t:t0 + x, k:"pbass", m:bass + (i % 3 === 2 ? 12 : 0)}));
+    for (let i = 0; i < 16; i++) ev.push({t:t0 + i / 4, k:"arp", m:arp[[0,1,2,3,2,1,2,3][i % 8]]});
+    let t = t0; SMEL[b].forEach(([m, d]) => { ev.push({t, k:"lead", m, d}); t += d; });
+  });
+  return ev.sort((a, b) => a.t - b.t);
+}
 const TUNES = {
   breeze:{name:"«Ветер с Балтики»", bpm:124, beats:4, events:breezeEvents},
+  surf:{name:"«Балтийский прибой»", bpm:132, beats:4, events:surfEvents},
   waltz:{name:"«Балтийский вальс»", bpm:84, beats:3, events:waltzEvents}
 };
 /* мелодия дня: dayMusic в album-data, для остальных дней — «Ветер с Балтики» */
@@ -1225,6 +1269,7 @@ const dayTune = n => { const k = (ALBUM.dayMusic || {})[n]; return TUNES[k] ? k 
 const homeDay = () => { const d = DAYS.find(x => x.date === todayIso); return d ? d.n : 1; };
 /* длина такта звучащей (или выбранной) мелодии: в её такт меняются кадры фильма */
 const BAR = () => { const t = TUNES[Music.on ? Music.mode : set.music] || TUNES.breeze; return 60 / t.bpm * t.beats; };
+const DUCK = .06; /* громкость музыки во время видео со своим звуком моря (обычная — .9) */
 const ownAudio = new Audio();
 ownAudio.loop = true; ownAudio.preload = "auto";
 let ownName = "";
@@ -1246,7 +1291,7 @@ const Music = {
       const rev = c.createConvolver(), wet = c.createGain(); rev.buffer = this.impulse(2.8); wet.gain.value = .32;
       this.bus.connect(rev); rev.connect(wet); wet.connect(this.master);
       this.drums = c.createGain(); this.drums.gain.value = .9; this.drums.connect(this.master);
-      this._noise = null;
+      this._noise = null; this._surf = null;
     } catch(e){ this.ctx = null; }
     return this.ctx;
   },
@@ -1319,11 +1364,11 @@ const Music = {
       this.mode = want; this.beat = 60 / tn.bpm; this.ev = tn.evs || (tn.evs = tn.events());
       this.idx = 0; this.loop = 0; this.phraseStart = t2 + .1;
       this.master.gain.cancelScheduledValues(t2); this.master.gain.setValueAtTime(.0001, t2);
-      this.master.gain.exponentialRampToValueAtTime(this.duckOn ? .18 : .9, t2 + 1.4);
+      this.master.gain.exponentialRampToValueAtTime(this.duckOn ? DUCK : .9, t2 + 1.4);
       this.timer = setInterval(() => this.schedule(), 60); this.schedule();
     }, 950);
   },
-  /* видео с морем: музыку приглушить, чтобы был слышен прибой */
+  /* видео с морем: музыку заметно убавить (просьба автора), чтобы был слышен настоящий прибой */
   duck(on){
     if (this.duckOn === on) return;
     this.duckOn = on;
@@ -1331,7 +1376,7 @@ const Music = {
     const t = c.currentTime;
     this.master.gain.cancelScheduledValues(t);
     this.master.gain.setValueAtTime(Math.max(this.master.gain.value, .0001), t);
-    this.master.gain.exponentialRampToValueAtTime(on ? .18 : .9, t + .7);
+    this.master.gain.exponentialRampToValueAtTime(on ? DUCK : .9, t + .7);
   },
   pause(){ if (this.ctx && this.ctx.suspend) this.ctx.suspend(); if (this.mode === "own") ownAudio.pause(); },
   resume(){
@@ -1361,6 +1406,8 @@ const Music = {
       this.voice(t, e.m, Math.max(.28, e.d * this.beat * .95), .11, "lead");
       if (this.loop % 2) this.voice(t, e.m + 12, .6, .05, "box");
     }
+    else if (e.k === "arp") this.voice(t, e.m, .2, .04, "pluck");
+    else if (e.k === "wave") this.wave(t, e.d * this.beat);
     else if (e.k === "bass") this.voice(t, e.m, 2.6, .26, "bass");
     else if (e.k === "chord") e.m.forEach(m => this.voice(t, m, 1.25, .06, "soft"));
     else if (this.loop % 2 === 0) this.voice(t, e.m, Math.max(1.3, e.d * this.beat * 1.9), .2, "piano");
@@ -1369,6 +1416,23 @@ const Music = {
   noise(){
     if (!this._noise){ const c = this.ctx, b = c.createBuffer(1, c.sampleRate, c.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random()*2 - 1; this._noise = b; }
     return this._noise;
+  },
+  /* волна прибоя для «Балтийского прибоя»: шум нарастает, гребень — и откат */
+  wave(t, dur){
+    const c = this.ctx;
+    if (!this._surf){
+      const n = c.sampleRate * 4, b = c.createBuffer(2, n, c.sampleRate);
+      for (let ch = 0; ch < 2; ch++){ const d = b.getChannelData(ch); for (let i = 0; i < n; i++) d[i] = Math.random()*2 - 1; }
+      this._surf = b;
+    }
+    const src = c.createBufferSource(), hp = c.createBiquadFilter(), lp = c.createBiquadFilter(), g = c.createGain();
+    src.buffer = this._surf; src.loop = true;
+    hp.type = "highpass"; hp.frequency.value = 140; lp.type = "lowpass";
+    const pk = t + dur * .55, end = t + dur;
+    lp.frequency.setValueAtTime(300, t); lp.frequency.exponentialRampToValueAtTime(2600, pk); lp.frequency.exponentialRampToValueAtTime(360, end);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.13, pk); g.gain.exponentialRampToValueAtTime(.0001, end);
+    src.connect(hp); hp.connect(lp); lp.connect(g); g.connect(this.master);
+    src.start(t, Math.random() * 3); src.stop(end + .05);
   },
   drum(t, kind, acc){
     const c = this.ctx, g = c.createGain(); g.connect(this.drums);
