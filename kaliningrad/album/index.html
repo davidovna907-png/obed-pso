@@ -487,6 +487,7 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
         <label class="opt"><input type="radio" name="music" value="surf"><span><b>«Балтийский прибой»</b><small>Энергичная мелодия под шум волн, сочинена для дня в Балтийске.</small></span></label>
         <label class="opt"><input type="radio" name="music" value="organ"><span><b>«Хорал Кафедрального собора»</b><small>Торжественная органная мелодия, сочинена для дня с органным концертом.</small></span></label>
         <label class="opt"><input type="radio" name="music" value="march"><span><b>Чайковский, марш из Шестой симфонии</b><small>Запись Musopen в общественном достоянии, звучит в день Черняховска.</small></span></label>
+        <label class="opt"><input type="radio" name="music" value="ballad"><span><b>«Вечер на острове Канта»</b><small>Тихая ностальгическая баллада для дня приезда: гитара, фортепиано, во втором проходе струнный квартет. Сочинена для альбома.</small></span></label>
         <label class="opt"><input type="radio" name="music" value="waltz"><span><b>«Балтийский вальс»</b><small>Спокойный вальс, тоже сочинён для альбома.</small></span></label>
         <label class="opt"><input type="radio" name="music" value="own"><span><b>Своя мелодия</b><small id="own-name">Любимая песня из памяти телефона.</small></span></label>
         <div class="row"><button type="button" class="btn" id="own-pick">Выбрать файл с музыкой</button><span class="mini" id="own-note"></span></div>
@@ -621,7 +622,7 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
  "author": "ND",
  "cast": ["Мамуля"],
  "dayScenes": {"4": "city", "5": "city"},
- "dayMusic": {"0": "waltz", "1": "waltz", "2": "breeze", "3": "surf", "4": "organ", "5": "march"},
+ "dayMusic": {"0": "ballad", "1": "waltz", "2": "breeze", "3": "surf", "4": "organ", "5": "march"},
  "extraDays": [{"n": 0, "label": "Приезд", "date": "2026-10-10", "title": "Приезд в Калининград", "kind": "Прилёт и вечерняя прогулка", "towns": ["Храброво", "Калининград"], "route": ["khr", "kgd"], "hex": "#6fa8ff", "scene": "plane", "note": "Приезд в Калининград, вечерняя прогулка по острову Канта, Кафедральный собор, Рыбная деревня и мост влюблённых"}],
  "dayNotes": {"1": "Королевские ворота, район Амалиенау, улица Фрунзе — по программе экскурсии первого дня. Виллы в Амалиенау, марципановый музей", "2": "Замок Нойхаузен, Шаакен, сыроварня, Зеленоградск, Балтийское море — по маршруту второго дня", "4": "Свободный день — от органной симфонии до подводной лодки"},
  "dayRoutes": {"2": ["kgd", "gur", "sha", "zel", "kgd"], "3": ["kgd", "bal", "yan", "svg", "kgd"], "4": ["kgd"], "5": ["kgd", "che", "nem", "sov", "kgd"]},
@@ -1364,7 +1365,30 @@ function organEvents(){
 }
 /* у мелодии-записи свои ноты не играются — только такты, по которым меняются кадры */
 const barEvents = () => Array.from({length:16}, (_, b) => ({t:b * 4, k:"bar"}));
+/* «Вечер на острове Канта» — ностальгическая баллада для приезда (в духе «Yesterday», но своя мелодия и гармония):
+   4/4, соль мажор; первый проход — гитарный перебор и мелодия на фортепиано, второй — вступает струнный квартет */
+const YCH = {G:[43,[59,62,67]], DF:[42,[57,62,66]], Em:[40,[59,64,67]], EmD:[38,[59,64,67]], C:[36,[60,64,67]], GB:[35,[59,62,67]],
+  Am:[45,[60,64,69]], D:[38,[57,62,66]], B7:[47,[59,63,66,69]]};
+const YPROG = ["G","DF","Em","EmD","C","GB","Am","D","G","B7","Em","C","Am","D","G","G"];
+const YMEL = [
+  [[71,1.5],[69,.5],[67,1],[74,1]], [[72,1],[71,1],[69,2]], [[67,1.5],[66,.5],[64,1],[71,1]], [[69,3],[67,1]],
+  [[64,1],[67,1],[72,1.5],[71,.5]], [[71,2],[74,1],[71,1]], [[72,1.5],[71,.5],[69,1],[67,1]], [[69,3],[66,1]],
+  [[67,1],[71,1],[74,1.5],[76,.5]], [[75,2],[73,1],[71,1]], [[76,1.5],[74,.5],[71,1],[67,1]], [[72,2],[76,1],[72,1]],
+  [[72,1.5],[71,.5],[69,1],[72,1]], [[71,1],[69,1],[66,1],[69,1]], [[67,4]], [[71,1],[69,1],[67,2]]
+];
+function balladEvents(){
+  const ev = [];
+  YPROG.forEach((c, b) => {
+    const [bass, ch] = YCH[c], t0 = b * 4;
+    const pick = [bass + 12, ch[0], ch[1], ch[2], ch[1], ch[0], ch[2], ch[1]]; /* перебор восьмыми: бас, затем голоса аккорда */
+    ev.push({t:t0, k:"bar"}, {t:t0, k:"cello", m:bass, d:4}, {t:t0, k:"pad", m:ch, d:4});
+    pick.forEach((m, i) => ev.push({t:t0 + i / 2, k:"gtr", m}));
+    let t = t0; YMEL[b].forEach(([m, d]) => { ev.push({t, k:"bmel", m, d}); t += d; });
+  });
+  return ev.sort((a, b) => a.t - b.t);
+}
 const TUNES = {
+  ballad:{name:"«Вечер на острове Канта»", bpm:96, beats:4, events:balladEvents, wet:.42},
   breeze:{name:"«Ветер с Балтики»", bpm:124, beats:4, events:breezeEvents},
   organ:{name:"«Хорал Кафедрального собора»", bpm:112, beats:4, events:organEvents, wet:.6},
   /* мелодия-запись (не сочинена в коде): играет файл, а такты для смены кадров идут с темпом bpm.
@@ -1590,6 +1614,14 @@ const Music = {
     if (e.k === "kick" || e.k === "snare" || e.k === "hat"){ if (this.loop || e.t >= 8) this.drum(t, e.k, e.acc); return; }
     if (e.k === "pbass") this.voice(t, e.m, .28, .2, "pbass");
     else if (e.k === "stab") e.m.forEach(m => this.voice(t, m, .22, .045, "pluck"));
+    else if (e.k === "gtr") this.voice(t, e.m, 1.6, .085, "guitar");
+    /* аккорды струнных тянутся, пока не вступит следующий — смычок меняется без провала */
+    else if (e.k === "cello"){ if (this.loop % 2) this.voice(t, e.m, e.d * this.beat + .75, .11, "cello"); }
+    else if (e.k === "pad"){ if (this.loop % 2) e.m.forEach(m => this.voice(t, m, e.d * this.beat + .75, .05, "violin")); }
+    else if (e.k === "bmel"){
+      if (this.loop % 2 === 0) this.voice(t, e.m, Math.max(1.2, e.d * this.beat * 1.6), .23, "piano");
+      else this.voice(t, e.m + 12, e.d * this.beat * .97, .21, "violin");
+    }
     else if (e.k === "ped") this.voice(t, e.m, e.d * this.beat, .12, "pedal");
     else if (e.k === "och") e.m.forEach(m => this.voice(t, m, e.d * this.beat * .98, .026, "flute"));
     else if (e.k === "omel") this.voice(t, e.m, e.d * this.beat * .96, .07, "organ");
@@ -1651,26 +1683,40 @@ const Music = {
       pbass:[[1,"triangle",1],[1,"sawtooth",.25]], pluck:[[1,"sawtooth",.6],[2,"triangle",.3]], lead:[[1,"square",.55],[1.004,"sawtooth",.45],[2,"sine",.2]],
       /* органные регистры: принципал 8'+4'+2', флейта, педаль 16'/8', микстура */
       organ:[[1,"sine",1],[2,"sine",.55],[3,"sine",.22],[4,"sine",.28],[6,"sine",.1],[8,"sine",.07]], flute:[[1,"sine",1],[2,"sine",.3],[3,"sine",.08]],
-      pedal:[[1,"triangle",.9],[2,"sine",.5],[3,"sine",.12]], mixture:[[2,"sine",.6],[3,"sine",.35],[4,"sine",.3],[6,"sine",.15]]}[kind];
-    const SUS = {organ:.025, flute:.04, pedal:.06, mixture:.012}[kind]; /* у органа звук не затухает, пока держится клавиша */
-    const FIL = {organ:[Math.min(9500, f*10)], flute:[Math.min(4000, f*5)], pedal:[900], mixture:[9500], bass:[700,220], pbass:[1000,280], pluck:[Math.min(6000, f*4), Math.max(400, f*1.2)], lead:[Math.min(7000, f*5), Math.max(700, f*2)]}[kind] || [Math.min(9000, f*6), Math.max(600, f*1.6)];
+      pedal:[[1,"triangle",.9],[2,"sine",.5],[3,"sine",.12]], mixture:[[2,"sine",.6],[3,"sine",.35],[4,"sine",.3],[6,"sine",.15]],
+      /* баллада: гитара (быстрая атака, звук затухает), виолончель и скрипки (смычок: мягкая атака, вибрато) */
+      guitar:[[1,"triangle",1],[2,"sine",.45],[3,"sine",.22],[4,"sine",.1]], cello:[[1,"sawtooth",.55],[2,"sine",.3]],
+      violin:[[1,"sawtooth",.45],[1.003,"sawtooth",.35],[2,"sine",.12]]}[kind];
+    const SUS = {organ:.025, flute:.04, pedal:.06, mixture:.012, cello:.18, violin:.28}[kind]; /* у органа и смычковых звук не затухает, пока держится нота */
+    const FIL = {guitar:[Math.min(5000, f*7), Math.max(500, f*1.4)], cello:[Math.min(2200, f*6)], violin:[Math.min(4500, f*4.5)], organ:[Math.min(9500, f*10)], flute:[Math.min(4000, f*5)], pedal:[900], mixture:[9500], bass:[700,220], pbass:[1000,280], pluck:[Math.min(6000, f*4), Math.max(400, f*1.2)], lead:[Math.min(7000, f*5), Math.max(700, f*2)]}[kind] || [Math.min(9000, f*6), Math.max(600, f*1.6)];
     const g = c.createGain(), lp = c.createBiquadFilter();
     lp.type = "lowpass";
     lp.frequency.setValueAtTime(FIL[0], t);
     g.gain.setValueAtTime(.0001, t);
     if (SUS){
-      const r = Math.min(.12, dur * .3);
+      const r = Math.min(kind === "violin" || kind === "cello" ? .45 : .12, dur * .3);
       g.gain.exponentialRampToValueAtTime(vel, t + SUS);
       g.gain.setValueAtTime(vel, t + Math.max(SUS, dur - r));
     } else {
       lp.frequency.exponentialRampToValueAtTime(FIL[1], t + dur);
-      g.gain.exponentialRampToValueAtTime(vel, t + ({box:.005, pluck:.004, pbass:.006, lead:.01}[kind] || .018));
+      g.gain.exponentialRampToValueAtTime(vel, t + ({box:.005, pluck:.004, pbass:.006, lead:.01, guitar:.003}[kind] || .018));
     }
     g.gain.exponentialRampToValueAtTime(.0001, t + dur);
     lp.connect(g); g.connect(this.bus);
+    /* вибрато смычковых: вступает не сразу, как у живого скрипача */
+    let vib = null;
+    if (kind === "violin" || kind === "cello"){
+      vib = c.createOscillator(); vib.frequency.value = kind === "violin" ? 5.4 : 4.6;
+      vib.start(t); vib.stop(t + dur + .05);
+    }
     P.forEach(([mul, type, amp]) => {
       const o = c.createOscillator(), a = c.createGain();
       o.type = type; o.frequency.value = f * mul; a.gain.value = amp;
+      if (vib){
+        const d = c.createGain(); d.gain.setValueAtTime(0, t);
+        d.gain.linearRampToValueAtTime(f * mul * .0045, t + Math.min(.6, dur * .5));
+        vib.connect(d); d.connect(o.frequency);
+      }
       o.connect(a); a.connect(lp); o.start(t); o.stop(t + dur + .05);
     });
   },
