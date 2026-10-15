@@ -222,6 +222,9 @@ img{max-width:100%}
 .check input{accent-color:var(--sea);width:19px;height:19px;margin:0}
 .addr{font:400 13px var(--mono);word-break:break-all;user-select:all}
 .mini{font-size:12.5px;color:var(--mist)}
+.ownday{display:grid;gap:8px;padding:11px 12px;border-radius:14px;border:1px dashed var(--line);background:var(--deep-2)}
+.ownday b{font-weight:600}.ownday small{color:var(--mist);font-size:13px}
+.ownday select{font:inherit;color:inherit;background:var(--deep);border:1px solid var(--line);border-radius:10px;padding:9px 10px}
 .gem-ic{width:16px;height:20px;vertical-align:-4px}
 
 /* Нижняя навигация */
@@ -488,6 +491,13 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
         <label class="opt"><input type="radio" name="music" value="own"><span><b>Своя мелодия</b><small id="own-name">Любимая песня из памяти телефона.</small></span></label>
         <div class="row"><button type="button" class="btn" id="own-pick">Выбрать файл с музыкой</button><span class="mini" id="own-note"></span></div>
         <input type="file" id="own-file" accept="audio/*" hidden>
+        <div class="ownday">
+          <b>Своя мелодия для одного дня</b>
+          <small>Например, любимая запись для 1 дня. Файл остаётся только на этом телефоне и звучит в фильме выбранного дня (при «По дням поездки»).</small>
+          <div class="row"><select id="od-day" aria-label="День"></select><button type="button" class="btn" id="od-pick">Выбрать файл</button><button type="button" class="btn" id="od-del" hidden>Вернуть мелодию альбома</button></div>
+          <span class="mini" id="od-note"></span>
+          <input type="file" id="od-file" accept="audio/*" hidden>
+        </div>
         <label class="opt"><input type="radio" name="music" value="none"><span><b>Без музыки</b><small>Только кадры, или только шум моря, если он включён.</small></span></label>
         <label class="check"><input type="checkbox" id="sea-on"> Шум прибоя под музыку</label>
         <div class="row"><button type="button" class="btn" id="preview" aria-pressed="false">Послушать</button></div>
@@ -1365,7 +1375,18 @@ const TUNES = {
   waltz:{name:"«Балтийский вальс»", bpm:84, beats:3, events:waltzEvents}
 };
 /* мелодия дня: dayMusic в album-data, для остальных дней — «Ветер с Балтики» */
-const dayTune = n => { const k = (ALBUM.dayMusic || {})[n]; return TUNES[k] ? k : "breeze"; };
+/* Своя мелодия для одного дня (например, любимая запись для 1 дня): файл хранится только на этом телефоне
+   (IndexedDB) и на сайт не попадает — так можно слушать и записи, которые нельзя выкладывать в публичный альбом */
+const ownDays = {};
+function setOwnDay(n, rec){
+  const k = "ownd" + n, old = TUNES[k];
+  if (old && old.file){ delete Music.clips[old.file]; try { URL.revokeObjectURL(old.file); } catch(e){} }
+  if (!rec || !rec.blob){ delete TUNES[k]; delete ownDays[n]; return; }
+  TUNES[k] = {name:"«" + String(rec.name || "своя мелодия").replace(/\.[^.]+$/, "") + "»", bpm:112, beats:4, events:barEvents,
+    file:URL.createObjectURL(rec.blob), credit:"своя мелодия с этого телефона", own:true};
+  ownDays[n] = k;
+}
+const dayTune = n => { if (ownDays[n] && TUNES[ownDays[n]]) return ownDays[n]; const k = (ALBUM.dayMusic || {})[n]; return TUNES[k] ? k : "breeze"; };
 const homeDay = () => { const d = DAYS.find(x => x.date === todayIso); return d ? d.n : 1; };
 /* длина такта звучащей (или выбранной) мелодии: в её такт меняются кадры фильма */
 const BAR = () => { const t = TUNES[Music.on ? Music.mode : set.music] || TUNES.breeze; return 60 / t.bpm * t.beats; };
@@ -1696,6 +1717,37 @@ const idb = {
 async function loadOwn(){
   try { const r = await idb.get("own"); if (r && r.blob){ ownAudio.src = URL.createObjectURL(r.blob); ownName = r.name || "своя мелодия"; renderSettings(); } } catch(e){}
 }
+async function loadOwnDays(){
+  try { const all = await idb.get("own-days"); if (all) Object.entries(all).forEach(([n, rec]) => setOwnDay(+n, rec)); } catch(e){}
+  renderSettings(); renderAlbum();
+}
+function renderOwnDay(){
+  const sel = $("#od-day"), ds = DAYS.filter(d => photosOfDay(d.n).length);
+  const cur = sel.value !== "" ? +sel.value : (ds.some(d => d.n === 1) ? 1 : ds.length ? ds[0].n : 0);
+  sel.innerHTML = ds.map(d => `<option value="${d.n}">${esc(dayLabel(d))}${ownDays[d.n] ? " ♪" : ""}</option>`).join("");
+  sel.value = String(cur);
+  const k = ownDays[cur];
+  $("#od-del").hidden = !k;
+  $("#od-note").textContent = k ? dayLabel(DAYS.find(d => d.n === cur)) + ": звучит " + TUNES[k].name + (set.music !== "days" ? " — включите «По дням поездки»" : "") : "";
+}
+$("#od-day").onchange = renderOwnDay;
+$("#od-pick").onclick = () => $("#od-file").click();
+$("#od-file").onchange = async e => {
+  const f = e.target.files && e.target.files[0]; e.target.value = ""; if (!f) return;
+  const n = +$("#od-day").value, rec = {name:f.name, blob:f};
+  setOwnDay(n, rec);
+  if (set.music !== "days"){ set.music = "days"; saveSet(); }
+  renderSettings(); renderAlbum();
+  try { const all = (await idb.get("own-days")) || {}; all[n] = rec; await idb.put("own-days", all); }
+  catch(err){ $("#od-note").textContent += " (не удалось сохранить: будет звучать, пока альбом открыт)"; }
+  if (Music.on) Music.play();
+};
+$("#od-del").onclick = async () => {
+  const n = +$("#od-day").value;
+  setOwnDay(n, null); renderSettings(); renderAlbum();
+  try { const all = (await idb.get("own-days")) || {}; delete all[n]; await idb.put("own-days", all); } catch(e){}
+  if (Music.on) Music.play();
+};
 $("#own-pick").onclick = () => $("#own-file").click();
 $("#own-file").onchange = async e => {
   const f = e.target.files && e.target.files[0]; if (!f) return;
@@ -1711,6 +1763,7 @@ function renderSettings(){
   DAYS.filter(d => d.n <= 2 || photosOfDay(d.n).length).forEach(d => { (byTune[dayTune(d.n)] = byTune[dayTune(d.n)] || []).push(d.n === 0 ? "приезд" : d.n + " день"); });
   $("#days-music").textContent = Object.entries(byTune).map(([k, ds]) => ds.join(", ") + " — " + TUNES[k].name).join("; ") + ". В общем фильме мелодия плавно меняется на границе дней.";
   $("#own-name").textContent = ownName ? "Выбрано: " + ownName : "Любимая песня из памяти телефона.";
+  renderOwnDay();
   $("#sea-on").checked = !!set.sea;
   $$("#speed [data-speed]").forEach(b => b.setAttribute("aria-pressed", +b.dataset.speed === +set.speed));
 }
@@ -1806,10 +1859,10 @@ function creditsHTML(list, demo){
   const cast = (ALBUM.cast || []).filter(Boolean);
   const used = [...new Set(days.map(d => dayTune(d.n)))];
   const mine = used.filter(k => !TUNES[k].file).map(k => TUNES[k].name);
-  const recs = used.filter(k => TUNES[k].file).map(k => TUNES[k].name + " (" + TUNES[k].credit + ")");
+  const recs = used.filter(k => TUNES[k].file).map(k => esc(TUNES[k].name) + " (" + esc(TUNES[k].credit) + ")");
   const daysMusic = [mine.length ? mine.join(" и ") + (mine.length > 1 ? ", сочинены" : ", сочинён") + " для этого альбома" : "", ...recs].filter(Boolean).join("; ");
   const T1 = TUNES[Music.mode];
-  const music = !Music.on ? "" : Music.pref === "days" ? daysMusic : T1 ? (T1.file ? T1.name + " (" + T1.credit + ")" : T1.name + ", сочинён для этого альбома") : Music.mode === "own" ? esc(ownName.replace(/\.[^.]+$/, "") || "Своя мелодия") : "Шум Балтийского моря";
+  const music = !Music.on ? "" : Music.pref === "days" ? daysMusic : T1 ? (T1.file ? esc(T1.name) + " (" + esc(T1.credit) + ")" : T1.name + ", сочинён для этого альбома") : Music.mode === "own" ? esc(ownName.replace(/\.[^.]+$/, "") || "Своя мелодия") : "Шум Балтийского моря";
   const stat = (n, a, b, c) => `<div><b>${n}</b><span>${plural(n, a, b, c)}</span></div>`;
   return `<div class="roll">
     <p class="cr-t">${esc(ALBUM.title)}</p><p class="cr-s">${esc(ALBUM.subtitle)}</p>
@@ -2412,7 +2465,7 @@ renderCover(); renderStrip(); renderAlbum(); renderMap(); renderBox(); renderSet
 const hashTab = (location.hash || "").slice(1);
 showTab(["album","map","box","set"].includes(hashTab) ? hashTab : store.get("alb-tab", "album"));
 Dust.start();
-loadOwn();
+loadOwn(); loadOwnDays();
 })();
 </script>
 </body>
