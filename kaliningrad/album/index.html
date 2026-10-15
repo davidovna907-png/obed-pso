@@ -1342,6 +1342,9 @@ const dayTune = n => { const k = (ALBUM.dayMusic || {})[n]; return TUNES[k] ? k 
 const homeDay = () => { const d = DAYS.find(x => x.date === todayIso); return d ? d.n : 1; };
 /* длина такта звучащей (или выбранной) мелодии: в её такт меняются кадры фильма */
 const BAR = () => { const t = TUNES[Music.on ? Music.mode : set.music] || TUNES.breeze; return 60 / t.bpm * t.beats; };
+/* у видео со своим звуком (прибой, рында) звук лежит рядом: photos/d4-08.mp4?v=2 → photos/d4-08.mp3?v=2 (tools/clips.py) */
+const hasClip = p => !!(p && p.isVideo && (p.sea || p.sound));
+const clipURL = p => p.src.replace(/\.mp4(\?|$)/, ".mp3$1");
 const DUCK = .06; /* громкость музыки во время видео со своим звуком моря (обычная — .9) */
 const ownAudio = new Audio();
 ownAudio.loop = true; ownAudio.preload = "auto";
@@ -1454,6 +1457,36 @@ const Music = {
     this.master.gain.cancelScheduledValues(t);
     this.master.gain.setValueAtTime(Math.max(this.master.gain.value, .0001), t);
     this.master.gain.exponentialRampToValueAtTime(on ? DUCK : .9, t + .7);
+  },
+  /* свой звук видео (прибой, звон рынды): на iPhone видео без нажатия пальцем играет только без звука,
+     поэтому звук идёт отдельным файлом через этот движок — ему звук разрешён нажатием «Смотреть фильм».
+     Выход мимо общей громкости музыки: приглушение музыки (duck) его не касается */
+  clips:{}, clip:null, clipTok:0,
+  loadClip(url){
+    const c = this.init(); if (!c) return Promise.reject(new Error("no audio"));
+    if (!this.clips[url]) this.clips[url] = fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
+      .then(b => new Promise((res, rej) => { const pr = c.decodeAudioData(b, res, rej); if (pr && pr.then) pr.then(res, rej); }))
+      .catch(e => { delete this.clips[url]; throw e; });
+    return this.clips[url];
+  },
+  playClip(url, offset){
+    this.stopClip();
+    const tok = this.clipTok;
+    return this.loadClip(url).then(buf => {
+      const c = this.ctx;
+      if (tok !== this.clipTok || !c) return false;
+      if (c.state === "suspended" && film.playing && c.resume) c.resume();
+      const src = c.createBufferSource(), g = c.createGain();
+      src.buffer = buf; src.connect(g); g.connect(c.destination);
+      src.start(c.currentTime + .02, Math.min(Math.max(0, offset || 0), Math.max(0, buf.duration - .05)));
+      this.clip = {src, g};
+      return true;
+    });
+  },
+  stopClip(){
+    this.clipTok++;
+    const k = this.clip; this.clip = null;
+    if (k && this.ctx){ try { const t = this.ctx.currentTime; k.g.gain.setTargetAtTime(.0001, t, .06); k.src.stop(t + .35); } catch(e){} }
   },
   pause(){ if (this.ctx && this.ctx.suspend) this.ctx.suspend(); if (this.mode === "own") ownAudio.pause(); },
   resume(){
@@ -1731,13 +1764,21 @@ function animateFrame(layer, f){
   const dur = (barsOf(f) * BAR() + 1.6) * 1000;
   const v = $("video", layer);
   if (v){
-    /* под музыку видео идёт без звука; видео с морем (sea) или со своим звуком (sound, например звон рынды) —
-       со своим звуком, музыка на это время тише */
-    const sea = !!(f.p && (f.p.sea || f.p.sound));
-    v.muted = Music.on && !sea;
-    const pr = v.play();
-    if (pr && pr.then) pr.then(() => { if (sea && !v.muted && film.frames[film.i] === f) Music.duck(true); })
-      .catch(() => { v.muted = true; const p2 = v.play(); if (p2 && p2.catch) p2.catch(() => {}); });
+    /* видео в фильме идёт без звука (так телефон разрешает играть его само); у видео с морем (sea) или со своим
+       звуком (sound, звон рынды) звук играет движок музыки из файла .mp3 рядом с видео, а музыка на это время тише */
+    v.muted = true;
+    const pr = v.play(); if (pr && pr.catch) pr.catch(() => {});
+    if (hasClip(f.p)){
+      const here = () => film.frames[film.i] === f;
+      Music.playClip(clipURL(f.p), v.currentTime).then(ok => { if (ok && here()) Music.duck(true); })
+        .catch(() => {
+          /* нет отдельного звука — пробуем звук самого видео (на компьютере так можно) */
+          if (!here()) return;
+          v.muted = false;
+          const p2 = v.play();
+          if (p2 && p2.then) p2.then(() => { if (here()) Music.duck(true); }).catch(() => { v.muted = true; const p3 = v.play(); if (p3 && p3.catch) p3.catch(() => {}); });
+        });
+    }
   }
   const kb = $(".kb", layer);
   if (kb && !reduce){ const a = kb.animate(KB[Math.floor(Math.random() * KB.length)], {duration:dur, easing:"linear", fill:"forwards"}); film.anims.push(a); }
@@ -1779,6 +1820,7 @@ function go(i){
   const prevTok = prev.dataset.tok;
   setTimeout(() => { if (prev.dataset.tok === prevTok && !prev.classList.contains("on")) prev.innerHTML = ""; }, 1500);
   film.cur ^= 1;
+  Music.stopClip();
   Music.duck(false);
   const fd = f.d || (f.p && f.p.dayObj); if (fd) Music.setDay(fd.n);
   animateFrame(next, f);
@@ -1788,6 +1830,7 @@ function go(i){
   $("#f-lbl").textContent = d ? dayLabel(d) + " · " + fmtDay(d.date).split(",")[0] : "";
   const nx = film.frames[i + 1];
   if (nx && (nx.t === "photo" || nx.t === "video")){ const im = new Image(); im.src = nx.p.img; }
+  if (nx && hasClip(nx.p)) Music.loadClip(clipURL(nx.p)).catch(() => {});
 }
 function tick(){
   if (!film.playing || $("#film").hidden) return;
@@ -1837,6 +1880,7 @@ function openFilm(opts){
   lockWake();
   const first = film.frames.find(x => x.d);
   Music.day = first ? first.d.n : null;
+  const ac = Music.init(); if (ac && ac.resume) ac.resume(); /* нажатие пальцем разрешает звук: прибой и рында в видео */
   const want = set.music === "days" ? dayTune(Music.day == null ? homeDay() : Music.day) : set.music;
   if (set.music !== "none" || set.sea){ if (!Music.on || Music.mode !== want) Music.play(); else Music.pref = set.music; }
   else Music.stop(.5);
@@ -1849,6 +1893,7 @@ function openFilm(opts){
 function endFilm(){
   film.playing = false;
   Ticker.stop();
+  Music.stopClip();
   Music.stop(5);
   /* после фильма дня — кнопка следующего дня с фото */
   const cur = film.opts.day, nd = cur != null ? filmDays().find(d => d.n > cur) : null;
@@ -1861,6 +1906,7 @@ function endFilm(){
 function closeFilm(){
   film.playing = false;
   Ticker.stop();
+  Music.stopClip();
   Music.stop(1.2); Music.day = null;
   film.anims.forEach(a => { try { a.cancel(); } catch(e){} }); film.anims = [];
   $("#film").hidden = true;
