@@ -761,8 +761,8 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
  {"id": "d4-05", "day": 4, "src": "photos/d4-05.jpg", "thumb": "photos/t/d4-05.jpg", "w": 1200, "h": 2314, "place": "okean", "title": "Три судна — три билета", "date": "2026-10-14", "collage": true},
  {"id": "d4-06", "day": 4, "src": "photos/d4-06.jpg", "thumb": "photos/t/d4-06.jpg", "w": 1200, "h": 2775, "place": "okean", "title": "Рыболовное судно СРТ-129", "date": "2026-10-14", "collage": true},
  {"id": "d4-07", "day": 4, "src": "photos/d4-07.jpg", "thumb": "photos/t/d4-07.jpg", "w": 1200, "h": 2775, "place": "okean", "title": "На борту СРТ-129", "date": "2026-10-14", "collage": true},
- {"id": "d4-08", "day": 4, "type": "video", "src": "photos/d4-08.mp4", "poster": "photos/d4-08.jpg", "thumb": "photos/t/d4-08.jpg", "w": 720, "h": 1280, "dur": 6.5, "muted": true, "place": "okean", "title": "Мамуля звонит в рынду", "date": "2026-10-14", "time": "13:23"},
- {"id": "d4-09", "day": 4, "type": "video", "src": "photos/d4-09.mp4", "poster": "photos/d4-09.jpg", "thumb": "photos/t/d4-09.jpg", "w": 720, "h": 1280, "dur": 4.1, "muted": true, "place": "okean", "title": "Я звоню в рынду", "date": "2026-10-14", "time": "13:24"},
+ {"id": "d4-08", "day": 4, "type": "video", "src": "photos/d4-08.mp4?v=2", "poster": "photos/d4-08.jpg", "thumb": "photos/t/d4-08.jpg", "w": 720, "h": 1280, "dur": 6.5, "place": "okean", "title": "Мамуля звонит в рынду", "date": "2026-10-14", "time": "13:23", "sound": true},
+ {"id": "d4-09", "day": 4, "type": "video", "src": "photos/d4-09.mp4?v=2", "poster": "photos/d4-09.jpg", "thumb": "photos/t/d4-09.jpg", "w": 720, "h": 1280, "dur": 4.1, "place": "okean", "title": "Я звоню в рынду", "date": "2026-10-14", "time": "13:24", "sound": true},
  {"id": "d4-10", "day": 4, "src": "photos/d4-10.jpg", "thumb": "photos/t/d4-10.jpg", "w": 1200, "h": 2728, "place": "okean", "title": "Научное судно «Витязь»", "date": "2026-10-14", "collage": true},
  {"id": "d4-11", "day": 4, "type": "video", "src": "photos/d4-11.mp4", "poster": "photos/d4-11.jpg", "thumb": "photos/t/d4-11.jpg", "w": 720, "h": 1280, "dur": 6.6, "muted": true, "place": "okean", "title": "По трапу на «Витязь»", "date": "2026-10-14", "time": "13:31"},
  {"id": "d4-12", "day": 4, "src": "photos/d4-12.jpg", "thumb": "photos/t/d4-12.jpg", "w": 1200, "h": 2775, "place": "okean", "title": "На капитанском мостике", "date": "2026-10-14", "collage": true},
@@ -1731,8 +1731,9 @@ function animateFrame(layer, f){
   const dur = (barsOf(f) * BAR() + 1.6) * 1000;
   const v = $("video", layer);
   if (v){
-    /* под музыку видео идёт без звука; видео с морем — со своим шумом прибоя, музыка на это время тише */
-    const sea = !!(f.p && f.p.sea);
+    /* под музыку видео идёт без звука; видео с морем (sea) или со своим звуком (sound, например звон рынды) —
+       со своим звуком, музыка на это время тише */
+    const sea = !!(f.p && (f.p.sea || f.p.sound));
     v.muted = Music.on && !sea;
     const pr = v.play();
     if (pr && pr.then) pr.then(() => { if (sea && !v.muted && film.frames[film.i] === f) Music.duck(true); })
