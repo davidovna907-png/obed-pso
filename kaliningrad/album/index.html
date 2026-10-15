@@ -487,6 +487,9 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
         <label class="opt"><input type="radio" name="music" value="surf"><span><b>«Балтийский прибой»</b><small>Энергичная мелодия под шум волн, сочинена для дня в Балтийске.</small></span></label>
         <label class="opt"><input type="radio" name="music" value="organ"><span><b>«Хорал Кафедрального собора»</b><small>Торжественная органная мелодия, сочинена для дня с органным концертом.</small></span></label>
         <label class="opt"><input type="radio" name="music" value="march"><span><b>Чайковский, марш из Шестой симфонии</b><small>Запись Musopen в общественном достоянии, звучит в день Черняховска.</small></span></label>
+        <label class="opt"><input type="radio" name="music" value="amal"><span><b>«Аллеи Амалиенау»</b><small>Для 1 дня, в духе «Experience» Эйнауди: фортепиано перебирает аккорды, мелодия и струнные вступают по очереди. Сочинена для альбома.</small></span></label>
+        <label class="opt"><input type="radio" name="music" value="kranz"><span><b>«Берег Кранца»</b><small>Для 2 дня, в духе «Shallow»: гитара и голос без слов, в припеве барабаны и струнные. Сочинена для альбома.</small></span></label>
+        <label class="opt"><input type="radio" name="music" value="leto"><span><b>«Янтарное лето»</b><small>Для 3 дня, в духе летнего хита «Хочу на море»: укулеле, маримба, хлопки и волны. Сочинена для альбома.</small></span></label>
         <label class="opt"><input type="radio" name="music" value="ballad"><span><b>«Вечер на острове Канта»</b><small>Тихая ностальгическая баллада для дня приезда: гитара, фортепиано, во втором проходе струнный квартет. Сочинена для альбома.</small></span></label>
         <label class="opt"><input type="radio" name="music" value="waltz"><span><b>«Балтийский вальс»</b><small>Спокойный вальс, тоже сочинён для альбома.</small></span></label>
         <label class="opt"><input type="radio" name="music" value="own"><span><b>Своя мелодия</b><small id="own-name">Любимая песня из памяти телефона.</small></span></label>
@@ -622,7 +625,7 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
  "author": "ND",
  "cast": ["Мамуля"],
  "dayScenes": {"4": "city", "5": "city"},
- "dayMusic": {"0": "ballad", "1": "waltz", "2": "breeze", "3": "surf", "4": "organ", "5": "march"},
+ "dayMusic": {"0": "ballad", "1": "amal", "2": "kranz", "3": "leto", "4": "organ", "5": "march"},
  "extraDays": [{"n": 0, "label": "Приезд", "date": "2026-10-10", "title": "Приезд в Калининград", "kind": "Прилёт и вечерняя прогулка", "towns": ["Храброво", "Калининград"], "route": ["khr", "kgd"], "hex": "#6fa8ff", "scene": "plane", "note": "Приезд в Калининград, вечерняя прогулка по острову Канта, Кафедральный собор, Рыбная деревня и мост влюблённых"}],
  "dayNotes": {"1": "Королевские ворота, район Амалиенау, улица Фрунзе — по программе экскурсии первого дня. Виллы в Амалиенау, марципановый музей", "2": "Замок Нойхаузен, Шаакен, сыроварня, Зеленоградск, Балтийское море — по маршруту второго дня", "4": "Свободный день — от органной симфонии до подводной лодки"},
  "dayRoutes": {"2": ["kgd", "gur", "sha", "zel", "kgd"], "3": ["kgd", "bal", "yan", "svg", "kgd"], "4": ["kgd"], "5": ["kgd", "che", "nem", "sov", "kgd"]},
@@ -1387,7 +1390,85 @@ function balladEvents(){
   });
   return ev.sort((a, b) => a.t - b.t);
 }
+/* «Аллеи Амалиенау» — для 1 дня, в духе «Experience» Эйнауди (мелодия и гармония свои): до минор, фортепиано
+   перебирает аккорд восьмыми; проходы нарастают — одно фортепиано, затем мелодия и виолончель, затем струнные, и снова сначала */
+const ACH = {Cm:[48,55,60,63,67], Ab:[44,51,56,60,63], Eb:[43,51,55,58,63], Bb:[46,53,58,62,65], Fm:[41,48,53,56,60], G:[43,50,55,59,62]};
+const ALOW = {Cm:36, Ab:44, Eb:39, Bb:46, Fm:41, G:43};
+const APROG = ["Cm","Cm","Ab","Ab","Eb","Eb","Bb","Bb","Cm","Cm","Ab","Ab","Fm","Fm","G","G"];
+const AMEL = [[[67,4]], [[68,2],[67,2]], [[72,4]], [[70,2],[68,2]], [[67,4]], [[70,2],[67,2]], [[65,4]], [[62,2],[65,2]],
+  [[67,2],[72,2]], [[75,4]], [[75,2],[72,2]], [[68,4]], [[68,2],[72,2]], [[77,4]], [[74,2],[71,2]], [[71,2],[74,2]]];
+function amalEvents(){
+  const ev = [];
+  APROG.forEach((c, b) => {
+    const t0 = b * 4, v = ACH[c];
+    ev.push({t:t0, k:"bar"});
+    [0,1,2,3,4,3,2,1].forEach((j, i) => ev.push({t:t0 + i / 2, k:"ost", m:v[j], acc:i % 4 === 0}));
+    if (b % 2 === 0) ev.push({t:t0, k:"alh", m:ALOW[c]}, {t:t0, k:"acel", m:ALOW[c], d:8}, {t:t0, k:"apad", m:[v[3], v[4]], d:8});
+    let t = t0; AMEL[b].forEach(([m, d]) => { ev.push({t, k:"amel", m, d}); t += d; });
+  });
+  return ev.sort((a, b) => a.t - b.t);
+}
+/* «Берег Кранца» — для 2 дня, в духе «Shallow» (мелодия и гармония свои): ре мажор; куплет — гитара перебором и тихий голос,
+   перед припевом дробь на томах, в припеве гитара бьёт по струнам, вступают барабаны и бас, во втором проходе — струнные */
+const KCH = {D:[50,57,62,66,69], AC:[49,57,64,69,73], GB:[47,55,62,67,71], G:[43,50,55,59,67], Em:[40,47,52,55,59],
+  A:[45,52,57,61,64], Bm:[47,54,59,62,66], DF:[42,50,57,62,66]};
+const KBASS = {D:38, AC:37, GB:35, G:43, Em:40, A:45, Bm:47, DF:42};
+const KPROG = ["D","AC","GB","G","D","AC","Em","A","G","A","Bm","DF","G","A","D","D"];
+const KMEL = [
+  [[66,1],[66,.5],[69,.5],[71,1],[69,1]], [[69,2],[64,1],[66,1]], [[67,1.5],[66,.5],[64,2]], [[62,1],[64,1],[66,2]],
+  [[66,1],[69,1],[74,1.5],[73,.5]], [[73,2],[71,1],[69,1]], [[67,1.5],[66,.5],[64,1],[67,1]], [[69,2],[71,1],[73,1]],
+  [[74,3],[71,1]], [[73,2],[76,2]], [[78,3],[74,1]], [[76,2],[74,1],[73,1]],
+  [[74,1],[76,1],[78,2]], [[81,2],[79,1],[76,1]], [[78,2],[76,1],[74,1]], [[74,4]]
+];
+function kranzEvents(){
+  const ev = [];
+  KPROG.forEach((c, b) => {
+    const t0 = b * 4, v = KCH[c], chorus = b >= 8;
+    ev.push({t:t0, k:"bar"});
+    if (!chorus){
+      [0,2,4,3,1,2,4,3].forEach((j, i) => ev.push({t:t0 + i / 2, k:"kpick", m:v[j]}));
+      if (b % 2 === 0) ev.push({t:t0, k:"kcel", m:KBASS[c] + 12, d:8});
+    } else {
+      [[0,0],[1,0],[1.5,1],[2.5,1],[3,0],[3.5,1]].forEach(([x, up]) => ev.push({t:t0 + x, k:"kstrum", m:v, up}));
+      ev.push({t:t0, k:"kb", m:KBASS[c], d:2}, {t:t0 + 2, k:"kb", m:KBASS[c], d:2}, {t:t0, k:"kpad", m:v.slice(2), d:4});
+      ev.push({t:t0, k:"kick"}, {t:t0 + 2.5, k:"kick"}, {t:t0 + 2, k:"snare"});
+      [0,1,2,3].forEach(x => ev.push({t:t0 + x, k:"hat", acc:x % 2 === 1}));
+      if (b === 8) ev.push({t:t0, k:"crash"});
+    }
+    if (b === 7) [[2,190],[2.5,160],[3,130],[3.5,105]].forEach(([x, f]) => ev.push({t:t0 + x, k:"tom", acc:f}));
+    let t = t0; KMEL[b].forEach(([m, d]) => { ev.push({t, k:"kmel", m, d, chorus}); t += d; });
+  });
+  return ev.sort((a, b) => a.t - b.t);
+}
+/* «Янтарное лето» — для 3 дня, в духе летнего хита «Хочу на море» (мелодия и гармония свои): ля мажор, укулеле, бас,
+   «бочка» на каждую долю, хлопки, мелодия на маримбе, во втором проходе её подхватывает свист; каждые четыре такта — волна */
+const LCH = {Fsm:[61,66,69,73], D:[62,66,69,74], A:[61,64,69,73], E:[59,64,68,71]};
+const LBASS = {Fsm:42, D:38, A:45, E:40};
+const LMEL = [
+  [[0,.5],[69,.5],[73,.5],[76,1],[73,.5],[71,1]], [[69,1.5],[66,.5],[69,1],[71,1]], [[0,.5],[73,.5],[76,.5],[78,1],[76,.5],[73,1]], [[71,2],[68,1],[71,1]],
+  [[0,.5],[69,.5],[73,.5],[76,1],[73,.5],[71,1]], [[69,1.5],[66,.5],[69,1],[71,1]], [[0,.5],[73,.5],[76,.5],[78,1],[76,.5],[73,1]], [[71,1],[73,1],[76,2]],
+  [[81,1],[80,.5],[78,1],[76,.5],[73,1]], [[78,1.5],[76,.5],[74,1],[73,1]], [[76,1],[73,.5],[76,.5],[81,1],[80,1]], [[80,2],[76,2]],
+  [[81,1],[80,.5],[78,1],[76,.5],[73,1]], [[78,1.5],[76,.5],[74,1],[73,1]], [[76,1],[73,.5],[76,.5],[81,1],[80,1]], [[76,1],[78,1],[80,2]]
+];
+function letoEvents(){
+  const ev = [];
+  for (let b = 0; b < 16; b++){
+    const c = ["Fsm","D","A","E"][b % 4], t0 = b * 4, v = LCH[c], r = LBASS[c];
+    ev.push({t:t0, k:"bar"});
+    [[0,0],[1,0],[1.5,1],[2.5,1],[3,0],[3.5,1]].forEach(([x, up]) => ev.push({t:t0 + x, k:"uke", m:v, up}));
+    [[0,r],[1.5,r],[2,r + 12],[3,r],[3.5,r + 7]].forEach(([x, m]) => ev.push({t:t0 + x, k:"pbass", m}));
+    [0,1,2,3].forEach(x => ev.push({t:t0 + x, k:"kick"}));
+    ev.push({t:t0 + 1, k:"clap"}, {t:t0 + 3, k:"clap"});
+    [.5,1.5,2.5,3.5].forEach(x => ev.push({t:t0 + x, k:"hat", acc:true}));
+    if (b % 4 === 0) ev.push({t:t0, k:"wave", d:8});
+    let t = t0; LMEL[b].forEach(([m, d]) => { if (m) ev.push({t, k:"lmel", m, d}); t += d; });
+  }
+  return ev.sort((a, b) => a.t - b.t);
+}
 const TUNES = {
+  amal:{name:"«Аллеи Амалиенау»", bpm:112, beats:4, events:amalEvents, wet:.45},
+  kranz:{name:"«Берег Кранца»", bpm:124, beats:4, events:kranzEvents, wet:.35},
+  leto:{name:"«Янтарное лето»", bpm:132, beats:4, events:letoEvents, wet:.18},
   ballad:{name:"«Вечер на острове Канта»", bpm:96, beats:4, events:balladEvents, wet:.42},
   breeze:{name:"«Ветер с Балтики»", bpm:124, beats:4, events:breezeEvents},
   organ:{name:"«Хорал Кафедрального собора»", bpm:112, beats:4, events:organEvents, wet:.6},
@@ -1611,8 +1692,35 @@ const Music = {
       return;
     }
     /* «Ветер с Балтики»: первые два такта без барабанов — разбег */
-    if (e.k === "kick" || e.k === "snare" || e.k === "hat"){ if (this.loop || e.t >= 8) this.drum(t, e.k, e.acc); return; }
-    if (e.k === "pbass") this.voice(t, e.m, .28, .2, "pbass");
+    if (e.k === "kick" || e.k === "snare" || e.k === "hat" || e.k === "clap" || e.k === "tom" || e.k === "crash"){ if (this.loop || e.t >= 8) this.drum(t, e.k, e.acc); return; }
+    /* «Аллеи Амалиенау»: проход 0 — одно фортепиано, 1 — мелодия и виолончель, 2 — мелодия у скрипок в октаву и альты */
+    if (e.k === "ost") this.voice(t, e.m, .95, e.acc ? .09 : .07, "piano");
+    else if (e.k === "alh") this.voice(t, e.m, 4.2, .2, "piano");
+    else if (e.k === "acel"){ if (this.loop % 3) this.voice(t, e.m, e.d * this.beat + .75, .1, "cello"); }
+    else if (e.k === "apad"){ if (this.loop % 3 === 2) e.m.forEach(m => this.voice(t, m, e.d * this.beat + .75, .05, "violin")); }
+    else if (e.k === "amel"){
+      const st = this.loop % 3;
+      if (st === 1) this.voice(t, e.m, Math.max(1.4, e.d * this.beat * 1.5), .2, "piano");
+      else if (st === 2){ this.voice(t, e.m + 12, e.d * this.beat * .97, .2, "violin"); this.voice(t, e.m, e.d * this.beat * .97, .1, "violin"); }
+    }
+    /* «Берег Кранца»: гитара (перебор в куплете, удар по струнам в припеве), голос, бас; во втором проходе — струнные */
+    else if (e.k === "kpick") this.voice(t, e.m, 1.5, .06, "guitar");
+    else if (e.k === "kstrum") this.strum(t, e.m, e.up, 1.1, e.up ? .032 : .05);
+    else if (e.k === "kb") this.voice(t, e.m, e.d * this.beat * .95, .2, "bass");
+    else if (e.k === "kcel"){ if (this.loop % 2) this.voice(t, e.m, e.d * this.beat + .75, .09, "cello"); }
+    else if (e.k === "kpad"){ if (this.loop % 2) e.m.forEach(m => this.voice(t, m + 12, e.d * this.beat + .75, .035, "violin")); }
+    else if (e.k === "kmel"){
+      this.voice(t, e.m, e.d * this.beat * .95, e.chorus ? .15 : .1, "vox");
+      if (e.chorus && this.loop % 2) this.voice(t, e.m, e.d * this.beat * .95, .09, "violin");
+    }
+    /* «Янтарное лето»: укулеле, маримба; во втором проходе мелодию подхватывает свист; в первом проходе мелодия вступает с 5-го такта */
+    else if (e.k === "uke") this.strum(t, e.m, e.up, .42, e.up ? .03 : .045);
+    else if (e.k === "lmel"){
+      if (this.loop % 2 === 0 && e.t < 16) return;
+      this.voice(t, e.m, Math.max(.35, e.d * this.beat), .14, "box");
+      if (this.loop % 2) this.voice(t, e.m + 12, e.d * this.beat * .92, .045, "whistle");
+    }
+    else if (e.k === "pbass") this.voice(t, e.m, .28, .2, "pbass");
     else if (e.k === "stab") e.m.forEach(m => this.voice(t, m, .22, .045, "pluck"));
     else if (e.k === "gtr") this.voice(t, e.m, 1.6, .085, "guitar");
     /* аккорды струнных тянутся, пока не вступит следующий — смычок меняется без провала */
@@ -1636,6 +1744,11 @@ const Music = {
     else if (e.k === "chord") e.m.forEach(m => this.voice(t, m, 1.25, .06, "soft"));
     else if (this.loop % 2 === 0) this.voice(t, e.m, Math.max(1.3, e.d * this.beat * 1.9), .2, "piano");
     else this.voice(t, e.m + 12, 1.7, .12, "box");
+  },
+  /* удар по струнам: вниз — все струны снизу вверх, вверх — верхние три сверху вниз и тише */
+  strum(t, notes, up, dur, vel){
+    const ns = up ? notes.slice(-3).reverse() : notes;
+    ns.forEach((m, i) => this.voice(t + i * .011, m, dur, vel, "guitar"));
   },
   noise(){
     if (!this._noise){ const c = this.ctx, b = c.createBuffer(1, c.sampleRate, c.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random()*2 - 1; this._noise = b; }
@@ -1667,7 +1780,25 @@ const Music = {
       env(.6, .004, .32); o.connect(g); o.start(t); o.stop(t + .35);
       return;
     }
+    if (kind === "tom"){ /* для тома acc — высота удара в герцах */
+      const o = c.createOscillator(); o.type = "sine";
+      o.frequency.setValueAtTime(acc || 150, t); o.frequency.exponentialRampToValueAtTime((acc || 150) * .55, t + .3);
+      env(.42, .004, .42); o.connect(g); o.start(t); o.stop(t + .45);
+      return;
+    }
     const n = c.createBufferSource(), f = c.createBiquadFilter(); n.buffer = this.noise();
+    if (kind === "clap"){ /* хлопок — три быстрых всплеска шума и короткий хвост */
+      f.type = "bandpass"; f.frequency.value = 1500; f.Q.value = 1.1; g.gain.setValueAtTime(.0001, t);
+      [0, .011, .022].forEach(x => { g.gain.setValueAtTime(.2, t + x); g.gain.exponentialRampToValueAtTime(.03, t + x + .009); });
+      g.gain.setValueAtTime(.18, t + .033); g.gain.exponentialRampToValueAtTime(.0001, t + .2);
+      n.connect(f); f.connect(g); n.start(t, Math.random() * .5); n.stop(t + .22);
+      return;
+    }
+    if (kind === "crash"){
+      f.type = "highpass"; f.frequency.value = 4500; env(.09, .003, 1.6);
+      n.connect(f); f.connect(g); n.start(t, Math.random() * .2); n.stop(t + 1.65);
+      return;
+    }
     if (kind === "snare"){
       f.type = "bandpass"; f.frequency.value = 1900; f.Q.value = .7; env(.24, .003, .16);
       const o = c.createOscillator(), og = c.createGain(); o.type = "triangle";
@@ -1686,15 +1817,17 @@ const Music = {
       pedal:[[1,"triangle",.9],[2,"sine",.5],[3,"sine",.12]], mixture:[[2,"sine",.6],[3,"sine",.35],[4,"sine",.3],[6,"sine",.15]],
       /* баллада: гитара (быстрая атака, звук затухает), виолончель и скрипки (смычок: мягкая атака, вибрато) */
       guitar:[[1,"triangle",1],[2,"sine",.45],[3,"sine",.22],[4,"sine",.1]], cello:[[1,"sawtooth",.55],[2,"sine",.3]],
-      violin:[[1,"sawtooth",.45],[1.003,"sawtooth",.35],[2,"sine",.12]]}[kind];
-    const SUS = {organ:.025, flute:.04, pedal:.06, mixture:.012, cello:.18, violin:.28}[kind]; /* у органа и смычковых звук не затухает, пока держится нота */
-    const FIL = {guitar:[Math.min(5000, f*7), Math.max(500, f*1.4)], cello:[Math.min(2200, f*6)], violin:[Math.min(4500, f*4.5)], organ:[Math.min(9500, f*10)], flute:[Math.min(4000, f*5)], pedal:[900], mixture:[9500], bass:[700,220], pbass:[1000,280], pluck:[Math.min(6000, f*4), Math.max(400, f*1.2)], lead:[Math.min(7000, f*5), Math.max(700, f*2)]}[kind] || [Math.min(9000, f*6), Math.max(600, f*1.6)];
+      violin:[[1,"sawtooth",.45],[1.003,"sawtooth",.35],[2,"sine",.12]],
+      /* «голос» без слов — мягкий, с вибрато; свист — почти чистый тон */
+      vox:[[1,"triangle",1],[2,"sine",.38],[3,"sine",.14],[4,"sine",.05]], whistle:[[1,"sine",1],[2,"sine",.05]]}[kind];
+    const SUS = {organ:.025, flute:.04, pedal:.06, mixture:.012, cello:.18, violin:.28, vox:.07, whistle:.03}[kind]; /* у органа и смычковых звук не затухает, пока держится нота */
+    const FIL = {vox:[Math.min(3600, f*4)], whistle:[9000], guitar:[Math.min(5000, f*7), Math.max(500, f*1.4)], cello:[Math.min(2200, f*6)], violin:[Math.min(4500, f*4.5)], organ:[Math.min(9500, f*10)], flute:[Math.min(4000, f*5)], pedal:[900], mixture:[9500], bass:[700,220], pbass:[1000,280], pluck:[Math.min(6000, f*4), Math.max(400, f*1.2)], lead:[Math.min(7000, f*5), Math.max(700, f*2)]}[kind] || [Math.min(9000, f*6), Math.max(600, f*1.6)];
     const g = c.createGain(), lp = c.createBiquadFilter();
     lp.type = "lowpass";
     lp.frequency.setValueAtTime(FIL[0], t);
     g.gain.setValueAtTime(.0001, t);
     if (SUS){
-      const r = Math.min(kind === "violin" || kind === "cello" ? .45 : .12, dur * .3);
+      const r = Math.min({violin:.45, cello:.45, vox:.2}[kind] || .12, dur * .3);
       g.gain.exponentialRampToValueAtTime(vel, t + SUS);
       g.gain.setValueAtTime(vel, t + Math.max(SUS, dur - r));
     } else {
@@ -1705,8 +1838,9 @@ const Music = {
     lp.connect(g); g.connect(this.bus);
     /* вибрато смычковых: вступает не сразу, как у живого скрипача */
     let vib = null;
-    if (kind === "violin" || kind === "cello"){
-      vib = c.createOscillator(); vib.frequency.value = kind === "violin" ? 5.4 : 4.6;
+    const VIB = {violin:[5.4, .0045], cello:[4.6, .0045], vox:[5, .004], whistle:[5.8, .005]}[kind];
+    if (VIB){
+      vib = c.createOscillator(); vib.frequency.value = VIB[0];
       vib.start(t); vib.stop(t + dur + .05);
     }
     P.forEach(([mul, type, amp]) => {
@@ -1714,7 +1848,7 @@ const Music = {
       o.type = type; o.frequency.value = f * mul; a.gain.value = amp;
       if (vib){
         const d = c.createGain(); d.gain.setValueAtTime(0, t);
-        d.gain.linearRampToValueAtTime(f * mul * .0045, t + Math.min(.6, dur * .5));
+        d.gain.linearRampToValueAtTime(f * mul * VIB[1], t + Math.min(.6, dur * .5));
         vib.connect(d); d.connect(o.frequency);
       }
       o.connect(a); a.connect(lp); o.start(t); o.stop(t + dur + .05);
