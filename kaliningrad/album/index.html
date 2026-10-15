@@ -483,6 +483,7 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
         <label class="opt"><input type="radio" name="music" value="breeze"><span><b>«Ветер с Балтики»</b><small>Энергичная мелодия с ритмом. Сочинена для этого альбома и играет прямо в телефоне, кадры меняются в такт.</small></span></label>
         <label class="opt"><input type="radio" name="music" value="surf"><span><b>«Балтийский прибой»</b><small>Энергичная мелодия под шум волн, сочинена для дня в Балтийске.</small></span></label>
         <label class="opt"><input type="radio" name="music" value="organ"><span><b>«Хорал Кафедрального собора»</b><small>Торжественная органная мелодия, сочинена для дня с органным концертом.</small></span></label>
+        <label class="opt"><input type="radio" name="music" value="march"><span><b>Чайковский, марш из Шестой симфонии</b><small>Запись Musopen в общественном достоянии, звучит в день Черняховска.</small></span></label>
         <label class="opt"><input type="radio" name="music" value="waltz"><span><b>«Балтийский вальс»</b><small>Спокойный вальс, тоже сочинён для альбома.</small></span></label>
         <label class="opt"><input type="radio" name="music" value="own"><span><b>Своя мелодия</b><small id="own-name">Любимая песня из памяти телефона.</small></span></label>
         <div class="row"><button type="button" class="btn" id="own-pick">Выбрать файл с музыкой</button><span class="mini" id="own-note"></span></div>
@@ -609,12 +610,12 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
  "subtitle": "Янтарные воспоминания",
  "author": "ND",
  "cast": ["Мамуля"],
- "dayScenes": {"4": "city"},
- "dayMusic": {"0": "waltz", "1": "waltz", "2": "breeze", "3": "surf", "4": "organ"},
+ "dayScenes": {"4": "city", "5": "city"},
+ "dayMusic": {"0": "waltz", "1": "waltz", "2": "breeze", "3": "surf", "4": "organ", "5": "march"},
  "extraDays": [{"n": 0, "label": "Приезд", "date": "2026-10-10", "title": "Приезд в Калининград", "kind": "Прилёт и вечерняя прогулка", "towns": ["Храброво", "Калининград"], "route": ["khr", "kgd"], "hex": "#6fa8ff", "scene": "plane", "note": "Приезд в Калининград, вечерняя прогулка по острову Канта, Кафедральный собор, Рыбная деревня и мост влюблённых"}],
  "dayNotes": {"1": "Королевские ворота, район Амалиенау, улица Фрунзе — по программе экскурсии первого дня. Виллы в Амалиенау, марципановый музей", "2": "Замок Нойхаузен, Шаакен, сыроварня, Зеленоградск, Балтийское море — по маршруту второго дня", "4": "Свободный день — от органной симфонии до подводной лодки"},
- "dayRoutes": {"2": ["kgd", "gur", "sha", "zel", "kgd"], "3": ["kgd", "bal", "yan", "svg", "kgd"], "4": ["kgd"]},
- "dayInfo": {"3": {"title": "Янтарное побережье", "kind": "Экскурсия по побережью"}, "4": {"title": "От органа до подводной лодки", "kind": "Свободный день"}},
+ "dayRoutes": {"2": ["kgd", "gur", "sha", "zel", "kgd"], "3": ["kgd", "bal", "yan", "svg", "kgd"], "4": ["kgd"], "5": ["kgd", "che", "kgd"]},
+ "dayInfo": {"3": {"title": "Янтарное побережье", "kind": "Экскурсия по побережью"}, "4": {"title": "От органа до подводной лодки", "kind": "Свободный день"}, "5": {"title": "Старый Инстербург", "kind": "Поездка в Черняховск"}},
  "extraTowns": {"gur": ["Гурьевск", 20.603, 54.77]},
  "extraPlaces": {"sinag": {"name": "Новая синагога", "old": "Neue Synagoge", "year": "1896 / 2018", "town": "kgd", "day": 1, "fact": "Синагогу Кёнигсберга сожгли в Хрустальную ночь 1938 года. На её месте по старым чертежам построили новое здание, оно открылось в 2018 году."}, "neuh": {"name": "Замок Нойхаузен", "old": "Neuhausen", "year": "1292", "town": "gur", "day": 2, "fact": ""}, "bk508": {"name": "Орудие бронекатера БК-508", "year": "1945", "town": "bal", "day": 3, "fact": "25 апреля 1945 года бронекатер БК-508 участвовал в высадке морского десанта на косу Фрише-Нерунг, а за штурм крепости Пиллау экипажу объявили благодарность Верховного Главнокомандующего. На катере стояла башня танка Т-34 с 76-мм орудием."}},
  "photos": [
@@ -770,7 +771,16 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
  {"id": "d4-14", "day": 4, "src": "photos/d4-14.jpg", "thumb": "photos/t/d4-14.jpg", "w": 1200, "h": 2775, "place": "okean", "title": "Подводная лодка Б-413", "date": "2026-10-14", "collage": true},
  {"id": "d4-15", "day": 4, "src": "photos/d4-15.jpg", "thumb": "photos/t/d4-15.jpg", "w": 1200, "h": 2906, "place": "okean", "title": "Быт подводников", "date": "2026-10-14", "collage": true},
  {"id": "d4-16", "day": 4, "src": "photos/d4-16.jpg", "thumb": "photos/t/d4-16.jpg", "w": 1200, "h": 2110, "place": "okean", "title": "Отсеки Б-413", "date": "2026-10-14", "collage": true},
- {"id": "d4-17", "day": 4, "src": "photos/d4-17.jpg", "thumb": "photos/t/d4-17.jpg", "w": 1500, "h": 2000, "place": "okean", "title": "Спасательная шлюпка на открытой площадке", "date": "2026-10-14"}
+ {"id": "d4-17", "day": 4, "src": "photos/d4-17.jpg", "thumb": "photos/t/d4-17.jpg", "w": 1500, "h": 2000, "place": "okean", "title": "Спасательная шлюпка на открытой площадке", "date": "2026-10-14"},
+ {"id": "d5-01", "day": 5, "src": "photos/d5-01.jpg", "thumb": "photos/t/d5-01.jpg", "w": 1200, "h": 2110, "town": "che", "title": "Приехали в Черняховск", "date": "2026-10-15", "collage": true},
+ {"id": "d5-02", "day": 5, "type": "video", "src": "photos/d5-02.mp4", "poster": "photos/d5-02.jpg", "thumb": "photos/t/d5-02.jpg", "w": 720, "h": 1280, "dur": 5.0, "muted": true, "town": "che", "title": "Переход на вокзале", "date": "2026-10-15", "time": "10:42"},
+ {"id": "d5-06", "day": 5, "src": "photos/d5-06.jpg", "thumb": "photos/t/d5-06.jpg", "w": 1200, "h": 2906, "place": "inster", "title": "Улицы Черняховска", "date": "2026-10-15", "collage": true},
+ {"id": "d5-03", "day": 5, "type": "video", "src": "photos/d5-03.mp4", "poster": "photos/d5-03.jpg", "thumb": "photos/t/d5-03.jpg", "w": 720, "h": 1280, "dur": 4.4, "muted": true, "town": "che", "title": "Фонтан на площади", "date": "2026-10-15", "time": "11:14"},
+ {"id": "d5-04", "day": 5, "type": "video", "src": "photos/d5-04.mp4", "poster": "photos/d5-04.jpg", "thumb": "photos/t/d5-04.jpg", "w": 720, "h": 1280, "dur": 5.5, "muted": true, "town": "che", "title": "Горы старой брусчатки", "date": "2026-10-15", "time": "11:18"},
+ {"id": "d5-07", "day": 5, "src": "photos/d5-07.jpg", "thumb": "photos/t/d5-07.jpg", "w": 1200, "h": 2906, "place": "barclay", "title": "Полководец и император", "date": "2026-10-15", "collage": true},
+ {"id": "d5-08", "day": 5, "src": "photos/d5-08.jpg", "thumb": "photos/t/d5-08.jpg", "w": 1200, "h": 2110, "town": "che", "title": "Маленькие радости", "date": "2026-10-15", "collage": true},
+ {"id": "d5-09", "day": 5, "src": "photos/d5-09.jpg", "thumb": "photos/t/d5-09.jpg", "w": 1200, "h": 1931, "town": "che", "title": "Парк у пруда", "date": "2026-10-15", "collage": true},
+ {"id": "d5-05", "day": 5, "type": "video", "src": "photos/d5-05.mp4", "poster": "photos/d5-05.jpg", "thumb": "photos/t/d5-05.jpg", "w": 720, "h": 1280, "dur": 6.9, "muted": true, "town": "che", "title": "Ручей в парке", "date": "2026-10-15", "time": "11:47"}
  ]
 }
 </script>
@@ -1331,9 +1341,15 @@ function organEvents(){
   });
   return ev.sort((a, b) => a.t - b.t);
 }
+/* у мелодии-записи свои ноты не играются — только такты, по которым меняются кадры */
+const barEvents = () => Array.from({length:16}, (_, b) => ({t:b * 4, k:"bar"}));
 const TUNES = {
   breeze:{name:"«Ветер с Балтики»", bpm:124, beats:4, events:breezeEvents},
   organ:{name:"«Хорал Кафедрального собора»", bpm:112, beats:4, events:organEvents, wet:.6},
+  /* мелодия-запись (не сочинена в коде): играет файл, а такты для смены кадров идут с темпом bpm.
+     Брать только записи в общественном достоянии (CC0 / PD) и указывать их в credit — альбом публичный */
+  march:{name:"П. И. Чайковский, марш из Шестой симфонии", bpm:124, beats:4, events:barEvents,
+    file:"music/tchaikovsky-6-3.mp3", credit:"запись Musopen, Чешский национальный симфонический оркестр, общественное достояние, CC0"},
   surf:{name:"«Балтийский прибой»", bpm:132, beats:4, events:surfEvents},
   waltz:{name:"«Балтийский вальс»", bpm:84, beats:3, events:waltzEvents}
 };
@@ -1414,7 +1430,8 @@ const Music = {
       this.beat = 60 / tn.bpm; this.ev = tn.evs || (tn.evs = tn.events());
       this.idx = 0; this.loop = 0; this.phraseStart = t + .15;
       this.timer = setInterval(() => this.schedule(), 60); this.schedule();
-    }
+      if (tn.file) this.startFile(tn); else this.stopFile(.4);
+    } else this.stopFile(.4);
     if (set.sea) this.startSea(); else this.stopSea();
     if (mode === "none" && !set.sea) this.on = false;
     updateMusicUI();
@@ -1423,6 +1440,7 @@ const Music = {
     fade = fade || 1.2;
     if (!this.on) return;
     this.on = false; this.onBar = null; clearInterval(this.timer); clearTimeout(this.swT); this.swTo = null; this.duckOn = false;
+    this.stopFile(fade);
     const c = this.ctx;
     if (c){
       const t = c.currentTime;
@@ -1455,6 +1473,7 @@ const Music = {
       this.master.gain.cancelScheduledValues(t2); this.master.gain.setValueAtTime(.0001, t2);
       this.master.gain.exponentialRampToValueAtTime(this.duckOn ? DUCK : .9, t2 + 1.4);
       this.timer = setInterval(() => this.schedule(), 60); this.schedule();
+      if (tn.file) this.startFile(tn); else this.stopFile(.2);
     }, 950);
   },
   /* видео с морем: музыку заметно убавить (просьба автора), чтобы был слышен настоящий прибой */
@@ -1491,6 +1510,24 @@ const Music = {
       this.clip = {src, g};
       return true;
     });
+  },
+  file:null, fileTok:0,
+  startFile(tn){
+    this.stopFile(.3);
+    if (!tn || !tn.file) return;
+    const tok = this.fileTok, c = this.ctx;
+    this.loadClip(tn.file).then(buf => {
+      if (tok !== this.fileTok || !this.on || this.tune !== tn || !this.ctx) return;
+      const src = c.createBufferSource(), g = c.createGain();
+      src.buffer = buf; src.loop = true; src.connect(g); g.connect(this.master);
+      src.start(c.currentTime + .05);
+      this.file = {src, g};
+    }).catch(() => {});
+  },
+  stopFile(fade){
+    this.fileTok++;
+    const k = this.file; this.file = null;
+    if (k && this.ctx){ try { const t = this.ctx.currentTime; k.g.gain.setTargetAtTime(.0001, t, (fade || .3) / 4); k.src.stop(t + (fade || .3) + .1); } catch(e){} }
   },
   stopClip(){
     this.clipTok++;
@@ -1756,8 +1793,12 @@ function creditsHTML(list, demo){
   const km = days.reduce((s, d) => s + routeKm(dayRoute(d, demo ? null : list.filter(p => p.dayN === d.n))), 0);
   const places = new Set(list.map(p => p.place).filter(Boolean)).size;
   const cast = (ALBUM.cast || []).filter(Boolean);
-  const usedTunes = [...new Set(days.map(d => dayTune(d.n)))].map(k => TUNES[k].name);
-  const music = !Music.on ? "" : Music.pref === "days" ? usedTunes.join(" и ") + (usedTunes.length > 1 ? ", сочинены" : ", сочинён") + " для этого альбома" : TUNES[Music.mode] ? TUNES[Music.mode].name + ", сочинён для этого альбома" : Music.mode === "own" ? esc(ownName.replace(/\.[^.]+$/, "") || "Своя мелодия") : "Шум Балтийского моря";
+  const used = [...new Set(days.map(d => dayTune(d.n)))];
+  const mine = used.filter(k => !TUNES[k].file).map(k => TUNES[k].name);
+  const recs = used.filter(k => TUNES[k].file).map(k => TUNES[k].name + " (" + TUNES[k].credit + ")");
+  const daysMusic = [mine.length ? mine.join(" и ") + (mine.length > 1 ? ", сочинены" : ", сочинён") + " для этого альбома" : "", ...recs].filter(Boolean).join("; ");
+  const T1 = TUNES[Music.mode];
+  const music = !Music.on ? "" : Music.pref === "days" ? daysMusic : T1 ? (T1.file ? T1.name + " (" + T1.credit + ")" : T1.name + ", сочинён для этого альбома") : Music.mode === "own" ? esc(ownName.replace(/\.[^.]+$/, "") || "Своя мелодия") : "Шум Балтийского моря";
   const stat = (n, a, b, c) => `<div><b>${n}</b><span>${plural(n, a, b, c)}</span></div>`;
   return `<div class="roll">
     <p class="cr-t">${esc(ALBUM.title)}</p><p class="cr-s">${esc(ALBUM.subtitle)}</p>
@@ -2233,6 +2274,12 @@ function renderPick(){
   $("#pick-cover").hidden = !d;
   if (d) $("#pick-cover").textContent = "✓ Отобрать кадры для фильма · " + dayLabel(d).toLowerCase();
   $$("#strip [data-goto]").forEach(b => b.setAttribute("aria-pressed", String(fday === +b.dataset.goto)));
+  setTimeout(preTune, 1500);
+}
+function preTune(){
+  const k = set.music === "days" ? (fday === "all" ? null : dayTune(fday)) : set.music;
+  const tn = k && TUNES[k];
+  if (tn && tn.file && !preTune[tn.file]){ preTune[tn.file] = 1; fetch(tn.file).catch(() => { preTune[tn.file] = 0; }); }
 }
 function pickDay(v){ fday = v; store.set("alb-fday2", {v, date:todayIso}); renderPick(); }
 $("#pick").onclick = e => { const b = e.target.closest("[data-pick]"); if (!b) return; pickDay(b.dataset.pick === "all" ? "all" : +b.dataset.pick); };
