@@ -307,6 +307,12 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
   -webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 4px 30px rgba(0,0,0,.5));
 }
 .ft-sub{margin:0;font:400 clamp(24px,5.6vw,46px)/1.1 var(--display);text-shadow:0 2px 20px rgba(0,0,0,.7)}
+/* финал фильма: надпись автора после последнего видео, появляется медленно */
+.ft-fin > *{transition:opacity 2s,transform 2.4s cubic-bezier(.2,.7,.2,1)}
+.ft-fin .ft-title{font-size:clamp(30px,9vw,100px);line-height:1.05;max-width:100%;text-wrap:balance;padding:0 .06em .08em}
+.ft-fin .ft-sub{max-width:16ch;text-wrap:balance;font-size:clamp(24px,5.6vw,44px)}
+.layer.on .ft-fin > *:nth-child(2){transition-delay:1.8s}
+.layer.on .ft-fin > *:nth-child(3){transition-delay:3s}
 .ft-mono{font:400 clamp(12px,2.6vw,15px)/1.4 var(--mono);color:#e9eef0;letter-spacing:.06em;text-shadow:0 1px 10px rgba(0,0,0,.8)}
 .ft-day{font:400 clamp(70px,19vw,180px)/.82 var(--display);color:var(--c);text-shadow:0 4px 40px rgba(0,0,0,.55);padding-bottom:.12em}
 .ft-h{margin:0;max-width:20ch;font:400 clamp(28px,6.4vw,56px)/1.08 var(--display);text-wrap:balance;text-shadow:0 2px 24px rgba(0,0,0,.7)}
@@ -628,10 +634,10 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
  "dayMusic": {"0": "ballad", "1": "amal", "2": "kranz", "3": "leto", "4": "organ", "5": "march"},
  "extraDays": [{"n": 0, "label": "Приезд", "date": "2026-10-10", "title": "Приезд в Калининград", "kind": "Прилёт и вечерняя прогулка", "towns": ["Храброво", "Калининград"], "route": ["khr", "kgd"], "hex": "#6fa8ff", "scene": "plane", "note": "Приезд в Калининград, вечерняя прогулка по острову Канта, Кафедральный собор, Рыбная деревня и мост влюблённых"}],
  "dayNotes": {"1": "Королевские ворота, район Амалиенау, улица Фрунзе — по программе экскурсии первого дня. Виллы в Амалиенау, марципановый музей", "2": "Замок Нойхаузен, Шаакен, сыроварня, Зеленоградск, Балтийское море — по маршруту второго дня", "4": "Свободный день — от органной симфонии до подводной лодки"},
- "dayRoutes": {"2": ["kgd", "gur", "sha", "zel", "kgd"], "3": ["kgd", "bal", "yan", "svg", "kgd"], "4": ["kgd"], "5": ["kgd", "che", "nem", "sov", "kgd"]},
+ "dayRoutes": {"2": ["kgd", "gur", "sha", "zel", "kgd"], "3": ["kgd", "bal", "yan", "svg", "kgd"], "4": ["kgd"], "5": ["kgd", "che", "nem", "sov", "kgd"], "6": ["kgd", "pra", "zhe", "dru", "kgd"]},
  "dayInfo": {"3": {"title": "Янтарное побережье", "kind": "Экскурсия по побережью"}, "4": {"title": "От органа до подводной лодки", "kind": "Свободный день"}, "5": {"title": "От Инстербурга до Тильзита", "kind": "Черняховск, Неман и Советск"}},
- "extraTowns": {"gur": ["Гурьевск", 20.603, 54.77], "nem": ["Неман", 22.03, 55.03]},
- "extraPlaces": {"sinag": {"name": "Новая синагога", "old": "Neue Synagoge", "year": "1896 / 2018", "town": "kgd", "day": 1, "fact": "Синагогу Кёнигсберга сожгли в Хрустальную ночь 1938 года. На её месте по старым чертежам построили новое здание, оно открылось в 2018 году."}, "neuh": {"name": "Замок Нойхаузен", "old": "Neuhausen", "year": "1292", "town": "gur", "day": 2, "fact": ""}, "bk508": {"name": "Орудие бронекатера БК-508", "year": "1945", "town": "bal", "day": 3, "fact": "25 апреля 1945 года бронекатер БК-508 участвовал в высадке морского десанта на косу Фрише-Нерунг, а за штурм крепости Пиллау экипажу объявили благодарность Верховного Главнокомандующего. На катере стояла башня танка Т-34 с 76-мм орудием."}, "ragnit": {"name": "Замок Рагнит", "old": "Ragnit", "town": "nem", "day": 5, "year": "1289", "fact": "В 1289 году рыцари Тевтонского ордена заложили здесь крепость Ландесхут на месте захваченной прусской крепости, а позже ей вернули прусское название — Рагнит."}},
+ "extraTowns": {"gur": ["Гурьевск", 20.603, 54.77], "nem": ["Неман", 22.03, 55.03], "dru": ["Дружба", 21.31, 54.535]},
+ "extraPlaces": {"sinag": {"name": "Новая синагога", "old": "Neue Synagoge", "year": "1896 / 2018", "town": "kgd", "day": 1, "fact": "Синагогу Кёнигсберга сожгли в Хрустальную ночь 1938 года. На её месте по старым чертежам построили новое здание, оно открылось в 2018 году."}, "neuh": {"name": "Замок Нойхаузен", "old": "Neuhausen", "year": "1292", "town": "gur", "day": 2, "fact": ""}, "bk508": {"name": "Орудие бронекатера БК-508", "year": "1945", "town": "bal", "day": 3, "fact": "25 апреля 1945 года бронекатер БК-508 участвовал в высадке морского десанта на косу Фрише-Нерунг, а за штурм крепости Пиллау экипажу объявили благодарность Верховного Главнокомандующего. На катере стояла башня танка Т-34 с 76-мм орудием."}, "ragnit": {"name": "Замок Рагнит", "old": "Ragnit", "town": "nem", "day": 5, "year": "1289", "fact": "В 1289 году рыцари Тевтонского ордена заложили здесь крепость Ландесхут на месте захваченной прусской крепости, а позже ей вернули прусское название — Рагнит."}, "mazur": {"name": "Мазурский канал, шлюз № 1", "old": "Masurischer Kanal", "year": "1911–1942", "town": "dru", "day": 6, "fact": "Мазурский канал должен был соединить Мазурские озёра через реку Алле (Лаву) с Балтийским морем при помощи 10 шлюзов. Строить его начали в 1911 году, а в 1942-м остановили, когда канал был готов на 70%; после войны его перерезала граница. Шлюз № 1 у посёлка Дружба (Алленбург) построен в 1920-х: длина 45 м, ширина 7,5 м, глубина 8 м."}},
  "photos": [
  {"id": "d0-01", "day": 0, "src": "photos/d0-01.jpg", "thumb": "photos/t/d0-01.jpg", "w": 1500, "h": 2000, "town": "khr", "title": "В полёте", "date": "2026-10-10"},
  {"id": "d0-02", "day": 0, "src": "photos/d0-02.jpg", "thumb": "photos/t/d0-02.jpg", "w": 1500, "h": 2000, "town": "khr", "title": "Над облаками", "date": "2026-10-10"},
@@ -812,8 +818,15 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
  {"id": "d6-01", "day": 6, "type": "video", "src": "photos/d6-01.mp4", "poster": "photos/d6-01.jpg", "thumb": "photos/t/d6-01.jpg", "w": 720, "h": 1280, "dur": 4.2, "muted": true, "town": "pra", "title": "По осенней листве", "date": "2026-10-16", "time": "11:07"},
  {"id": "d6-02", "day": 6, "type": "video", "src": "photos/d6-02.mp4", "poster": "photos/d6-02.jpg", "thumb": "photos/t/d6-02.jpg", "w": 822, "h": 1280, "dur": 4.2, "muted": true, "town": "pra", "title": "Бархатцы у парка", "date": "2026-10-16", "time": "11:26"},
  {"id": "d6-06", "day": 6, "src": "photos/d6-06.jpg", "thumb": "photos/t/d6-06.jpg", "w": 1200, "h": 2906, "title": "Старые улочки", "date": "2026-10-16", "collage": true},
- {"id": "d6-07", "day": 6, "src": "photos/d6-07.jpg", "thumb": "photos/t/d6-07.jpg", "w": 1200, "h": 2906, "title": "Вся наша группа", "date": "2026-10-16", "collage": true}
- ]
+ {"id": "d6-07", "day": 6, "src": "photos/d6-07.jpg", "thumb": "photos/t/d6-07.jpg", "w": 1200, "h": 2906, "title": "Вся наша группа", "date": "2026-10-16", "collage": true},
+ {"id": "d6-09", "day": 6, "src": "photos/d6-09.jpg", "thumb": "photos/t/d6-09.jpg", "w": 1200, "h": 1955, "title": "Осенний портрет", "date": "2026-10-16", "collage": true},
+ {"id": "d6-10", "day": 6, "src": "photos/d6-10.jpg", "thumb": "photos/t/d6-10.jpg", "w": 1200, "h": 2906, "place": "mazur", "title": "Мазурский канал", "date": "2026-10-16", "collage": true},
+ {"id": "d6-11", "day": 6, "src": "photos/d6-11.jpg", "thumb": "photos/t/d6-11.jpg", "w": 1200, "h": 1931, "place": "mazur", "title": "История канала", "date": "2026-10-16", "collage": true},
+ {"id": "d6-12", "day": 6, "src": "photos/d6-12.jpg", "thumb": "photos/t/d6-12.jpg", "w": 1200, "h": 2397, "town": "kgd", "title": "Наша группа", "date": "2026-10-16", "collage": true},
+ {"id": "d6-13", "day": 6, "src": "photos/d6-13.jpg", "thumb": "photos/t/d6-13.jpg", "w": 1200, "h": 2501, "title": "На качелях", "date": "2026-10-16", "collage": true},
+ {"id": "d6-08", "day": 6, "type": "video", "src": "photos/d6-08.mp4", "poster": "photos/d6-08.jpg", "thumb": "photos/t/d6-08.jpg", "w": 720, "h": 1280, "dur": 10.9, "muted": true, "place": "preg", "title": "Моя прогулка по набережной", "date": "2026-10-16", "time": "16:02"}
+ ],
+ "finale": {"id": "d6-08", "text": "ПРОДОЛЖЕНИЕ СЛЕДУЕТ…", "sub": "СПАСИБО, КЕНИГСБЕРГ — КАЛИНИНГРАД 💓☀️🫂"}
 }
 </script>
 
@@ -1980,6 +1993,8 @@ function buildFrames(opts){
   const list = opts.photos || (kept.length ? kept : all);
   const demo = !list.length;
   const frames = one ? [] : [{t:"title", demo}];  /* фильм дня начинается сразу с его главы */
+  /* финал альбома (finale в album-data): это видео идёт последним во всём фильме, за ним — надпись автора */
+  const fin = ALBUM.finale && list.find(p => p.id === ALBUM.finale.id);
   DAYS.forEach(d => {
     if (one && d.n !== opts.day) return;
     const ph = list.filter(p => p.dayN === d.n);
@@ -1990,20 +2005,26 @@ function buildFrames(opts){
     const f = pickFact(dayFacts(d, ph));
     if (demo){ if (f) frames.push({t:"fact", d, f}); return; }
     ph.forEach((p, k) => {
-      frames.push({t: p.isVideo ? "video" : "photo", p, d});
+      if (p !== fin) frames.push({t: p.isVideo ? "video" : "photo", p, d});
       if (f && ph.length > 5 && k === Math.floor(ph.length / 2) - 1) frames.push({t:"fact", d, f});
     });
     if (f && ph.length <= 5) frames.push({t:"fact", d, f});
   });
+  if (fin) frames.push({t:"video", p:fin, d:fin.dayObj}, {t:"finale", d:fin.dayObj});
   frames.push({t:"credits", list, demo});
   return frames;
 }
 const barsOf = f => f.t === "video" ? Math.max(2, Math.ceil((f.p.dur || 6) / BAR()))
   : f.t === "photo" && f.p.collage ? (+set.speed || 2) + 1
-  : ({title:4, chapter:3, route:3, fact:4, photo:+set.speed || 2, credits:10}[f.t]);
+  : ({title:4, chapter:3, route:3, fact:4, photo:+set.speed || 2, finale:5, credits:10}[f.t]);
 function frameHTML(f){
   if (f.t === "title") return `<img class="bg kb" src="${sceneURL("sea", "#37cbb8")}" alt=""><div class="shade"></div>
     <div class="ft"><div class="ft-eyebrow">Фильм-воспоминание</div><h1 class="ft-title">${esc(ALBUM.title)}</h1><p class="ft-sub">${esc(ALBUM.subtitle)}</p><div class="ft-mono">${tripRange()}</div>${f.demo ? `<div class="ft-hint">Пока без ваших фото: так будет выглядеть фильм</div>` : ""}</div>`;
+  if (f.t === "finale"){
+    const fn = ALBUM.finale || {};
+    return `<img class="bg kb" src="${sceneURL("sea", "#37cbb8")}" alt=""><div class="shade"></div>
+    <div class="ft ft-fin"><h1 class="ft-title">${esc(fn.text || "")}</h1>${fn.sub ? `<p class="ft-sub">${esc(fn.sub)}</p>` : ""}<div class="ft-mono">${tripRange()}</div></div>`;
+  }
   if (f.t === "chapter"){
     const d = f.d, ph = photosOfDay(d.n);
     const towns = dayTowns(d, ph);
