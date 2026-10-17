@@ -2598,8 +2598,8 @@ function renderPick(){
     + ds.map(d => `<button type="button" data-pick="${d.n}" style="--c:${d.hex}" aria-pressed="${fday === d.n}">${esc(dayLabel(d))}<small>${dm(d.date)}</small></button>`).join("");
   const d = fday === "all" ? null : DAYS.find(x => x.n === fday);
   $("#play-lbl").textContent = "Смотреть фильм · " + (d ? dayLabel(d).toLowerCase() : "все дни");
-  $("#pick-cover").hidden = !d;
-  if (d) $("#pick-cover").textContent = "✓ Отобрать кадры для фильма · " + dayLabel(d).toLowerCase();
+  /* кнопка отбора кадров на обложке убрана (17.10, альбом готов); вернуть: hidden = !d и подпись с днём */
+  $("#pick-cover").hidden = true;
   $$("#strip [data-goto]").forEach(b => b.setAttribute("aria-pressed", String(fday === +b.dataset.goto)));
   setTimeout(preTune, 1500);
 }
