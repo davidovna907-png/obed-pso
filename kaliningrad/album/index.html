@@ -2082,10 +2082,10 @@ function buildFrames(opts){
   const list = opts.photos || (kept.length ? kept : all);
   const demo = !list.length;
   const frames = one ? [] : [{t:"title", demo}];  /* фильм дня начинается сразу с его главы */
-  /* финал альбома (finale в album-data): это видео идёт последним во всём фильме, за ним — надпись автора */
+  /* финал альбома (finale в album-data): надпись автора в конце общего фильма и фильма последнего дня поездки;
+     видео прогулки по набережной (finale.id) идёт только в своём, 6 дне — последним кадром */
   const lastDay = Math.max(...PHOTOS.map(p => p.dayN));
-  const finFrom = opts.photos ? list : !one || opts.day === lastDay ? PHOTOS : [];
-  const fin = ALBUM.finale ? finFrom.find(p => p.id === ALBUM.finale.id) : null;
+  const fin = ALBUM.finale && !opts.photos && (!one || opts.day === lastDay) ? DAYS.find(x => x.n === lastDay) : null;
   DAYS.forEach(d => {
     if (one && d.n !== opts.day) return;
     const ph = list.filter(p => p.dayN === d.n);
@@ -2097,13 +2097,12 @@ function buildFrames(opts){
     if (demo){ if (f) frames.push({t:"fact", d, f}); return; }
     ph.forEach((p, k) => {
       if (at && factAt(p)) frames.push({t:"fact", d, f:factAt(p)});
-      if (p !== fin) frames.push({t: p.isVideo ? "video" : "photo", p, d});
+      frames.push({t: p.isVideo ? "video" : "photo", p, d});
       if (f && ph.length > 5 && k === Math.floor(ph.length / 2) - 1) frames.push({t:"fact", d, f});
     });
     if (f && ph.length <= 5) frames.push({t:"fact", d, f});
   });
-  /* fin: на финале музыка не возвращается к мелодии дня этого видео, а доигрывает мелодию последнего дня */
-  if (fin) frames.push({t:"video", p:fin, d:fin.dayObj, fin:true}, {t:"finale", d:fin.dayObj, fin:true});
+  if (fin) frames.push({t:"finale", d:fin, fin:true});
   frames.push({t:"credits", list, demo});
   return frames;
 }
