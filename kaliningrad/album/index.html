@@ -158,6 +158,7 @@ img{max-width:100%}
 .chap-meta b{color:var(--c);font-weight:600}
 .fact{font-size:14px;padding:11px 13px;border-radius:14px;background:color-mix(in srgb,var(--c) 11%,transparent);border:1px solid color-mix(in srgb,var(--c) 22%,transparent)}
 .fact b{color:var(--c);font-weight:600}
+.grid-fact{grid-column:1/-1;margin:4px 0}
 .chap-note{margin:0;font:500 clamp(21px,5vw,25px)/1.2 var(--hand);color:var(--amber-2)}
 .empty{
   display:grid;gap:6px;padding:16px;border-radius:16px;border:1px dashed color-mix(in srgb,var(--c) 45%,var(--line));
@@ -845,7 +846,8 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
  {"id": "d7-13", "day": 7, "src": "photos/d7-13.jpg", "thumb": "photos/t/d7-13.jpg", "w": 1200, "h": 2110, "place": "zoo", "title": "Последние цветы", "date": "2026-10-17", "collage": true},
  {"id": "d7-09", "day": 7, "type": "video", "src": "photos/d7-09.mp4", "poster": "photos/d7-09.jpg", "thumb": "photos/t/d7-09.jpg", "w": 810, "h": 1280, "dur": 3.8, "muted": true, "town": "kgd", "title": "Цветущая клумба", "date": "2026-10-17", "time": "16:09"}
  ],
- "finale": {"id": "d6-08", "text": "ПРОДОЛЖЕНИЕ СЛЕДУЕТ…", "sub": "СПАСИБО, КЕНИГСБЕРГ — КАЛИНИНГРАД 💓☀️🫂"}
+ "finale": {"id": "d6-08", "text": "ПРОДОЛЖЕНИЕ СЛЕДУЕТ…", "sub": "СПАСИБО, КЕНИГСБЕРГ — КАЛИНИНГРАД 💓☀️🫂"},
+ "factAt": {"d7-02": "tretyak", "d7-10": "zoo"}
 }
 </script>
 
@@ -984,6 +986,8 @@ function dayFacts(d, ph){
 }
 const pickFact = arr => arr.length ? arr[Math.floor(Math.random() * Math.min(arr.length, 4))] : null;
 const factCache = {};
+/* справка «Знаете ли вы?» перед конкретным кадром (factAt в album-data: {"d7-10": "zoo"}) — в фильме и в главе */
+const factAt = p => { const pl = PLACES[(ALBUM.factAt || {})[p.id]]; return pl && pl.fact ? pl : null; };
 const chapFact = (d, ph) => (d.n in factCache) ? factCache[d.n] : (factCache[d.n] = pickFact(dayFacts(d, ph)));
 
 /* ---------- Иллюстрации глав (рисуются кодом: закат над Балтикой) ---------- */
@@ -1225,8 +1229,9 @@ function tile(p, list, wide, num){
 }
 function gridHTML(list, key, pick){
   return `<div class="grid">` + list.map((p, k) => {
-    const r = p.w && p.h ? p.w / p.h : 1.33;
-    return tile(p, key, (k === 0 && r > 1.15 && list.length > 2) || r > 1.75, pick ? k + 1 : null);
+    const r = p.w && p.h ? p.w / p.h : 1.33, fa = key[0] === "d" && factAt(p);
+    return (fa ? `<div class="fact grid-fact"><b>Знаете ли вы?</b> ${esc(fa.fact)}</div>` : "")
+      + tile(p, key, (k === 0 && r > 1.15 && list.length > 2) || r > 1.75, pick ? k + 1 : null);
   }).join("") + `</div>`;
 }
 function renderStrip(){
@@ -1256,7 +1261,7 @@ function renderAlbum(){
         <div class="chap-meta"><span>${esc(d.kind)}</span><span>${esc(towns.join(", "))}</span>${ph.length ? `<b>${ph.length} ${plural(ph.length,"кадр","кадра","кадров")}</b>` : ""}</div>
         ${ph.length ? `<div class="chap-actions"><button type="button" class="btn day-play" data-film-day="${d.n}">${I_PLAY}Смотреть ${esc(dayLabel(d).toLowerCase())} · ${mmss(filmSeconds(d.n))}</button></div>` : ""}
         ${d.note ? `<p class="chap-note">${esc(d.note)}</p>` : ""}
-        ${f ? `<div class="fact"><b>Знаете ли вы?</b> ${esc(f.fact)}</div>` : ""}
+        ${f && !ph.some(factAt) ? `<div class="fact"><b>Знаете ли вы?</b> ${esc(f.fact)}</div>` : ""}
         ${body}
         ${ph.length ? `<div class="chap-actions"><button type="button" class="btn" data-film-day="${d.n}">${I_PLAY}Фильм этого дня</button></div>` : ""}
       </div></article>`;
@@ -2065,7 +2070,9 @@ function buildFrames(opts){
   const demo = !list.length;
   const frames = one ? [] : [{t:"title", demo}];  /* фильм дня начинается сразу с его главы */
   /* финал альбома (finale в album-data): это видео идёт последним во всём фильме, за ним — надпись автора */
-  const fin = ALBUM.finale && list.find(p => p.id === ALBUM.finale.id);
+  const lastDay = Math.max(...PHOTOS.map(p => p.dayN));
+  const finFrom = opts.photos ? list : !one || opts.day === lastDay ? PHOTOS : [];
+  const fin = ALBUM.finale ? finFrom.find(p => p.id === ALBUM.finale.id) : null;
   DAYS.forEach(d => {
     if (one && d.n !== opts.day) return;
     const ph = list.filter(p => p.dayN === d.n);
@@ -2073,9 +2080,10 @@ function buildFrames(opts){
     frames.push({t:"chapter", d, demo});
     const r = dayRoute(d, ph);
     if (r.length > 1) frames.push({t:"route", d, r});
-    const f = pickFact(dayFacts(d, ph));
+    const at = !demo && ph.some(factAt), f = at ? null : pickFact(dayFacts(d, ph));
     if (demo){ if (f) frames.push({t:"fact", d, f}); return; }
     ph.forEach((p, k) => {
+      if (at && factAt(p)) frames.push({t:"fact", d, f:factAt(p)});
       if (p !== fin) frames.push({t: p.isVideo ? "video" : "photo", p, d});
       if (f && ph.length > 5 && k === Math.floor(ph.length / 2) - 1) frames.push({t:"fact", d, f});
     });
