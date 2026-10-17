@@ -159,6 +159,7 @@ img{max-width:100%}
 .fact{font-size:14px;padding:11px 13px;border-radius:14px;background:color-mix(in srgb,var(--c) 11%,transparent);border:1px solid color-mix(in srgb,var(--c) 22%,transparent)}
 .fact b{color:var(--c);font-weight:600}
 .grid-fact{grid-column:1/-1;margin:4px 0}
+html:not(.owner) .owner-only{display:none}
 .chap-note{margin:0;font:500 clamp(21px,5vw,25px)/1.2 var(--hand);color:var(--amber-2)}
 .empty{
   display:grid;gap:6px;padding:16px;border-radius:16px;border:1px dashed color-mix(in srgb,var(--c) 45%,var(--line));
@@ -523,6 +524,17 @@ body.picking .wrap{padding-bottom:calc(var(--nav-h) + 230px + env(safe-area-inse
           <button type="button" data-speed="4">Медленно<small>≈ 8 с</small></button>
         </div>
         <p>Во время фильма: нажмите на правый край экрана — следующий кадр, на левый — предыдущий, в центр — кнопки. Можно листать пальцем. Экран не гаснет, пока идёт фильм.</p>
+      </div>
+      <div class="box owner-only" style="--c:var(--heather)">
+        <h4>Режим автора</h4>
+        <p class="mini">Этот блок, строка «Сегодня…» на обложке, пометки «новое» и подсказки на обороте открыток видны только на этом телефоне. Остальные видят чистый альбом.</p>
+        <ol>
+          <li>Присылайте фото Claude в чат с пометкой «в альбом» и номером дня поездки.</li>
+          <li>Добавьте пару слов о кадре: кто на фото, что запомнилось. Эти слова появятся на обороте открытки и в фильме. Без вашего рассказа оборот остаётся пустым, ничего не придумывается.</li>
+          <li>Через 1–2 минуты после обновления откройте альбом заново.</li>
+        </ol>
+        <p class="mini">Альбом открыт для всех, у кого есть ссылка. Слишком личные кадры лучше не присылать.</p>
+        <p><button type="button" class="btn" id="owner-off">Посмотреть как зритель (выключить режим автора)</button></p>
       </div>
       <div class="box" style="--c:var(--brick)" id="install">
         <h4>Установить на телефон</h4>
@@ -933,9 +945,16 @@ let picking = null;
 const mmss = sec => { sec = Math.round(sec || 0); return Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0"); };
 const sceneOf = d => (d && ALBUM.dayScenes && ALBUM.dayScenes[d.n]) || (d && d.scene) || (d && SCENE_OF_DAY[d.n]) || "sea";
 
+/* Режим автора (только на телефоне автора): служебные строки на обложке, пометки «новое», подсказки для правок.
+   Остальные видят чистый альбом. Включается и выключается пятью быстрыми нажатиями на заголовок «Калининград». */
+/* один раз при первом открытии этой версии (17.10): телефон, где альбом уже открывали (он был только у автора), — автору,
+   новый зритель — чистый альбом */
+if (store.get("alb-owner", null) === null) store.set("alb-owner", store.get("alb-seen", null) != null);
+const OWNER = store.get("alb-owner", false) === true;
+document.documentElement.classList.toggle("owner", OWNER);
 /* Новые кадры с прошлого открытия альбома на этом телефоне */
 const seenBefore = store.get("alb-seen", null);
-const NEW = new Set(); /* пометок «новое» нет: альбом готов, им делятся */
+const NEW = new Set(OWNER && seenBefore ? PHOTOS.filter(p => !seenBefore.includes(p.id)).map(p => p.id) : []);
 const markSeen = () => store.set("alb-seen", PHOTOS.map(p => p.id));
 if (!seenBefore) markSeen();
 addEventListener("pagehide", markSeen);
@@ -1182,9 +1201,32 @@ function renderCover(){
   $("#meta").innerHTML = n
     ? `<span><b>${np}</b> фото</span>${nv ? `<span><b>${nv}</b> видео</span>` : ""}<span><b>${days}</b> ${plural(days,"день","дня","дней")}</span>${places ? `<span><b>${places}</b> ${plural(places,"место","места","мест")}</span>` : ""}`
     : `<span>Альбом ждёт первых кадров</span><span><b>7</b> глав по дням поездки</span>`;
-  /* альбом готов (17.10), им делятся: на обложке нет служебных строк («сегодня день…, присылайте фото», «новое в альбоме») */
-  $("#status").hidden = true;
-  $("#news").hidden = true;
+  /* альбом готов (17.10), им делятся: служебные строки («сегодня день…, присылайте фото», «новое в альбоме») — только автору */
+  $("#status").hidden = $("#news").hidden = true;
+  if (!OWNER) return;
+  const first = DAYS[0].date, last = DAYS[DAYS.length-1].date;
+  let html = "", color = "var(--amber)";
+  const today = DAYS.find(d => d.date === todayIso);
+  const ann = DAYS.find(d => d.date.slice(5) === todayIso.slice(5));
+  const years = +todayIso.slice(0,4) - 2026;
+  if (todayIso < first){
+    const k = Math.round((parse(first) - parse(todayIso)) / 864e5);
+    html = `До поездки ${k} ${plural(k,"день","дня","дней")}. Главы альбома уже ждут кадров.`;
+  } else if (today){
+    color = today.hex;
+    html = `Сегодня ${esc(dayLabel(today).toLowerCase())}: ${esc(today.title)}. Присылайте фото дня, они появятся в альбоме. <button type="button" data-goto="${today.n}">К главе дня</button>`;
+  } else if (ann && years > 0){
+    color = ann.hex;
+    html = `Ровно ${years} ${plural(years,"год","года","лет")} назад: ${esc(dayLabel(ann).toLowerCase())}, ${esc(ann.title)}. <button type="button" data-film-day="${ann.n}">Вспомнить этот день</button>`;
+  } else if (todayIso > last){
+    html = n ? `Поездка позади, а воспоминания здесь: ${n} ${plural(n,"кадр","кадра","кадров")}.` : `Поездка позади. Пришлите фото, и альбом оживёт.`;
+  }
+  $("#status").style.setProperty("--sc", color);
+  $("#status").innerHTML = `<i></i><span>Режим автора · ${html}</span>`;
+  $("#status").hidden = false;
+  const nl = PHOTOS.filter(p => NEW.has(p.id)), k = nl.length;
+  $("#news").hidden = !k;
+  if (k) $("#news").innerHTML = `<i></i><span>Новое в альбоме: ${k} ${plural(k,"кадр","кадра","кадров")}. <button type="button" id="news-film">Смотреть фильм из новых</button></span>`;
 }
 
 /* ---------- Альбом: главы по дням ---------- */
@@ -2361,7 +2403,7 @@ function backHTML(p){
     <div class="pc-mark"><span>${esc(town.name.toUpperCase().slice(0, 13))}</span><b>${date ? date.split("-").reverse().join(".") : "2026"}</b><span>${d ? esc(dayLabel(d).toUpperCase()) : ""}</span></div>
     <h3 class="pc-title">${esc(p.name)}</h3>
     ${old ? `<div class="pc-old">${esc(old)}</div>` : ""}
-    ${p.memory ? `<div class="pc-memory">${esc(p.memory)}</div>` : ""}
+    ${p.memory ? `<div class="pc-memory">${esc(p.memory)}</div>` : OWNER ? `<div class="pc-memory"><span class="ph-hint">Здесь будет ваша история этого кадра. Расскажите её в чате с Claude, и она появится на обороте.</span></div>` : ""}
     ${pl && pl.fact ? `<p class="pc-fact"><b>Знаете ли вы?</b> ${esc(pl.fact)}</p>` : ""}
     <div class="pc-foot">${d ? esc(dayLabel(d)) + " · " : ""}${date ? esc(fmtDate(date)) : ""}${p.time ? " · " + esc(p.time) : ""} · ${esc(town.name)}</div></div>`;
 }
@@ -2591,7 +2633,8 @@ $("#pb-copy").onclick = async () => {
 const filmDays = () => DAYS.filter(d => photosOfDay(d.n).length);
 /* по умолчанию — один день, чтобы не уставать: сегодняшний, если в нём есть фото, иначе последний с фото;
    свой выбор держится до конца дня, назавтра альбом снова откроется на новом дне */
-const defaultDay = () => "all"; /* альбом готов: по умолчанию весь фильм, выбор дня держится до конца дня */
+/* альбом готов: зрителям по умолчанию весь фильм; автору — как раньше, сегодняшний день или последний с фото */
+const defaultDay = () => { if (!OWNER) return "all"; const ds = filmDays(), t = ds.find(d => d.date === todayIso); return t ? t.n : ds.length ? ds[ds.length-1].n : "all"; };
 const savedPick = store.get("alb-fday2", null);
 let fday = savedPick && savedPick.date === todayIso ? savedPick.v : defaultDay();
 function renderPick(){
@@ -2613,6 +2656,15 @@ function preTune(){
   if (tn && tn.file && !preTune[tn.file]){ preTune[tn.file] = 1; fetch(tn.file).catch(() => { preTune[tn.file] = 0; }); }
 }
 function pickDay(v){ fday = v; store.set("alb-fday2", {v, date:todayIso}); renderPick(); }
+let ownerTaps = [];
+$("#a-title").addEventListener("click", () => {
+  const t = Date.now(); ownerTaps = ownerTaps.filter(x => t - x < 3000).concat(t);
+  if (ownerTaps.length < 5) return;
+  ownerTaps = []; store.set("alb-owner", !OWNER);
+  toast(OWNER ? "Режим автора выключен: альбом как у зрителей" : "Режим автора включён на этом телефоне");
+  setTimeout(() => location.reload(), 900);
+});
+$("#owner-off").onclick = () => { store.set("alb-owner", false); toast("Режим автора выключен: альбом как у зрителей"); setTimeout(() => location.reload(), 900); };
 $("#pick").onclick = e => { const b = e.target.closest("[data-pick]"); if (!b) return; pickDay(b.dataset.pick === "all" ? "all" : +b.dataset.pick); };
 $("#play-film").onclick = () => openFilm(fday === "all" ? {} : {day:fday});
 /* Отбор с обложки: сразу открыть день с галочками */
