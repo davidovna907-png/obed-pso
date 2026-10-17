@@ -2106,10 +2106,18 @@ function frameHTML(f){
   if (f.t === "route"){
     const d = f.d, r = f.r, uniq = [...new Set(r)];
     const xs = uniq.map(k => MX(TOWNS[k].lon)), ys = uniq.map(k => MY(TOWNS[k].lat)), ar = innerWidth / innerHeight;
-    const x0 = Math.min(...xs) - 110, x1 = Math.max(...xs) + 170, y0 = Math.min(...ys) - 90, y1 = Math.max(...ys) + 110;
-    let vw = Math.max(x1 - x0, 300), vh = Math.max(y1 - y0, 220);
-    if (vw / vh < ar) vw = vh * ar; else vh = vw / ar;
-    const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2 + vh * .1, u = vw / innerWidth;
+    /* подписи городов целиком на экране: ширина подписи в пикселях экрана (≈0,62 кегля на букву + отступ) */
+    const lw = uniq.map(k => 11 + TOWNS[k].name.length * 17 * .62 + 22), left = uniq.map(k => /end/.test(lblAttr(TOWNS[k], 1)));
+    const y0 = Math.min(...ys) - 90, y1 = Math.max(...ys) + 110;
+    let u = 1, x0, x1, vw, vh;
+    for (let it = 0; it < 5; it++){  /* масштаб зависит от ширины, ширина — от подписей: несколько приближений */
+      x0 = Math.min(Math.min(...xs) - 110, ...xs.map((x, j) => left[j] ? x - lw[j] * u : x));
+      x1 = Math.max(Math.max(...xs) + 170, ...xs.map((x, j) => left[j] ? x : x + lw[j] * u));
+      vw = Math.max(x1 - x0, 300); vh = Math.max(y1 - y0, 220);
+      if (vw / vh < ar) vw = vh * ar; else vh = vw / ar;
+      u = vw / innerWidth;
+    }
+    const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2 + vh * .1;
     const pins = uniq.map((k, j) => { const t = TOWNS[k], y = MY(t.lat); return `<g class="pin" style="animation-delay:${.6 + j*.7}s"><circle cx="${MX(t.lon)}" cy="${y}" r="${(7*u).toFixed(1)}" fill="${d.hex}" stroke="#071016" stroke-width="${(2.5*u).toFixed(1)}"/><text ${lblAttr(t, 11*u)} y="${(y + 6*u).toFixed(1)}" font-family="Golos Text, sans-serif" font-size="${(17*u).toFixed(1)}" font-weight="600" fill="#fff" paint-order="stroke" stroke="#071016" stroke-width="${(4*u).toFixed(1)}">${esc(t.name)}</text></g>`; }).join("");
     return `<div class="f-map"><svg viewBox="${(cx - vw/2).toFixed(1)} ${(cy - vh/2).toFixed(1)} ${vw.toFixed(1)} ${vh.toFixed(1)}" aria-hidden="true">${mapBase({x:cx - vw/2, y:cy - vh/2, w:vw, h:vh, m:16 * u})}<path class="draw" d="${routeD(r)}" pathLength="1" stroke="${d.hex}" stroke-width="${(4*u).toFixed(1)}" style="color:${d.hex}"/>${pins}</svg></div>
       <div class="f-map-cap" style="--c:${d.hex}"><div class="ft-mono">${esc(dayLabel(d))} · путь по карте</div><div class="f-km">≈ ${routeKm(r)} км</div><div class="ft-p">по прямой: ${uniq.map(k => esc(TOWNS[k].name)).join(" → ")}${r[r.length-1] === r[0] && r.length > 2 ? " → обратно" : ""}</div></div>`;
