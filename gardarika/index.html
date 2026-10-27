@@ -194,6 +194,45 @@ body.editing .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 .f-end .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .f-end button{min-height:48px;padding:0 22px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);cursor:pointer;display:inline-flex;align-items:center;gap:8px}
 .f-end button.main{background:var(--gold);color:#1a1205;border:0;font-weight:600}
+/* ---------- Начало фильма: цветной нео-нуар (кадр intro — мы втроём, tools/noir.py) ----------
+   ночь, дождь, дымка, неон слева бирюзовый и справа малиновый (мигает, как неисправная вывеска),
+   луч выхватывает каждого с именем, на вступлении бита загорается неоновое название. Время — в тактах музыки (ntPlay) */
+.nt{position:absolute;inset:0;overflow:hidden;background:#000}
+.nt-cam{position:absolute;inset:0;transform-origin:52% 44%;will-change:transform}
+.nt-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%}
+.nt.wide .nt-img{object-fit:contain;-webkit-mask-image:linear-gradient(90deg,transparent calc(50% - var(--hw)),#000 calc(50% - var(--hw) * .72),#000 calc(50% + var(--hw) * .72),transparent calc(50% + var(--hw)));mask-image:linear-gradient(90deg,transparent calc(50% - var(--hw)),#000 calc(50% - var(--hw) * .72),#000 calc(50% + var(--hw) * .72),transparent calc(50% + var(--hw)))}
+.nt-side{position:absolute;inset:-8%;width:116%;height:116%;object-fit:cover;filter:blur(30px) brightness(.45) saturate(1.2)}
+.nt.wide .nt-head{top:calc(7vh + 2%)}
+.nt.wide .nt-title{font-size:clamp(46px,9vh,110px)}
+.nt.wide .nt-year{font-size:clamp(20px,4.2vh,44px)}
+.nt-spot,.nt-beam{position:absolute;left:0;top:0;width:4000px;height:4000px;margin:-2000px 0 0 -2000px;pointer-events:none}
+.nt-beam{mix-blend-mode:screen}
+.nt-name{position:absolute;white-space:nowrap;text-align:center;pointer-events:none;transform:translate(-50%,0)}
+.nt-name b{display:block;font:600 clamp(16px,4.4vw,30px)/1 var(--display);text-transform:uppercase;letter-spacing:.24em;margin-right:-.24em;color:#fff;text-shadow:0 0 6px rgba(255,60,130,.95),0 0 18px rgba(255,40,110,.6),0 2px 12px rgba(0,0,0,.9)}
+.nt-name i{display:block;height:2px;width:70%;margin:8px auto 0;background:#ff2d6f;box-shadow:0 0 8px #ff2d6f,0 0 18px #ff2d6f}
+.nt-light{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen}
+.nt-light i{position:absolute;inset:0}
+.nt-l i{background:radial-gradient(120% 70% at -12% 58%,rgba(0,190,255,.40),rgba(0,120,200,.10) 45%,transparent 70%);animation:ntPulse 5.3s ease-in-out infinite}
+.nt-r i{background:radial-gradient(110% 75% at 112% 42%,rgba(255,30,110,.55),rgba(200,20,90,.15) 45%,transparent 72%);animation:ntBuzz 3.7s steps(1,end) infinite}
+@keyframes ntPulse{0%,100%{opacity:.65}50%{opacity:1}}
+@keyframes ntBuzz{0%,100%{opacity:1}7%{opacity:.3}9%{opacity:1}31%{opacity:.85}33%{opacity:.35}34%{opacity:1}71%{opacity:.95}73%{opacity:.5}74%{opacity:1}}
+.nt-haze{position:absolute;inset:-10%;pointer-events:none;mix-blend-mode:screen}
+.nt-haze i{position:absolute;width:85%;height:50%;border-radius:50%}
+.nt-haze i:nth-child(1){left:-15%;top:38%;background:radial-gradient(closest-side,rgba(40,150,180,.30),transparent);animation:ntDrift 14s ease-in-out infinite alternate}
+.nt-haze i:nth-child(2){right:-18%;top:20%;background:radial-gradient(closest-side,rgba(200,40,110,.28),transparent);animation:ntDrift 11s ease-in-out infinite alternate-reverse}
+@keyframes ntDrift{from{transform:translate(-6%,2%) scale(1)}to{transform:translate(8%,-3%) scale(1.15)}}
+.nt-rain{position:absolute;inset:-10%;pointer-events:none;mix-blend-mode:screen;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='90' height='170'><g stroke='%23cfe6ff' stroke-linecap='round'><line x1='12' y1='4' x2='8' y2='42' stroke-opacity='.55'/><line x1='52' y1='70' x2='49' y2='98' stroke-opacity='.4'/><line x1='78' y1='116' x2='74' y2='160' stroke-opacity='.5'/><line x1='33' y1='122' x2='31' y2='140' stroke-opacity='.3'/></g></svg>"),url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='230'><g stroke='%23e2efff' stroke-linecap='round'><line x1='20' y1='30' x2='15' y2='84' stroke-opacity='.35'/><line x1='96' y1='150' x2='92' y2='196' stroke-opacity='.3'/><line x1='122' y1='12' x2='119' y2='40' stroke-opacity='.25'/></g></svg>");background-size:90px 170px,140px 230px;animation:ntRain .55s linear infinite}
+@keyframes ntRain{from{background-position:0 0,0 0}to{background-position:-12px 170px,-18px 230px}}
+.nt-scrim{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.78),rgba(0,0,0,.35) 48%,rgba(0,0,0,.55))}
+.nt-pre{position:absolute;left:0;right:0;top:calc(7vh + 9%);text-align:center;font:500 clamp(12px,3.4vw,16px)/1 var(--mono);letter-spacing:.5em;margin-right:-.5em;text-transform:uppercase;color:#c9f6ff;text-shadow:0 0 8px rgba(25,227,255,.85),0 0 20px rgba(25,227,255,.4)}
+.nt-head{position:absolute;left:0;right:0;top:calc(7vh + 4%);text-align:center}
+.nt-title{margin:0;font:700 clamp(46px,14.5vw,150px)/.95 var(--display);text-transform:uppercase;letter-spacing:.06em;margin-right:-.06em;color:#ffe6ef;text-shadow:0 0 3px #fff,0 0 10px #ff2d6f,0 0 24px #ff2d6f,0 0 52px rgba(255,45,111,.75),0 0 96px rgba(255,45,111,.45)}
+.nt-line{height:3px;width:min(280px,60vw);margin:14px auto 0;background:#ff2d6f;box-shadow:0 0 8px #ff2d6f,0 0 22px #ff2d6f;transform-origin:50% 50%}
+.nt-year{margin-top:14px;font:600 clamp(22px,6.5vw,60px)/1 var(--display);letter-spacing:.55em;margin-right:-.55em;color:#dffcff;text-shadow:0 0 6px #19e3ff,0 0 18px #19e3ff,0 0 40px rgba(25,227,255,.6)}
+.nt-flash{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;background:radial-gradient(circle at 50% 22%,#fff 0,#ff6a9c 30%,rgba(255,45,111,0) 75%)}
+/* пауза фильма останавливает и дождь, и мигание неона */
+.film.paused .layer,.film.paused .layer *{animation-play-state:paused!important}
+@media (prefers-reduced-motion:reduce){.nt-rain,.nt-haze{display:none}.nt-light i{animation:none}}
 @media (prefers-reduced-motion:reduce){.ft-eyebrow,.ft-title,.ft-year,.ft-hint{animation-duration:.01s}.ft-line{animation-duration:.01s}}
 </style>
 </head>
@@ -206,6 +245,7 @@ body.editing .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
  "subtitle": "",
  "author": "ND",
  "cast": ["Наталья", "Мария", "Евгений"],
+ "intro": {"src": "photos/intro.jpg", "w": 1200, "h": 2000, "cast": [["Евгений", 0.287, 0.41], ["Наталья", 0.494, 0.42], ["Мария", 0.713, 0.44]]},
  "photos": [
  {"id": "g001", "src": "photos/g001.jpg", "thumb": "photos/t/g001.jpg", "w": 1500, "h": 2000},
  {"id": "g002", "src": "photos/g002.jpg", "thumb": "photos/t/g002.jpg", "w": 1500, "h": 2000},
@@ -371,6 +411,7 @@ const I_PAUSE = `<svg class="ic fill" viewBox="0 0 24 24"><rect x="6" y="4.5" wi
 function renderCover(){
   if (DATA.subtitle){ $("#h-sub").textContent = DATA.subtitle; $("#h-sub").hidden = false; }
   $("#h-eyebrow").textContent = (DATA.author || "ND") + " представляет";
+  if (DATA.intro && DATA.intro.src){ const im = new Image(); im.src = DATA.intro.src; } /* начало фильма — без задержки */
   const hero = PHOTOS.find(p => p.hero) || PHOTOS.find(p => !p.isVideo);
   if (hero) $("#hero-bg").innerHTML = `<img src="${esc(hero.src)}" alt="">`;
   const nP = PHOTOS.filter(p => !p.isVideo).length, nV = PHOTOS.length - nP;
@@ -581,6 +622,9 @@ const Music = {
   },
   fire(e, t){
     if (e.k === "bar"){
+      /* начало фильма: нарастание перед вступлением бита и удар на нём */
+      if (this.loop === 0 && e.t === 12) this.riser(t, 4 * this.beat);
+      if (this.loop === 0 && e.t === 16) this.impact(t);
       if (this.loop || e.t){ setTimeout(() => { if (this.on && this.onBar) this.onBar(); }, Math.max(0, (t - this.ctx.currentTime) * 1000)); }
       return;
     }
@@ -592,15 +636,34 @@ const Music = {
       return;
     }
     if (e.k === "g808"){ if (!intro) this.voice(t, e.m, e.d * this.beat, .25, "sub"); return; }
-    if (e.k === "gkeys"){ e.m.forEach(m => this.voice(t, m, e.acc ? .9 : .45, e.acc ? .055 : .04, "piano")); return; }
+    /* вступление (начало фильма) — фортепиано и струнные громче, чтобы на телефоне было слышно */
+    if (e.k === "gkeys"){ const up = intro ? 1.6 : 1; e.m.forEach(m => this.voice(t, m, e.acc ? .9 : .45, (e.acc ? .055 : .04) * up, "piano")); return; }
     if (e.k === "gbell"){ if (!intro) this.voice(t, e.m, .5, .028, "box"); return; }
-    if (e.k === "gpad"){ e.m.forEach(m => this.voice(t, m - 12, e.d * this.beat + .5, .022, "violin")); return; }
+    if (e.k === "gpad"){ e.m.forEach(m => this.voice(t, m - 12, e.d * this.beat + .5, intro ? .04 : .022, "violin")); return; }
     if (e.k === "gbrass"){ if (second) e.m.forEach(m => this.voice(t, m, .32, .04, "brass")); return; }
     if (e.k === "gmel"){
       if (this.loop === 0 && e.t < 32) return; /* мелодия вступает со второй половины первого прохода */
       this.voice(t, e.m, Math.max(.25, e.d * this.beat * .95), .085, "gfunk");
       if (second) this.voice(t, e.m - 12, Math.max(.25, e.d * this.beat * .95), .05, "box");
     }
+  },
+  riser(t, dur){
+    const c = this.ctx, n = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+    n.buffer = this.noise(); n.loop = true;
+    f.type = "bandpass"; f.Q.value = 1.6;
+    f.frequency.setValueAtTime(350, t); f.frequency.exponentialRampToValueAtTime(5500, t + dur);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.22, t + dur * .97); g.gain.exponentialRampToValueAtTime(.0001, t + dur + .04);
+    n.connect(f); f.connect(g); g.connect(this.bus); n.start(t); n.stop(t + dur + .1);
+  },
+  impact(t){
+    const c = this.ctx, o = c.createOscillator(), g = c.createGain();
+    o.type = "sine"; o.frequency.setValueAtTime(90, t); o.frequency.exponentialRampToValueAtTime(30, t + .9);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.42, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + 1.6);
+    o.connect(g); g.connect(this.drums); o.start(t); o.stop(t + 1.65);
+    const n = c.createBufferSource(), f = c.createBiquadFilter(), h = c.createGain();
+    n.buffer = this.noise(); f.type = "lowpass"; f.frequency.value = 1200;
+    h.gain.setValueAtTime(.0001, t); h.gain.exponentialRampToValueAtTime(.22, t + .005); h.gain.exponentialRampToValueAtTime(.0001, t + .6);
+    n.connect(f); f.connect(h); h.connect(this.bus); n.start(t); n.stop(t + .65);
   },
   noise(){
     if (!this._noise){ const c = this.ctx, b = c.createBuffer(1, c.sampleRate, c.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random()*2 - 1; this._noise = b; }
@@ -698,7 +761,7 @@ function buildFrames(){
   return frames;
 }
 /* видео сменяется само, чуть раньше своего конца (см. animateFrame); его такты — только запасной выход, если видео не пошло */
-const barsOf = f => f.t === "video" ? Math.ceil((f.p.dur || 6) / BAR()) + 2 : ({title:5, photo:2, demo:2, credits:10}[f.t]);
+const barsOf = f => f.t === "video" ? Math.ceil((f.p.dur || 6) / BAR()) + 2 : ({title:DATA.intro && DATA.intro.src ? 6 : 5, photo:2, demo:2, credits:10}[f.t]);
 /* доля такта музыки, оставшаяся до следующей смены кадров (1 — такт только начался) */
 function barLeft(){
   const c = Music.ctx; if (!Music.on || !c || !Music.beat) return 1;
@@ -707,6 +770,7 @@ function barLeft(){
 }
 function filmSeconds(){ return buildFrames().reduce((s, f) => s + (f.t === "credits" ? 20 : f.t === "video" ? (f.p.dur || 6) : barsOf(f) * BAR()), 0); }
 function frameHTML(f){
+  if (f.t === "title" && DATA.intro && DATA.intro.src) return ntHTML(DATA.intro);
   if (f.t === "title"){
     const bg = PHOTOS.find(p => p.hero) || PHOTOS.find(p => !p.isVideo);
     return `<div class="title-bg">${bg ? `<img class="kb" src="${esc(bg.src)}" alt="">` : ""}</div><div class="grain"></div>
@@ -723,6 +787,76 @@ function frameHTML(f){
     return `<img class="bg" src="${esc(p.img)}" alt="">${media}<div class="vign"></div><div class="grain"></div>${cap}`;
   }
   return `<div class="credits">${creditsHTML()}</div>`;
+}
+/* ---------- Начало фильма: нео-нуар ---------- */
+/* где на экране окажется точка кадра intro (object-fit: cover, object-position: 50% 40%) */
+/* на широком экране (компьютер, телефон боком) кадр целиком по высоте, по бокам — он же, размытый */
+function ntGeom(I){
+  const W = innerWidth, H = innerHeight, wide = W / H > I.w / I.h * 1.3;
+  const s = wide ? Math.min(W / I.w, H / I.h) : Math.max(W / I.w, H / I.h), dw = I.w * s, dh = I.h * s;
+  const ox = (W - dw) / 2, oy = (H - dh) * .4;
+  return {dw, wide, at:(x, y) => [ox + x * dw, oy + y * dh]};
+}
+function ntHTML(I){
+  const g = ntGeom(I), r0 = Math.round(g.dw * .085), r1 = Math.round(g.dw * .24);
+  const names = (I.cast || []).map(([n, x, y], k) => { const [px, py] = g.at(x, y + .17); return `<div class="nt-name" data-k="${k}" style="left:${px.toFixed(0)}px;top:${py.toFixed(0)}px"><b>${esc(n)}</b><i></i></div>`; }).join("");
+  return `<div class="nt${g.wide ? " wide" : ""}" style="--hw:${(g.dw / 2).toFixed(0)}px"><div class="nt-cam">${g.wide ? `<img class="nt-side" src="${esc(I.src)}" alt="">` : ""}<img class="nt-img" src="${esc(I.src)}" alt=""><div class="nt-spot" style="background:radial-gradient(circle at center,rgba(2,3,8,0) 0,rgba(2,3,8,0) ${r0}px,rgba(2,3,8,.86) ${r1}px)"></div><div class="nt-beam" style="background:radial-gradient(circle at center,rgba(255,226,205,.30) 0,rgba(255,200,190,.12) ${r0}px,rgba(255,180,190,0) ${Math.round(r1 * .9)}px)"></div>${names}</div>
+    <div class="nt-light nt-l"><i></i></div><div class="nt-light nt-r"><i></i></div><div class="nt-haze"><i></i><i></i></div><div class="nt-rain"></div>
+    <div class="nt-scrim"></div><div class="nt-pre">${esc(DATA.author || "ND")} представляет</div>
+    <div class="nt-head"><h1 class="nt-title">${esc(DATA.title)}</h1><div class="nt-line"></div><div class="nt-year">${esc(DATA.year)}</div></div>
+    <div class="nt-flash"></div></div><div class="grain"></div>`;
+}
+/* сцена по тактам музыки: 0–1,5 — проявление из темноты, «ND представляет»; 1,5–3,6 — луч по очереди
+   на каждого с именем; 3,5–4 — нарастание, название мигает, загораясь; 4 — вступает бит: вспышка, удар,
+   название горит, «2026»; до 6 — неон гудит. Анимации — в film.anims (пауза их останавливает) */
+function ntPlay(layer){
+  const I = DATA.intro, b = BAR() * 1000, c = Music.ctx;
+  const off = Music.on && c ? Math.max(0, Math.min(1000, (Music.phraseStart - c.currentTime) * 1000)) : 0;
+  const A = (el, kf, start, dur, opt) => { if (el) film.anims.push(el.animate(kf, Object.assign({delay:off + start * b, duration:dur * b, fill:"both", easing:"linear"}, opt || {}))); };
+  const q = sel => $(sel, layer);
+  const g = ntGeom(I), P = (I.cast || []).map(([, x, y]) => g.at(x, y)), tr = ([x, y]) => `translate(${x.toFixed(0)}px,${y.toFixed(0)}px)`;
+  A(q(".nt-img"), [{opacity:0}, {opacity:1}], 0, 1.4, {easing:"ease-out"});
+  A(q(".nt-cam"), [{transform:"scale(1.03)"}, {transform:"scale(1.16)"}], 0, 6.6);
+  A(q(".nt-rain"), [{opacity:0}, {opacity:.55}], .1, 1);
+  A(q(".nt-haze"), [{opacity:0}, {opacity:1}], .2, 1.5);
+  A(q(".nt-l"), [{opacity:0}, {opacity:1}], .4, 1.2);
+  A(q(".nt-r"), [{opacity:0}, {opacity:1}], .8, 1);
+  A(q(".nt-pre"), [{opacity:0, filter:"blur(6px)"}, {opacity:1, filter:"blur(0)", offset:.35}, {opacity:1, filter:"blur(0)", offset:.75}, {opacity:0, filter:"blur(4px)"}], .35, 1.25);
+  if (P.length){
+    /* луч: появляется на первом, переходит ко второму и третьему, гаснет перед названием */
+    const T0 = 1.5, T1 = 3.9, o = t => (t - T0) / (T1 - T0);
+    const kf = [{transform:tr(P[0]), offset:0}];
+    const marks = [[2.2, 2.4], [2.95, 3.15]];
+    for (let k = 1; k < P.length && k <= marks.length; k++){
+      kf.push({transform:tr(P[k - 1]), offset:o(marks[k - 1][0]), easing:"ease-in-out"}, {transform:tr(P[k]), offset:o(marks[k - 1][1])});
+    }
+    kf.push({transform:tr(P[Math.min(P.length, 3) - 1]), offset:1});
+    /* затемнение вокруг и тёплый свет прожектора движутся вместе */
+    [".nt-spot", ".nt-beam"].forEach(sel => {
+      A(q(sel), kf, T0, T1 - T0);
+      A(q(sel), [{opacity:0}, {opacity:1, offset:.1}, {opacity:1, offset:o(3.55)}, {opacity:0}], T0, T1 - T0);
+    });
+    const win = [[1.6, 2.25], [2.45, 2.98], [3.2, 3.62]];
+    layer.querySelectorAll(".nt-name").forEach((el, k) => {
+      const [s0, s1] = win[Math.min(k, 2)];
+      A(el, [{opacity:0, transform:"translate(-50%,10px)", filter:"blur(4px)"}, {opacity:1, transform:"translate(-50%,0)", filter:"blur(0)", offset:.3},
+             {opacity:1, transform:"translate(-50%,0)", filter:"blur(0)", offset:.8}, {opacity:0, transform:"translate(-50%,-6px)", filter:"blur(3px)"}], s0, s1 - s0);
+    });
+  }
+  A(q(".nt-scrim"), [{opacity:0}, {opacity:1}], 3.4, .6);
+  /* название загорается, как неон: мигает и на вступлении бита вспыхивает */
+  const d = .5 / .95;
+  A(q(".nt-title"), [{opacity:0, transform:"scale(1)", offset:0}, {opacity:.7, transform:"scale(1)", offset:.08}, {opacity:0, transform:"scale(1)", offset:.12},
+    {opacity:0, transform:"scale(1)", offset:.22}, {opacity:.45, transform:"scale(1)", offset:.27}, {opacity:.1, transform:"scale(1)", offset:.33},
+    {opacity:.9, transform:"scale(1)", offset:.40}, {opacity:.25, transform:"scale(1)", offset:.45}, {opacity:.85, transform:"scale(1)", offset:d - .02},
+    {opacity:1, transform:"scale(1.14)", offset:d, easing:"cubic-bezier(.2,.9,.3,1)"}, {opacity:1, transform:"scale(1)", offset:1}], 3.5, .95);
+  A(q(".nt-line"), [{transform:"scaleX(0)"}, {transform:"scaleX(1)"}], 4, .35, {easing:"cubic-bezier(.2,.9,.3,1)"});
+  A(q(".nt-year"), [{opacity:0, transform:"translateY(12px) scale(1.2)", filter:"blur(6px)"}, {opacity:1, transform:"none", filter:"blur(0)"}], 4.08, .35, {easing:"ease-out"});
+  A(q(".nt-flash"), [{opacity:0}, {opacity:.85, offset:.12}, {opacity:0}], 4, .22);
+  A(q(".nt"), [{transform:"none"}, {transform:"translate(-4px,3px) scale(1.03)", offset:.15}, {transform:"translate(3px,-2px) scale(1.02)", offset:.35},
+    {transform:"translate(-2px,1px)", offset:.6}, {transform:"none"}], 4, .18);
+  /* неон гудит */
+  A(q(".nt-head"), [{opacity:1}, {opacity:.8, offset:.05}, {opacity:1, offset:.08}, {opacity:1, offset:.6}, {opacity:.9, offset:.62}, {opacity:1}], 4.5, .7, {iterations:Infinity, fill:"forwards"});
 }
 function creditsHTML(){
   const nP = PHOTOS.filter(p => !p.isVideo).length, nV = PHOTOS.length - nP;
@@ -772,6 +906,7 @@ function animateFrame(layer, f){
       else { v.addEventListener("playing", start, {once:true}); v.addEventListener("error", start, {once:true}); }
     }
   }
+  if (f.t === "title" && $(".nt", layer)) ntPlay(layer);
   if (!reduce) layer.querySelectorAll(".kb").forEach(kb => film.anims.push(kb.animate(KB[Math.floor(Math.random() * KB.length)], {duration:dur, easing:"linear", fill:"forwards"})));
   if (f.t === "credits"){
     const roll = $(".roll", layer), H = layer.clientHeight, h = roll.offsetHeight;
@@ -838,6 +973,7 @@ function poke(){
 function openFilm(from){
   film.frames = buildFrames();
   film.playing = true; film.anims = [];
+  $("#film").classList.remove("paused");
   $("#fl0").innerHTML = $("#fl1").innerHTML = "";
   $("#fl0").classList.remove("on"); $("#fl1").classList.remove("on");
   $("#f-end").hidden = true;
@@ -880,6 +1016,7 @@ function togglePlay(){
   const v = $("#fl" + film.cur + " video");
   if (film.playing){ Music.resume(); film.anims.forEach(a => a.play()); if (v){ const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); } }
   else { Music.pause(); film.anims.forEach(a => a.pause()); if (v) v.pause(); }
+  $("#film").classList.toggle("paused", !film.playing);
   setPlayIcon(); poke();
 }
 const fNext = () => { if (film.i < film.frames.length - 1) go(film.i + 1); poke(); };
@@ -926,6 +1063,7 @@ function toast(t){ const el = $("#toast"); el.textContent = t; el.classList.add(
 const MEDIA_CACHE = "gard-media";
 const mediaURLs = () => {
   const s = new Set();
+  if (DATA.intro && DATA.intro.src) s.add(new URL(DATA.intro.src, location.href).href);
   ALL.forEach(p => [p.src, p.thumb, p.poster, hasClip(p) ? clipURL(p) : null].forEach(u => { if (u) s.add(new URL(u, location.href).href); }));
   return [...s];
 };
