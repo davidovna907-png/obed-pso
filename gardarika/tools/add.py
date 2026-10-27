@@ -2,7 +2,7 @@
 """Фильм «Гардарика 2026»: готовит присланные фото и видео для сайта и добавляет их в фильм.
 
 Запуск из корня репозитория:
-  python3 gardarika/tools/add.py [--title "подпись"] [--memory "текст"] [--mute] [--turn 90] --write файлы…
+  python3 gardarika/tools/add.py [--title "подпись"] [--memory "текст"] [--mute] [--turn 90] [--after g011] --write файлы…
 
 Что делает:
   • фото: разворачивает по EXIF, уменьшает до 2000 px (превью 800 px), сохраняет БЕЗ EXIF и геометок;
@@ -10,7 +10,8 @@
     звук видео кладёт рядом отдельным файлом photos/<id>.mp3 и ставит "sound": true —
     в фильме на это время музыка стихает (на iPhone звук видео играет из этого файла);
     --mute — видео без звука (музыка звучит как на фото);
-  • дописывает кадры в JSON album-data в gardarika/index.html; порядок — по времени съёмки, если оно есть у всех кадров.
+  • дописывает кадры в JSON album-data в gardarika/index.html: в конец, а с --after ID — сразу после этого кадра
+    (в порядке файлов); без --after порядок — по времени съёмки, если оно есть у всех кадров.
 Без --write ничего не записывает, только показывает, что получится.
 """
 import argparse
@@ -56,6 +57,7 @@ def main():
     ap.add_argument("--memory", help="история кадра словами пользователя")
     ap.add_argument("--mute", action="store_true", help="видео без звука")
     ap.add_argument("--turn", type=int, default=0, choices=[0, 90, -90, 180], help="довернуть видео")
+    ap.add_argument("--after", help="вставить новые кадры после кадра с этим id (например g011)")
     ap.add_argument("--write", action="store_true", help="сохранить и дописать в фильм")
     a = ap.parse_args()
 
@@ -64,6 +66,9 @@ def main():
     if a.write:
         os.makedirs(thumbs_dir, exist_ok=True)
     html, m, data = photo.read_album(index)
+    ids = [p.get("id") for p in data.get("photos", [])]
+    if a.after and a.after not in ids:
+        sys.exit(f"Нет кадра {a.after} в фильме")
     used = {p.get("id") for p in data.get("photos", [])}
     if os.path.isdir(photos_dir):
         used |= {os.path.splitext(f)[0] for f in os.listdir(photos_dir)}
@@ -115,8 +120,13 @@ def main():
     if not a.write:
         print(json.dumps(new, ensure_ascii=False, indent=1))
         return
-    data.setdefault("photos", []).extend(new)
-    if all(p.get("date") and p.get("time") for p in data["photos"]):
+    photos = data.setdefault("photos", [])
+    if a.after:
+        i = ids.index(a.after) + 1
+        photos[i:i] = new
+    else:
+        photos.extend(new)
+    if not a.after and all(p.get("date") and p.get("time") for p in photos):
         data["photos"].sort(key=lambda p: (p["date"], p["time"]))
     block = photo.dump(data)
     json.loads(block)  # проверка
