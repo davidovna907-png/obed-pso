@@ -312,7 +312,7 @@ body.editing .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
  "subtitle": "",
  "author": "ND",
  "cast": ["Наталья", "Мария", "Евгений"],
- "intro": {"src": "photos/intro.jpg?v=2", "w": 1200, "h": 2000, "cast": [["Евгений", 0.287, 0.41], ["Наталья", 0.494, 0.42], ["Мария", 0.713, 0.44]]},
+ "intro": {"src": "photos/intro.jpg?v=2", "w": 1200, "h": 2000, "cast": [["Евгений", 0.287, 0.41], ["Наталья", 0.494, 0.42], ["Мария", 0.713, 0.44]], "portraits": {"Евгений": "photos/p-evgeniy.jpg"}},
  "photos": [
  {"id": "g001", "src": "photos/g001.jpg", "thumb": "photos/t/g001.jpg", "w": 1500, "h": 2000},
  {"id": "g002", "src": "photos/g002.jpg", "thumb": "photos/t/g002.jpg", "w": 1500, "h": 2000},
@@ -1000,10 +1000,13 @@ function fnHTML(){
   const where = Object.fromEntries((I.cast || []).map(([n, x, y]) => [n, [x, y]]));
   const k = .62 * ps / (.11 * I.w), bw = I.w * k, bh = I.h * k;
   const cast = (DATA.cast || []).filter(Boolean);
+  const own = I.portraits || {};   /* свой портрет героя (tools/portrait.py), иначе — лицо из кадра начала */
   const cards = cast.map((n, i) => {
     const [x, y] = where[n] || [.5, .42];
     const pos = `${(ps / 2 - x * bw).toFixed(0)}px ${(ps / 2 - (y - .012) * bh).toFixed(0)}px`;
-    return `<div class="fn-card"><div class="fn-ph" style="--ps:${ps}px;background-image:url('${esc(I.src)}');background-size:${bw.toFixed(0)}px ${bh.toFixed(0)}px;background-position:${pos}"></div>
+    const ph = own[n] ? `background-image:url('${esc(own[n])}');background-size:cover;background-position:center`
+      : `background-image:url('${esc(I.src)}');background-size:${bw.toFixed(0)}px ${bh.toFixed(0)}px;background-position:${pos}`;
+    return `<div class="fn-card"><div class="fn-ph" style="--ps:${ps}px;${ph}"></div>
       <div class="fn-nm"><b>${esc(n)}</b></div><div class="fn-hole" style="--hs:${Math.round(ps * .62)}px">${holeSVG(i + 3)}</div></div>`;
   }).join("");
   const nP = PHOTOS.filter(p => !p.isVideo).length, nV = PHOTOS.length - nP;
@@ -1297,6 +1300,7 @@ const MEDIA_CACHE = "gard-media";
 const mediaURLs = () => {
   const s = new Set();
   if (DATA.intro && DATA.intro.src) s.add(new URL(DATA.intro.src, location.href).href);
+  Object.values((DATA.intro && DATA.intro.portraits) || {}).forEach(u => s.add(new URL(u, location.href).href));
   ALL.forEach(p => [p.src, p.thumb, p.poster, hasClip(p) ? clipURL(p) : null].forEach(u => { if (u) s.add(new URL(u, location.href).href); }));
   return [...s];
 };
