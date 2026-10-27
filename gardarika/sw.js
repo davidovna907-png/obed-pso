@@ -1,7 +1,7 @@
 /* Фильм «Гардарика 2026»: хранит фильм на телефоне целиком — страницу, фото, видео, звук видео и шрифты,
    чтобы он открывался и смотрелся без интернета. Фото и видео сохраняет сама страница (saveOffline в index.html)
    в кэш MEDIA, отсюда они отдаются без сети. */
-const SHELL = "gard-shell-v3", MEDIA = "gard-media";
+const SHELL = "gard-shell-v4", MEDIA = "gard-media";
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/apple-touch-icon.png",
   "./icons/qr.svg", "./icons/invite.jpg"];
 const BASE = new URL("./", self.registration.scope).pathname;
@@ -44,13 +44,13 @@ self.addEventListener("fetch", e => {
     })));
     return;
   }
-  /* шрифты: сохранённая копия, в фоне — обновление */
+  /* шрифты: сохранённая копия (её кладёт и сама страница — saveFonts, кэш gard-fonts), в фоне — обновление */
   if (fonts) {
-    e.respondWith(caches.open(SHELL).then(c => c.match(req).then(hit => {
-      const net = fetch(req).then(res => { if (res && (res.ok || res.type === "opaque")) c.put(req, res.clone()); return res; })
+    e.respondWith(caches.match(req, {ignoreVary: true}).then(hit => {
+      const net = fetch(req).then(res => { if (res && (res.ok || res.type === "opaque")) { const copy = res.clone(); caches.open(SHELL).then(c => c.put(req, copy)); } return res; })
         .catch(() => hit || Response.error());
       return hit || net;
-    })));
+    }));
     return;
   }
   /* страница и значки: сначала сеть (чтобы новые кадры появлялись сразу), без сети — сохранённая копия */

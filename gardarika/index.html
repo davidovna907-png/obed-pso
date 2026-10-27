@@ -1325,8 +1325,23 @@ async function saveOffline(){
       try { const r = await fetch(u, {cache:"no-cache"}); if (r.ok){ await c.put(u, r); done++; } } catch(e){}
       showOffline(done, all.length);
     }
+    await saveFonts();
   } catch(e){}
   saving = false;
+}
+/* шрифты (Oswald и др.) — тоже в память: без них без интернета название рисуется запасным, более широким шрифтом.
+   Страница сама скачивает CSS Google Fonts и файлы шрифтов в кэш gard-fonts, sw.js отдаёт их без сети */
+async function saveFonts(){
+  try {
+    const link = document.querySelector('link[rel="stylesheet"][href*="fonts.googleapis.com"]'); if (!link) return;
+    const c = await caches.open("gard-fonts");
+    if (await c.match(link.href)) return;
+    const css = await fetch(link.href); if (!css.ok) return;
+    const text = await css.clone().text();
+    const urls = [...new Set([...text.matchAll(/url\((https:\/\/fonts\.gstatic\.com[^)]+)\)/g)].map(m => m[1]))];
+    for (const u of urls){ try { const r = await fetch(u); if (r.ok) await c.put(u, r); } catch(e){} }
+    await c.put(link.href, css);   /* CSS — последним: есть CSS, значит, шрифты уже сохранены */
+  } catch(e){}
 }
 addEventListener("online", saveOffline);
 addEventListener("offline", () => { if (!$("#offline").classList.contains("ok")) saveOffline(); });
