@@ -28,6 +28,27 @@ import photo  # noqa: E402  общие функции фотоальбома «�
 FILM = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+def make_video(path, out_mp4, poster, thumb_path, write, mute=False, turn=0):
+    """Как photo.make_video, но не тяжелее ~2,5 Мбит/с: иначе на мобильном интернете видео в фильме не успевает загрузиться."""
+    dur, hdr, shot = photo.video_info(path)
+    if not write:
+        return dur, shot, 0, 0
+    scale = f"scale='if(gt(iw,ih),{photo.VIDEO_MAX},-2)':'if(gt(iw,ih),-2,{photo.VIDEO_MAX})'"
+    rot = {90: "transpose=2,", -90: "transpose=1,", 180: "hflip,vflip,"}.get(turn, "")
+    vf = (photo.TONEMAP + "," if hdr else "") + rot + scale + ",format=yuv420p"
+    audio = ["-an"] if mute else ["-map", "0:a:0?", "-c:a", "aac", "-b:a", "96k", "-ac", "2"]
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", path, "-map", "0:v:0", *audio, "-vf", vf,
+                    "-c:v", "libx264", "-preset", "slow", "-crf", "23", "-maxrate", "2.2M", "-bufsize", "4.4M", "-profile:v", "high",
+                    "-color_primaries", "bt709", "-color_trc", "bt709", "-colorspace", "bt709",
+                    "-map_metadata", "-1", "-map_chapters", "-1", "-movflags", "+faststart", out_mp4], check=True)
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", f"{min(0.6, dur / 3):.2f}", "-i", out_mp4, "-frames:v", "1", "-q:v", "3", poster], check=True)
+    im = Image.open(poster).convert("RGB")
+    w, h = im.size
+    im.thumbnail((photo.THUMB, photo.THUMB), Image.LANCZOS)
+    im.save(thumb_path, "JPEG", quality=photo.QUALITY, optimize=True, progressive=True)
+    return dur, shot, w, h
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("files", nargs="+")
@@ -55,8 +76,8 @@ def main():
         pid = f"g{k:03d}"
         if path.lower().endswith(photo.VIDEO_EXT):
             mp4 = os.path.join(photos_dir, pid + ".mp4")
-            dur, shot, vw, vh = photo.make_video(path, mp4, os.path.join(photos_dir, pid + ".jpg"),
-                                                 os.path.join(thumbs_dir, pid + ".jpg"), a.write, a.mute, a.turn)
+            dur, shot, vw, vh = make_video(path, mp4, os.path.join(photos_dir, pid + ".jpg"),
+                                           os.path.join(thumbs_dir, pid + ".jpg"), a.write, a.mute, a.turn)
             e = {"id": pid, "type": "video", "src": f"photos/{pid}.mp4", "poster": f"photos/{pid}.jpg",
                  "thumb": f"photos/t/{pid}.jpg", "w": vw, "h": vh, "dur": round(dur, 1)}
             if a.write and not a.mute:
