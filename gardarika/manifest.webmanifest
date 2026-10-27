@@ -1,0 +1,18 @@
+{
+  "id": "./",
+  "name": "Гардарика 2026",
+  "short_name": "Гардарика",
+  "description": "Фильм «Гардарика 2026»: фото и видео под гангстерский бит",
+  "lang": "ru",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b0a09",
+  "theme_color": "#0b0a09",
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ],
+  "orientation": "any"
+}

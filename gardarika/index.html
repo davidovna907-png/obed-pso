@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Гардарика 2026</title>
+<meta name="description" content="Фильм «Гардарика 2026»: фото и видео под гангстерский бит, с титрами">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Гардарика">
+<meta name="theme-color" content="#0b0a09">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Golos+Text:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@500;700&display=swap">
+<style>
+/* Макет: «гангстерское кино» — чёрный, золото и красная полоса, широкие буквы Oswald, кинорамка в фильме.
+   Тёмная тема всегда. */
+:root{
+  color-scheme:dark;
+  --night:#0b0a09; --deep:#15130f; --line:#2c2720; --ink:#f1ece2; --mist:#a59c8c;
+  --gold:#d9a945; --gold-2:#f3d48a; --red:#c8312b;
+  --display:"Oswald","Arial Narrow",Impact,sans-serif;
+  --body:"Golos Text",-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --hand:"Caveat","Segoe Print","Bradley Hand",cursive;
+}
+*{box-sizing:border-box}
+html,body{overscroll-behavior-y:none}
+html{background:var(--night)}
+body{margin:0;background:var(--night);color:var(--ink);font:15px/1.55 var(--body);-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+/* полоска цвета фона под часами */
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--night);z-index:40}
+body.noscroll{overflow:hidden}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit}
+.ic{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ic.fill{fill:currentColor;stroke:none}
+
+/* ---------- Обложка ---------- */
+.hero{position:relative;min-height:min(78vh,640px);display:grid;align-content:end;padding:calc(48px + env(safe-area-inset-top,0px)) 16px 28px;overflow:hidden;isolation:isolate}
+.hero-bg{position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse at 50% 30%,#2a2216 0%,#0b0a09 70%)}
+.hero-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(.85) contrast(1.15) brightness(.42)}
+.hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,10,9,.2),rgba(11,10,9,.35) 45%,var(--night))}
+.eyebrow{font:500 12px/1.3 var(--mono);letter-spacing:.32em;text-transform:uppercase;color:var(--gold)}
+.title{margin:10px 0 0;font:700 clamp(54px,17vw,150px)/.88 var(--display);letter-spacing:.02em;text-transform:uppercase;color:var(--ink)}
+.title em{display:block;font-style:normal;color:var(--gold);letter-spacing:.3em;font-size:.42em;margin-top:.25em}
+.stripe{width:72px;height:5px;background:var(--red);margin:18px 0 0}
+.sub{margin:14px 0 0;color:var(--mist);max-width:36ch}
+.play-btn{margin-top:22px;justify-self:start;display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 24px 0 18px;border:0;border-radius:999px;background:var(--gold);color:#1a1205;font:600 17px var(--body);cursor:pointer;box-shadow:0 10px 30px rgba(217,169,69,.25)}
+.play-btn .ic{width:24px;height:24px}
+.meta{margin-top:12px;font:400 12.5px var(--mono);color:var(--mist)}
+.wrap{padding:8px 16px calc(32px + env(safe-area-inset-bottom,0px));max-width:1100px;margin:0 auto}
+.h2{font:600 22px/1.2 var(--display);letter-spacing:.06em;text-transform:uppercase;margin:18px 0 12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px}
+.tile{position:relative;aspect-ratio:1;border:0;padding:0;border-radius:6px;overflow:hidden;background:var(--deep);cursor:pointer}
+.tile img{width:100%;height:100%;object-fit:cover;display:block}
+.tile .vid{position:absolute;right:6px;bottom:6px;display:flex;align-items:center;gap:3px;padding:2px 6px;border-radius:6px;background:rgba(0,0,0,.6);font:500 11px var(--mono);color:#fff}
+.tile .vid .ic{width:12px;height:12px}
+.empty{border:1px dashed var(--line);border-radius:14px;padding:22px 18px;color:var(--mist);text-align:center}
+.empty b{color:var(--ink);display:block;margin-bottom:6px;font-weight:600}
+.note{margin-top:22px;padding:14px 16px;border-radius:14px;background:var(--deep);border:1px solid var(--line);color:var(--mist);font-size:14px}
+.note b{color:var(--ink)}
+
+/* ---------- Фильм ---------- */
+.film{position:fixed;inset:0;z-index:50;background:#000;overflow:hidden;color:#fff;user-select:none;-webkit-user-select:none;touch-action:none}
+.layer{position:absolute;inset:0;opacity:0;transition:opacity 1.1s ease}
+.layer.on{opacity:1}
+.layer .bg{position:absolute;inset:-6%;width:112%;height:112%;object-fit:cover;filter:blur(26px) brightness(.38) saturate(.7)}
+.layer .ph{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;will-change:transform}
+.layer .ph.cover{object-fit:cover}
+/* лёгкая «киношная» обработка фото: чуть контраста, виньетка */
+.layer img.ph{filter:contrast(1.06) saturate(.92)}
+.vign{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55))}
+/* кинорамка: чёрные полосы сверху и снизу */
+.bars::before,.bars::after{content:"";position:absolute;left:0;right:0;height:7vh;background:#000;z-index:3;pointer-events:none}
+.bars::before{top:0}.bars::after{bottom:0}
+.grain{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:.08;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>")}
+.cap{position:absolute;left:0;right:0;bottom:0;z-index:5;padding:24px 20px calc(7vh + 18px);display:grid;gap:4px;background:linear-gradient(transparent,rgba(0,0,0,.72));opacity:0;transform:translateY(10px);transition:opacity .9s .5s,transform .9s .5s,padding-bottom .4s}
+.layer.on .cap{opacity:1;transform:none}
+.film:not(.calm) .cap{padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}
+.cap-t{font:600 clamp(18px,4.4vw,28px)/1.15 var(--display);letter-spacing:.05em;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.cap-t::before{content:"";width:4px;height:1.05em;background:var(--red)}
+.cap-hand{font:500 clamp(22px,5vw,34px)/1.12 var(--hand);color:var(--gold-2);padding-left:14px;max-width:34ch}
+/* титул */
+.ft{position:absolute;inset:0;z-index:5;display:grid;place-content:center;justify-items:center;text-align:center;padding:24px}
+.ft-eyebrow{font:500 clamp(11px,2.6vw,14px)/1.3 var(--mono);letter-spacing:.4em;text-transform:uppercase;color:var(--gold);opacity:0;animation:fadeUp 1.2s .4s forwards}
+.ft-title{margin:14px 0 0;font:700 clamp(52px,15vw,170px)/.9 var(--display);text-transform:uppercase;letter-spacing:.04em;opacity:0;animation:slam 1.1s 1.2s cubic-bezier(.2,.9,.25,1) forwards}
+.ft-year{font:600 clamp(26px,7vw,70px)/1 var(--display);letter-spacing:.5em;margin-right:-.5em;color:var(--gold);opacity:0;animation:fadeUp 1s 2.4s forwards}
+.ft-line{width:0;height:5px;background:var(--red);margin:20px auto 0;animation:line 1.2s 2.2s forwards}
+.ft-hint{margin-top:22px;font:400 13px var(--mono);color:#cfc6b6;opacity:0;animation:fadeUp 1s 3s forwards}
+.title-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,#2b2014,#000 70%)}
+.title-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.2) brightness(.3)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes slam{0%{opacity:0;transform:scale(1.35);letter-spacing:.3em}60%{opacity:1}100%{opacity:1;transform:none;letter-spacing:.04em}}
+@keyframes line{to{width:min(260px,50vw)}}
+.demo{position:absolute;inset:0;display:grid;place-content:center;text-align:center;gap:10px;background:radial-gradient(ellipse at 50% 50%,#211a12,#000 70%);padding:24px}
+.demo b{font:700 clamp(60px,18vw,140px)/1 var(--display);color:var(--gold)}
+.demo span{font:400 15px var(--mono);color:#cfc6b6}
+/* титры */
+.credits{position:absolute;inset:0;background:#000;overflow:hidden}
+.roll{position:absolute;left:0;right:0;top:100%;display:grid;gap:42px;justify-items:center;text-align:center;padding:0 24px}
+.cr-t{margin:0;font:700 clamp(54px,14vw,130px)/.9 var(--display);text-transform:uppercase;letter-spacing:.04em}
+.cr-y{margin:-26px 0 0;font:600 clamp(24px,6vw,48px)/1 var(--display);letter-spacing:.5em;margin-right:-.5em;color:var(--gold)}
+.cr-b{display:grid;gap:6px;max-width:30ch}
+.cr-b span{font:500 11.5px/1.3 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--mist)}
+.cr-b b{font:600 clamp(24px,5.4vw,38px)/1.15 var(--display);text-transform:uppercase;letter-spacing:.04em}
+.cr-b small{font:400 14px/1.4 var(--body);color:#cfc6b6}
+.cr-stats{grid-template-columns:repeat(auto-fit,minmax(100px,1fr));max-width:520px;width:100%;gap:18px}
+.cr-stats div{display:grid;gap:2px}
+.cr-stats b{font:700 clamp(42px,10vw,66px)/1 var(--display);color:var(--gold)}
+.cr-end{margin:30px 0 0;font:600 clamp(28px,7vw,52px)/1 var(--display);letter-spacing:.3em;margin-right:-.3em;color:var(--red)}
+/* управление */
+.f-ui{position:absolute;inset:0;z-index:10;pointer-events:none;transition:opacity .45s}
+.f-ui > *{pointer-events:auto}
+.film.calm .f-ui{opacity:0}
+.film.calm .f-ui > *{pointer-events:none}
+.f-top{position:absolute;top:0;left:0;right:0;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 30px;display:flex;align-items:center;gap:12px;background:linear-gradient(rgba(0,0,0,.6),transparent)}
+.f-prog{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.22);overflow:hidden}
+.f-prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .6s}
+.f-bot{position:absolute;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;gap:10px;padding:8px;border-radius:999px;background:rgba(20,18,14,.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.16)}
+.f-btn{width:48px;height:48px;border-radius:50%;border:0;background:rgba(255,255,255,.1);display:grid;place-items:center;cursor:pointer;color:#fff}
+.f-btn.main{background:var(--gold);color:#1a1205}
+.f-btn.off{opacity:.5}
+.f-end{position:absolute;inset:0;z-index:12;display:grid;place-content:center;justify-items:center;gap:14px;background:rgba(0,0,0,.72);text-align:center;padding:24px}
+.f-end h3{margin:0;font:700 clamp(36px,10vw,64px)/1 var(--display);text-transform:uppercase;letter-spacing:.06em}
+.f-end .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.f-end button{min-height:48px;padding:0 22px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.f-end button.main{background:var(--gold);color:#1a1205;border:0;font-weight:600}
+@media (prefers-reduced-motion:reduce){.ft-eyebrow,.ft-title,.ft-year,.ft-hint{animation-duration:.01s}.ft-line{animation-duration:.01s}}
+</style>
+</head>
+<body>
+<!-- Данные фильма: фото и видео дописывает tools/add.py (см. CLAUDE.md, раздел «Фильм «Гардарика 2026»») -->
+<script type="application/json" id="album-data">
+{
+ "title": "Гардарика",
+ "year": "2026",
+ "subtitle": "",
+ "author": "ND",
+ "cast": [],
+ "photos": [
+ ]
+}
+</script>
+
+<header class="hero">
+  <div class="hero-bg" id="hero-bg"></div>
+  <div class="eyebrow" id="h-eyebrow">ND представляет</div>
+  <h1 class="title">Гардарика<em>2026</em></h1>
+  <div class="stripe"></div>
+  <p class="sub" id="h-sub" hidden></p>
+  <button class="play-btn" id="play"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>Смотреть фильм</button>
+  <div class="meta" id="meta"></div>
+</header>
+<main class="wrap">
+  <div id="frames"></div>
+  <div class="note">Музыка — <b>«Гардарика»</b>, бит в гангстерском стиле, сочинён для этого фильма и звучит прямо в телефоне. На фото музыка громче, на видео со звуком стихает, чтобы было слышно само видео. Нажмите на кадр — фильм начнётся с него.</div>
+</main>
+
+<div class="film" id="film" hidden>
+  <div class="layer" id="fl0"></div><div class="layer" id="fl1"></div>
+  <div class="f-ui">
+    <div class="f-top">
+      <button class="f-btn" id="f-close" aria-label="Закрыть"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <div class="f-prog"><i id="f-bar"></i></div>
+      <button class="f-btn" id="f-mute" aria-label="Музыка"><svg class="ic" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg></button>
+    </div>
+    <div class="f-bot">
+      <button class="f-btn" id="f-prev" aria-label="Назад"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button class="f-btn main" id="f-play" aria-label="Пауза"></button>
+      <button class="f-btn" id="f-next" aria-label="Дальше"><svg class="ic" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+  </div>
+  <div class="f-end" id="f-end" hidden>
+    <h3>Конец фильма</h3>
+    <div class="row"><button class="main" id="f-again">Смотреть ещё раз</button><button id="f-done">Закрыть</button></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const plural = (n, a, b, c) => { const m = n % 10, h = n % 100; return m === 1 && h !== 11 ? a : m >= 2 && m <= 4 && (h < 12 || h > 14) ? b : c; };
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const DATA = JSON.parse($("#album-data").textContent);
+const PHOTOS = (DATA.photos || []).filter(p => p && p.src && p.film !== false).map(p => ({...p, isVideo:p.type === "video", img:p.poster || p.src}));
+const I_PLAY = `<svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>`;
+const I_PAUSE = `<svg class="ic fill" viewBox="0 0 24 24"><rect x="6" y="4.5" width="4" height="15" rx="1"/><rect x="14" y="4.5" width="4" height="15" rx="1"/></svg>`;
+
+/* ---------- Обложка ---------- */
+function renderCover(){
+  if (DATA.subtitle){ $("#h-sub").textContent = DATA.subtitle; $("#h-sub").hidden = false; }
+  $("#h-eyebrow").textContent = (DATA.author || "ND") + " представляет";
+  const hero = PHOTOS.find(p => p.hero) || PHOTOS.find(p => !p.isVideo);
+  if (hero) $("#hero-bg").innerHTML = `<img src="${esc(hero.src)}" alt="">`;
+  const nP = PHOTOS.filter(p => !p.isVideo).length, nV = PHOTOS.length - nP;
+  $("#meta").textContent = PHOTOS.length
+    ? [nP ? nP + " " + plural(nP, "фото", "фото", "фото") : "", nV ? nV + " " + plural(nV, "видео", "видео", "видео") : ""].filter(Boolean).join(" · ") + " · ≈ " + Math.max(1, Math.round(filmSeconds() / 60)) + " мин"
+    : "Пока без кадров: можно посмотреть, как будет выглядеть фильм";
+  $("#frames").innerHTML = PHOTOS.length
+    ? `<h2 class="h2">Кадры фильма</h2><div class="grid">${PHOTOS.map((p, i) => `<button class="tile" data-i="${i}" aria-label="${esc(p.title || "Кадр " + (i + 1))}"><img src="${esc(p.thumb || p.img)}" alt="" loading="lazy">${p.isVideo ? `<span class="vid"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>${Math.round(p.dur || 0)} с</span>` : ""}</button>`).join("")}</div>`
+    : `<div class="empty"><b>Здесь появятся кадры</b>Пришлите фото и видео в чат — они станут фильмом «Гардарика 2026».</div>`;
+}
+$("#frames").onclick = e => { const t = e.target.closest(".tile"); if (t) openFilm(+t.dataset.i + 1); };
+$("#play").onclick = () => openFilm(0);
+
+/* ---------- Музыка: «Гардарика» — свой бит в гангстерском стиле (до минор, 90 ударов в минуту) ----------
+   Вступление — фортепиано и струнные без барабанов, на 5-м такте «падает» бит: бочка, малый с хлопком,
+   хэт с качем, глубокий бас 808. Высокая «свистящая» мелодия в духе джи-фанка, во втором проходе — медь. */
+const GCH = {Cm:[60,63,67], Ab:[60,63,68], Fm:[60,65,68], G:[59,62,65,67]};
+const GBASS = {Cm:36, Ab:32, Fm:41, G:43};
+const GPROG = ["Cm","Cm","Ab","Ab","Fm","Fm","G","G","Cm","Cm","Ab","Ab","Fm","Fm","G","G"];
+const GMEL = [
+  [[0,1],[75,1],[74,.5],[72,.5],[67,1]], [[70,1.5],[72,.5],[0,2]], [[0,1],[75,1],[77,.5],[75,.5],[72,1]], [[68,2],[0,2]],
+  [[0,.5],[72,.5],[75,1],[77,1],[80,1]], [[79,1.5],[77,.5],[75,2]], [[74,1],[71,1],[74,1],[77,1]], [[74,2],[0,2]],
+  [[0,1],[75,1],[74,.5],[72,.5],[67,1]], [[70,1.5],[72,.5],[0,2]], [[0,1],[75,1],[77,.5],[75,.5],[72,1]], [[68,2],[0,2]],
+  [[0,.5],[72,.5],[75,1],[77,1],[80,1]], [[79,1.5],[77,.5],[75,2]], [[79,1],[77,.5],[75,.5],[74,1],[71,1]], [[67,2],[0,2]]
+];
+function gardEvents(){
+  const ev = [];
+  GPROG.forEach((c, b) => {
+    const t0 = b * 4, v = GCH[c], r = GBASS[c], fill = b === 7 || b === 15;
+    ev.push({t:t0, k:"bar"});
+    /* фортепиано: синкопированные аккорды */
+    [0, .75, 1.5, 2.5, 3].forEach((x, i) => ev.push({t:t0 + x, k:"gkeys", m:v, acc:i === 0}));
+    /* колокольчик-остинато сверху */
+    [0, 1, 2, 3].forEach(x => ev.push({t:t0 + x + .5, k:"gbell", m:v[(b + x) % v.length] + 12}));
+    if (b % 2 === 0) ev.push({t:t0, k:"gpad", m:v, d:8});
+    if (b % 2 === 0) ev.push({t:t0, k:"gbrass", m:v.slice(0, 3)}, {t:t0 + 1.5, k:"gbrass", m:v.slice(0, 3)});
+    /* бас 808 — в ритм бочки */
+    [[0,1.5,0],[1.75,.6,0],[2.5,1,0],[3.5,.5,12]].forEach(([x, d, o]) => ev.push({t:t0 + x, k:"g808", m:r + o, d}));
+    /* барабаны */
+    (b % 2 ? [0, 2.25, 2.5] : [0, 1.75, 2.5]).forEach(x => ev.push({t:t0 + x, k:"kick"}));
+    [1, 3].forEach(x => ev.push({t:t0 + x, k:"snare"}, {t:t0 + x, k:"clap"}));
+    if (fill) [3.25, 3.5, 3.75].forEach(x => ev.push({t:t0 + x, k:"snare", acc:1}));
+    for (let i = 0; i < 8; i++) ev.push({t:t0 + i / 2 + (i % 2 ? .07 : 0), k:"hat", acc:i % 2 === 0});
+    if (b % 8 === 0) ev.push({t:t0, k:"crash"});
+    let t = t0; GMEL[b].forEach(([m, d]) => { if (m) ev.push({t, k:"gmel", m, d}); t += d; });
+  });
+  return ev.sort((a, b) => a.t - b.t);
+}
+const TUNE = {name:"«Гардарика»", bpm:90, beats:4, events:gardEvents, wet:.22};
+const BAR = () => 60 / TUNE.bpm * TUNE.beats;
+const LOUD = 1, DUCK = .12; /* громкость музыки: на фото — полная, на видео со звуком — тихо */
+
+/* видео фильма загружаются заранее по очереди, ближайшее первым (иначе на мобильном интернете идут рывками) */
+const vidReady = {}, vidLoad = {};
+let vidChain = Promise.resolve();
+function preVideo(url){
+  if (!vidLoad[url]){
+    const job = vidChain.catch(() => {}).then(() => vidReady[url] || fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.blob(); })
+      .then(b => (vidReady[url] = URL.createObjectURL(b))));
+    vidChain = job;
+    vidLoad[url] = job.catch(e => { delete vidLoad[url]; throw e; });
+  }
+  return vidLoad[url];
+}
+function dropVideos(){ Object.keys(vidReady).forEach(u => { try { URL.revokeObjectURL(vidReady[u]); } catch(e){} delete vidReady[u]; delete vidLoad[u]; }); }
+/* звук видео лежит рядом: photos/g05.mp4 → photos/g05.mp3 (делает tools/add.py) */
+const hasClip = p => !!(p && p.isVideo && p.sound);
+const clipURL = p => p.src.replace(/\.mp4(\?|$)/, ".mp3$1");
+
+const Music = {
+  ctx:null, master:null, bus:null, drums:null, on:false, onBar:null, timer:0, stopT:0,
+  beat:.5, ev:null, idx:0, loop:0, phraseStart:0, _noise:null, duckOn:false,
+  init(){
+    if (this.ctx) return this.ctx;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch(e){}
+    try {
+      const c = this.ctx = new AC();
+      this.master = c.createGain(); this.master.gain.value = .0001;
+      const comp = c.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 3;
+      this.master.connect(comp); comp.connect(c.destination);
+      this.bus = c.createGain();
+      const dry = c.createGain(); dry.gain.value = .85; this.bus.connect(dry); dry.connect(this.master);
+      const rev = c.createConvolver(), wet = c.createGain(); rev.buffer = this.impulse(2.2); wet.gain.value = TUNE.wet;
+      this.bus.connect(rev); rev.connect(wet); wet.connect(this.master);
+      this.drums = c.createGain(); this.drums.gain.value = .95; this.drums.connect(this.master);
+    } catch(e){ this.ctx = null; }
+    return this.ctx;
+  },
+  impulse(sec){
+    const c = this.ctx, n = Math.floor(c.sampleRate * sec), b = c.createBuffer(2, n, c.sampleRate);
+    for (let ch = 0; ch < 2; ch++){ const d = b.getChannelData(ch); for (let i = 0; i < n; i++) d[i] = (Math.random()*2 - 1) * Math.pow(1 - i/n, 3); }
+    return b;
+  },
+  level(v, sec){
+    const c = this.ctx; if (!c) return;
+    const t = c.currentTime;
+    this.master.gain.cancelScheduledValues(t);
+    this.master.gain.setValueAtTime(Math.max(this.master.gain.value, .0001), t);
+    this.master.gain.exponentialRampToValueAtTime(Math.max(v, .0001), t + sec);
+  },
+  /* вызывать только из нажатия пальцем: иначе телефон не даст включить звук */
+  play(){
+    clearTimeout(this.stopT);
+    const c = this.init();
+    clearInterval(this.timer);
+    if (!c){ this.on = false; return; }
+    if (c.resume) c.resume();
+    this.on = true; this.duckOn = false;
+    this.level(LOUD, 1.6);
+    this.beat = 60 / TUNE.bpm; this.ev = TUNE.evs || (TUNE.evs = TUNE.events());
+    this.idx = 0; this.loop = 0; this.phraseStart = c.currentTime + .15;
+    this.timer = setInterval(() => this.schedule(), 60); this.schedule();
+    updateMute();
+  },
+  stop(fade){
+    fade = fade || 1.2;
+    if (!this.on) return;
+    this.on = false; this.onBar = null; clearInterval(this.timer); this.duckOn = false;
+    this.level(.0001, fade);
+    updateMute();
+  },
+  /* видео со своим звуком: музыка стихает; на фото — снова громко */
+  duck(on){
+    if (this.duckOn === on) return;
+    this.duckOn = on;
+    if (this.on) this.level(on ? DUCK : LOUD, on ? .8 : 1.2);
+  },
+  /* звук видео: на iPhone видео без нажатия пальцем играет только без звука, поэтому звук идёт
+     отдельным файлом через этот движок — ему звук разрешён нажатием «Смотреть фильм» */
+  clips:{}, clip:null, clipTok:0,
+  loadClip(url){
+    const c = this.init(); if (!c) return Promise.reject(new Error("no audio"));
+    if (!this.clips[url]) this.clips[url] = fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
+      .then(b => new Promise((res, rej) => { const pr = c.decodeAudioData(b, res, rej); if (pr && pr.then) pr.then(res, rej); }))
+      .catch(e => { delete this.clips[url]; throw e; });
+    return this.clips[url];
+  },
+  playClip(url, offset){
+    this.stopClip();
+    const tok = this.clipTok;
+    return this.loadClip(url).then(buf => {
+      const c = this.ctx;
+      if (tok !== this.clipTok || !c) return false;
+      if (c.state === "suspended" && film.playing && c.resume) c.resume();
+      const src = c.createBufferSource(), g = c.createGain();
+      src.buffer = buf; src.connect(g); g.connect(c.destination);
+      src.start(c.currentTime + .02, Math.min(Math.max(0, offset || 0), Math.max(0, buf.duration - .05)));
+      this.clip = {src, g};
+      return true;
+    });
+  },
+  stopClip(){
+    this.clipTok++;
+    const k = this.clip; this.clip = null;
+    if (k && this.ctx){ try { const t = this.ctx.currentTime; k.g.gain.setTargetAtTime(.0001, t, .06); k.src.stop(t + .35); } catch(e){} }
+  },
+  pause(){ if (this.ctx && this.ctx.suspend) this.ctx.suspend(); },
+  resume(){ if (this.ctx && this.ctx.resume) this.ctx.resume(); },
+  schedule(){
+    const c = this.ctx; if (!c || !this.on) return;
+    const until = c.currentTime + .3;
+    for (;;){
+      const e = this.ev[this.idx], time = this.phraseStart + e.t * this.beat;
+      if (time > until) break;
+      if (time >= c.currentTime - .05) this.fire(e, time);
+      if (++this.idx >= this.ev.length){ this.idx = 0; this.loop++; this.phraseStart += 16 * TUNE.beats * this.beat; }
+    }
+  },
+  fire(e, t){
+    if (e.k === "bar"){
+      if (this.loop || e.t){ setTimeout(() => { if (this.on && this.onBar) this.onBar(); }, Math.max(0, (t - this.ctx.currentTime) * 1000)); }
+      return;
+    }
+    const intro = this.loop === 0 && e.t < 16; /* первые 4 такта первого прохода — вступление без бита */
+    const second = this.loop % 2 === 1;
+    if (e.k === "kick" || e.k === "snare" || e.k === "hat" || e.k === "clap" || e.k === "crash"){
+      if (!intro) this.drum(t, e.k, e.acc);
+      if (this.loop === 0 && e.t === 16 && e.k === "kick") this.drum(t, "crash"); /* бит «падает» с тарелкой */
+      return;
+    }
+    if (e.k === "g808"){ if (!intro) this.voice(t, e.m, e.d * this.beat, .25, "sub"); return; }
+    if (e.k === "gkeys"){ e.m.forEach(m => this.voice(t, m, e.acc ? .9 : .45, e.acc ? .055 : .04, "piano")); return; }
+    if (e.k === "gbell"){ if (!intro) this.voice(t, e.m, .5, .028, "box"); return; }
+    if (e.k === "gpad"){ e.m.forEach(m => this.voice(t, m - 12, e.d * this.beat + .5, .022, "violin")); return; }
+    if (e.k === "gbrass"){ if (second) e.m.forEach(m => this.voice(t, m, .32, .04, "brass")); return; }
+    if (e.k === "gmel"){
+      if (this.loop === 0 && e.t < 32) return; /* мелодия вступает со второй половины первого прохода */
+      this.voice(t, e.m, Math.max(.25, e.d * this.beat * .95), .085, "gfunk");
+      if (second) this.voice(t, e.m - 12, Math.max(.25, e.d * this.beat * .95), .05, "box");
+    }
+  },
+  noise(){
+    if (!this._noise){ const c = this.ctx, b = c.createBuffer(1, c.sampleRate, c.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random()*2 - 1; this._noise = b; }
+    return this._noise;
+  },
+  drum(t, kind, acc){
+    const c = this.ctx, g = c.createGain(); g.connect(this.drums);
+    const env = (v, a, d) => { g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(v, t + a); g.gain.exponentialRampToValueAtTime(.0001, t + d); };
+    if (kind === "kick"){
+      const o = c.createOscillator(); o.type = "sine";
+      o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(42, t + .16);
+      env(.6, .004, .4); o.connect(g); o.start(t); o.stop(t + .42);
+      return;
+    }
+    const n = c.createBufferSource(), f = c.createBiquadFilter(); n.buffer = this.noise();
+    if (kind === "clap"){ /* хлопок — три быстрых всплеска шума и короткий хвост */
+      f.type = "bandpass"; f.frequency.value = 1500; f.Q.value = 1.1; g.gain.setValueAtTime(.0001, t);
+      [0, .011, .022].forEach(x => { g.gain.setValueAtTime(.16, t + x); g.gain.exponentialRampToValueAtTime(.03, t + x + .009); });
+      g.gain.setValueAtTime(.14, t + .033); g.gain.exponentialRampToValueAtTime(.0001, t + .2);
+      n.connect(f); f.connect(g); n.start(t, Math.random() * .5); n.stop(t + .22);
+      return;
+    }
+    if (kind === "crash"){
+      f.type = "highpass"; f.frequency.value = 4500; env(.08, .003, 1.8);
+      n.connect(f); f.connect(g); n.start(t, Math.random() * .2); n.stop(t + 1.85);
+      return;
+    }
+    if (kind === "snare"){
+      f.type = "bandpass"; f.frequency.value = 1800; f.Q.value = .7; env(acc ? .14 : .26, .003, .18);
+      const o = c.createOscillator(), og = c.createGain(); o.type = "triangle";
+      o.frequency.setValueAtTime(200, t); o.frequency.exponentialRampToValueAtTime(130, t + .08);
+      og.gain.setValueAtTime(acc ? .06 : .13, t); og.gain.exponentialRampToValueAtTime(.0001, t + .1);
+      o.connect(og); og.connect(this.drums); o.start(t); o.stop(t + .12);
+    } else { f.type = "highpass"; f.frequency.value = 7500; env(acc ? .05 : .028, .002, .045); }
+    n.connect(f); f.connect(g); n.start(t, Math.random() * .5); n.stop(t + .2);
+  },
+  voice(t, m, dur, vel, kind){
+    const c = this.ctx, f = 440 * Math.pow(2, (m - 69) / 12);
+    const P = {piano:[[1,"triangle",1],[2,"sine",.32],[3,"sine",.1]], box:[[1,"sine",1],[3,"sine",.22],[5.4,"sine",.06]],
+      /* бас 808: чистый низкий тон, обертон — чтобы бас был слышен и в динамике телефона */
+      sub:[[1,"sine",1],[2,"sine",.45],[3,"triangle",.12]],
+      violin:[[1,"sawtooth",.45],[1.003,"sawtooth",.35],[2,"sine",.12]],
+      brass:[[1,"sawtooth",.6],[1.006,"sawtooth",.5],[2,"sawtooth",.15]],
+      /* «свистящий» синтезатор джи-фанка: почти чистый тон с подъездом к ноте и вибрато */
+      gfunk:[[1,"sine",1],[1,"triangle",.35],[2,"sine",.08]]}[kind];
+    const SUS = {violin:.3, gfunk:.03}[kind];
+    const FIL = {sub:[600,180], violin:[Math.min(3000, f*4)], brass:[Math.min(4200, f*6), Math.max(500, f*1.5)], gfunk:[7000], box:[Math.min(9000, f*6), Math.max(600, f*1.6)]}[kind] || [Math.min(9000, f*6), Math.max(600, f*1.6)];
+    const g = c.createGain(), lp = c.createBiquadFilter();
+    lp.type = "lowpass";
+    lp.frequency.setValueAtTime(FIL[0], t);
+    g.gain.setValueAtTime(.0001, t);
+    if (SUS){
+      const r = Math.min(kind === "violin" ? .45 : .12, dur * .3);
+      g.gain.exponentialRampToValueAtTime(vel, t + SUS);
+      g.gain.setValueAtTime(vel, t + Math.max(SUS, dur - r));
+    } else {
+      lp.frequency.exponentialRampToValueAtTime(FIL[1], t + dur);
+      g.gain.exponentialRampToValueAtTime(vel, t + ({box:.005, sub:.008, brass:.012}[kind] || .018));
+    }
+    g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    lp.connect(g); g.connect(this.bus);
+    let vib = null;
+    const VIB = {violin:[5.4, .004], gfunk:[5.6, .006]}[kind];
+    if (VIB){ vib = c.createOscillator(); vib.frequency.value = VIB[0]; vib.start(t); vib.stop(t + dur + .05); }
+    P.forEach(([mul, type, amp]) => {
+      const o = c.createOscillator(), a = c.createGain();
+      o.type = type; a.gain.value = amp;
+      if (kind === "gfunk"){ o.frequency.setValueAtTime(f * mul * .94, t); o.frequency.exponentialRampToValueAtTime(f * mul, t + .07); }
+      else if (kind === "sub"){ o.frequency.setValueAtTime(f * mul * 1.5, t); o.frequency.exponentialRampToValueAtTime(f * mul, t + .05); }
+      else o.frequency.value = f * mul;
+      if (vib){
+        const d = c.createGain(); d.gain.setValueAtTime(0, t);
+        d.gain.linearRampToValueAtTime(f * mul * VIB[1], t + Math.min(.5, dur * .5));
+        vib.connect(d); d.connect(o.frequency);
+      }
+      o.connect(a); a.connect(lp); o.start(t); o.stop(t + dur + .05);
+    });
+  }
+};
+window.__filmMusic = Music; /* для проверки звука при доработках */
+
+/* ---------- Фильм ---------- */
+const film = {frames:[], i:0, left:0, playing:false, cur:0, anims:[], tok:0, calmT:0, wake:null, start:0, waitFor:null, waitT:0};
+const KB = [
+  [{transform:"scale(1.02) translate(0,0)"}, {transform:"scale(1.13) translate(-1.5%,-1%)"}],
+  [{transform:"scale(1.14) translate(1%,1%)"}, {transform:"scale(1.03) translate(0,0)"}],
+  [{transform:"scale(1.1) translate(-2.5%,0)"}, {transform:"scale(1.1) translate(2.5%,0)"}],
+  [{transform:"scale(1.1) translate(0,2%)"}, {transform:"scale(1.1) translate(0,-2%)"}]
+];
+function buildFrames(){
+  const frames = [{t:"title", demo:!PHOTOS.length}];
+  if (PHOTOS.length) PHOTOS.forEach(p => frames.push({t:p.isVideo ? "video" : "photo", p}));
+  else [1, 2, 3].forEach(n => frames.push({t:"demo", n}));
+  frames.push({t:"credits"});
+  return frames;
+}
+const barsOf = f => f.t === "video" ? Math.max(2, Math.ceil((f.p.dur || 6) / BAR())) : ({title:5, photo:2, demo:2, credits:10}[f.t]);
+function filmSeconds(){ return buildFrames().reduce((s, f) => s + (f.t === "credits" ? 20 : barsOf(f) * BAR()), 0); }
+function frameHTML(f){
+  if (f.t === "title"){
+    const bg = PHOTOS.find(p => p.hero) || PHOTOS.find(p => !p.isVideo);
+    return `<div class="title-bg">${bg ? `<img class="kb" src="${esc(bg.src)}" alt="">` : ""}</div><div class="grain"></div>
+      <div class="ft"><div class="ft-eyebrow">${esc(DATA.author || "ND")} представляет</div><h1 class="ft-title">${esc(DATA.title)}</h1><div class="ft-line"></div><div class="ft-year" style="margin-top:18px">${esc(DATA.year)}</div>${DATA.subtitle ? `<div class="ft-hint">${esc(DATA.subtitle)}</div>` : ""}${f.demo ? `<div class="ft-hint">Пока без ваших кадров: так будет выглядеть фильм</div>` : ""}</div>`;
+  }
+  if (f.t === "demo") return `<div class="demo"><b>${String(f.n).padStart(2, "0")}</b><span>Здесь будут ваши фото и видео</span></div><div class="grain"></div>`;
+  if (f.t === "photo" || f.t === "video"){
+    const p = f.p, sr = innerWidth / innerHeight, pr = p.w && p.h ? p.w / p.h : sr;
+    const cover = Math.abs(Math.log(pr / sr)) < .2;
+    const media = p.isVideo
+      ? `<video class="ph ${cover ? "cover" : ""}" src="${esc(vidReady[p.src] || p.src)}" poster="${esc(p.img)}" playsinline muted preload="auto"></video>`
+      : `<img class="ph kb ${cover ? "cover" : ""}" src="${esc(p.src)}" alt="${esc(p.title || "")}">`;
+    const cap = p.title || p.memory ? `<div class="cap">${p.title ? `<div class="cap-t">${esc(p.title)}</div>` : ""}${p.memory ? `<div class="cap-hand">${esc(p.memory)}</div>` : ""}</div>` : "";
+    return `<img class="bg" src="${esc(p.img)}" alt="">${media}<div class="vign"></div><div class="grain"></div>${cap}`;
+  }
+  return `<div class="credits">${creditsHTML()}</div>`;
+}
+function creditsHTML(){
+  const nP = PHOTOS.filter(p => !p.isVideo).length, nV = PHOTOS.length - nP;
+  const cast = (DATA.cast || []).filter(Boolean);
+  const stat = (n, a, b, c) => `<div><b>${n}</b><span>${plural(n, a, b, c)}</span></div>`;
+  return `<div class="roll">
+    <p class="cr-t">${esc(DATA.title)}</p><p class="cr-y">${esc(DATA.year)}</p>
+    <div class="cr-b"><span>Режиссёр, оператор и главная героиня</span><b>${esc(DATA.author || "ND")}</b></div>
+    ${cast.length ? `<div class="cr-b"><span>В ролях</span>${cast.map(c => `<b>${esc(c)}</b>`).join("")}</div>` : ""}
+    ${PHOTOS.length ? `<div class="cr-b cr-stats">${nP ? stat(nP, "фото", "фото", "фото") : ""}${nV ? stat(nV, "видео", "видео", "видео") : ""}</div>` : ""}
+    <div class="cr-b"><span>Музыка</span><b>${TUNE.name}</b><small>бит в гангстерском стиле, сочинён для этого фильма</small></div>
+    <p class="cr-end">${esc(DATA.year)}</p></div>`;
+}
+function animateFrame(layer, f){
+  const dur = (barsOf(f) * BAR() + 1.6) * 1000;
+  const v = $("video", layer);
+  Music.duck(false);
+  if (v){
+    v.muted = true;
+    const pr = v.play(); if (pr && pr.catch) pr.catch(() => {});
+    if (hasClip(f.p)){
+      const here = () => film.frames[film.i] === f;
+      /* звук видео — когда картинка действительно пошла; музыка на это время стихает */
+      let started = false;
+      const start = () => {
+        if (started || !here()) return; started = true; clearTimeout(t);
+        Music.duck(true);
+        Music.playClip(clipURL(f.p), v.error ? 0 : v.currentTime).catch(() => {
+          if (!here()) return;
+          v.muted = false; /* нет отдельного звука — звук самого видео (на компьютере так можно) */
+          const p2 = v.play(); if (p2 && p2.catch) p2.catch(() => { v.muted = true; Music.duck(false); });
+        });
+      };
+      const t = setTimeout(start, 2500);
+      if (!v.paused && v.readyState > 2) start();
+      else { v.addEventListener("playing", start, {once:true}); v.addEventListener("error", start, {once:true}); }
+    }
+  }
+  if (!reduce) layer.querySelectorAll(".kb").forEach(kb => film.anims.push(kb.animate(KB[Math.floor(Math.random() * KB.length)], {duration:dur, easing:"linear", fill:"forwards"})));
+  if (f.t === "credits"){
+    const roll = $(".roll", layer), H = layer.clientHeight, h = roll.offsetHeight;
+    const ms = Math.max(16000, (h + H * .55) / 46 * 1000);
+    film.anims.push(roll.animate([{transform:"translateY(0)"}, {transform:`translateY(${-(h + H*.55)}px)`}], {duration:ms, easing:"linear", fill:"forwards"}));
+    film.left = Math.ceil(ms / 1000 / BAR()) + 1;
+  }
+}
+function go(i){
+  if (i < 0) i = 0;
+  if (i >= film.frames.length){ endFilm(); return; }
+  film.i = i;
+  const f = film.frames[i];
+  film.left = barsOf(f);
+  film.waitFor = null; clearTimeout(film.waitT);
+  const prev = $("#fl" + film.cur), next = $("#fl" + (film.cur ^ 1));
+  const old = film.anims; film.anims = [];
+  setTimeout(() => old.forEach(a => { try { a.cancel(); } catch(e){} }), 1500);
+  const tok = String(++film.tok);
+  next.dataset.tok = tok;
+  next.innerHTML = frameHTML(f);
+  next.classList.toggle("bars", f.t === "photo" || f.t === "video");
+  next.classList.remove("on"); void next.offsetWidth; next.classList.add("on");
+  prev.classList.remove("on");
+  prev.querySelectorAll("video").forEach(v => { v.muted = true; });
+  const prevTok = prev.dataset.tok;
+  setTimeout(() => { if (prev.dataset.tok === prevTok && !prev.classList.contains("on")) prev.innerHTML = ""; }, 1500);
+  film.cur ^= 1;
+  Music.stopClip();
+  animateFrame(next, f);
+  if (!film.playing) film.anims.forEach(a => a.pause());
+  $("#f-bar").style.width = (film.frames.length > 1 ? i / (film.frames.length - 1) * 100 : 100) + "%";
+  const nx = film.frames[i + 1];
+  if (nx && nx.p){ const im = new Image(); im.src = nx.p.img; }
+  film.frames.slice(i + 1, i + 6).forEach(x => {
+    if (x.t !== "video") return;
+    preVideo(x.p.src).catch(() => {});
+    if (hasClip(x.p)) Music.loadClip(clipURL(x.p)).catch(() => {});
+  });
+}
+function tick(){
+  if (!film.playing || $("#film").hidden) return;
+  if (--film.left > 0) return;
+  /* видео досматриваем до конца: такт мог оборвать его на секунду раньше */
+  const f = film.frames[film.i], v = f && f.t === "video" ? $("#fl" + film.cur + " video") : null;
+  if (film.waitFor === f) return;
+  if (v && !v.ended && !v.paused && !v.error){
+    film.waitFor = f;
+    const i = film.i, tok = film.tok;
+    const next = () => {
+      clearTimeout(film.waitT); v.onended = null;
+      if (film.tok !== tok) return;
+      if (!film.playing){ film.waitFor = null; return; }
+      go(i + 1);
+    };
+    v.onended = next;
+    film.waitT = setTimeout(next, Math.max(500, ((v.duration || 0) - v.currentTime) * 1000 + 1500));
+    return;
+  }
+  go(film.i + 1);
+}
+const Ticker = {
+  id:0,
+  start(){ this.stop(); if (Music.on) Music.onBar = tick; else this.id = setInterval(tick, BAR() * 1000); },
+  stop(){ clearInterval(this.id); this.id = 0; Music.onBar = null; }
+};
+async function lockWake(){ try { if (navigator.wakeLock) film.wake = await navigator.wakeLock.request("screen"); } catch(e){} }
+function setPlayIcon(){ $("#f-play").innerHTML = film.playing ? I_PAUSE : I_PLAY; $("#f-play").setAttribute("aria-label", film.playing ? "Пауза" : "Продолжить"); }
+function updateMute(){ $("#f-mute").classList.toggle("off", !Music.on); }
+function poke(){
+  $("#film").classList.remove("calm");
+  clearTimeout(film.calmT);
+  film.calmT = setTimeout(() => { if (film.playing) $("#film").classList.add("calm"); }, 2800);
+}
+function openFilm(from){
+  film.frames = buildFrames();
+  film.playing = true; film.anims = [];
+  $("#fl0").innerHTML = $("#fl1").innerHTML = "";
+  $("#fl0").classList.remove("on"); $("#fl1").classList.remove("on");
+  $("#f-end").hidden = true;
+  $("#film").hidden = false;
+  document.body.classList.add("noscroll");
+  try { const el = document.documentElement; if (el.requestFullscreen){ const pr = el.requestFullscreen({navigationUI:"hide"}); if (pr && pr.catch) pr.catch(() => {}); } } catch(e){}
+  lockWake();
+  Music.play(); /* нажатие пальцем разрешает звук */
+  Ticker.start();
+  setPlayIcon();
+  go(Math.min(from || 0, film.frames.length - 1));
+  poke();
+}
+function endFilm(){
+  film.playing = false;
+  Ticker.stop();
+  Music.stopClip();
+  Music.stop(5);
+  $("#f-end").hidden = false;
+  $("#film").classList.remove("calm");
+  setPlayIcon();
+}
+function closeFilm(){
+  film.playing = false;
+  Ticker.stop();
+  Music.stopClip();
+  setTimeout(dropVideos, 1600);
+  Music.stop(1.2);
+  film.anims.forEach(a => { try { a.cancel(); } catch(e){} }); film.anims = [];
+  $("#film").hidden = true;
+  $("#fl0").innerHTML = $("#fl1").innerHTML = "";
+  document.body.classList.remove("noscroll");
+  try { if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(() => {}); } catch(e){}
+  try { if (film.wake) film.wake.release(); } catch(e){}
+  film.wake = null;
+}
+function togglePlay(){
+  if (!$("#f-end").hidden) return;
+  film.playing = !film.playing;
+  const v = $("#fl" + film.cur + " video");
+  if (film.playing){ Music.resume(); film.anims.forEach(a => a.play()); if (v){ const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); } }
+  else { Music.pause(); film.anims.forEach(a => a.pause()); if (v) v.pause(); }
+  setPlayIcon(); poke();
+}
+const fNext = () => { if (film.i < film.frames.length - 1) go(film.i + 1); poke(); };
+const fPrev = () => { go(film.i - 1); poke(); };
+$("#f-close").onclick = closeFilm;
+$("#f-done").onclick = closeFilm;
+$("#f-again").onclick = () => openFilm(0);
+$("#f-play").onclick = togglePlay;
+$("#f-next").onclick = fNext;
+$("#f-prev").onclick = fPrev;
+$("#f-mute").onclick = () => {
+  if (Music.on) Music.stop(.8); else { Music.play(); if (!film.playing) Music.pause(); }
+  Ticker.start(); poke();
+};
+(function(){
+  const el = $("#film"); let x0 = null, y0 = 0;
+  el.addEventListener("pointerdown", e => { if (e.target.closest("button")) return; x0 = e.clientX; y0 = e.clientY; });
+  el.addEventListener("pointermove", () => { if (!el.classList.contains("calm")) return; if (matchMedia("(hover:hover)").matches) poke(); });
+  el.addEventListener("pointerup", e => {
+    if (x0 == null || !$("#f-end").hidden) { x0 = null; return; }
+    const dx = e.clientX - x0, dy = e.clientY - y0; x0 = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)){ dx < 0 ? fNext() : fPrev(); return; }
+    const w = innerWidth;
+    if (e.clientX < w * .28) fPrev();
+    else if (e.clientX > w * .72) fNext();
+    else if (el.classList.contains("calm")) poke();
+    else { el.classList.add("calm"); clearTimeout(film.calmT); }
+  });
+})();
+document.addEventListener("visibilitychange", () => { if (!document.hidden && !$("#film").hidden) lockWake(); });
+document.addEventListener("keydown", e => {
+  if ($("#film").hidden) return;
+  if (e.key === "Escape") closeFilm();
+  else if (e.key === " "){ e.preventDefault(); togglePlay(); }
+  else if (e.key === "ArrowRight") fNext();
+  else if (e.key === "ArrowLeft") fPrev();
+});
+
+renderCover();
+</script>
+</body>
+</html>
