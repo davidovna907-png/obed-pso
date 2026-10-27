@@ -51,6 +51,31 @@ button{font:inherit;color:inherit}
 .stripe{width:72px;height:5px;background:var(--red);margin:18px 0 0}
 .sub{margin:14px 0 0;color:var(--mist);max-width:36ch}
 .play-btn{margin-top:22px;justify-self:start;display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 24px 0 18px;border:0;border-radius:999px;background:var(--gold);color:#1a1205;font:600 17px var(--body);cursor:pointer;box-shadow:0 10px 30px rgba(217,169,69,.25)}
+/* обложка в нео-нуаре (есть кадр intro): ночной кадр втроём на весь экран, дождь, дымка, неон;
+   название сверху — неоновое, кнопки снизу */
+.hero.noir{min-height:max(560px,min(100svh,940px));grid-template-rows:auto 1fr auto;align-content:stretch;padding:calc(30px + env(safe-area-inset-top,0px)) 16px 26px}
+.hero.noir .hero-bg{background:#000}
+.hero.noir .hero-bg img{filter:none;object-position:50% 40%}
+.hero.noir .hero-bg::after{background:linear-gradient(180deg,rgba(0,0,0,.55) 0,rgba(0,0,0,0) 26%,rgba(0,0,0,0) 52%,rgba(5,5,9,.82) 78%,var(--night) 100%)}
+.hero.noir .nt-light,.hero.noir .nt-haze,.hero.noir .nt-rain{z-index:-1}
+.hero.noir .nt-rain{opacity:.35}
+.hero-top{text-align:center;justify-self:stretch}
+.hero.noir .eyebrow{color:#c9f6ff;letter-spacing:.5em;margin-right:-.5em;text-shadow:0 0 8px rgba(25,227,255,.85),0 0 20px rgba(25,227,255,.4)}
+.hero.noir .title{margin-top:14px;font-size:clamp(50px,15vw,140px);letter-spacing:.06em;margin-right:-.06em;color:#ffe6ef;text-shadow:0 0 3px #fff,0 0 10px #ff2d6f,0 0 24px #ff2d6f,0 0 52px rgba(255,45,111,.75),0 0 96px rgba(255,45,111,.45);animation:heroIgnite 1.6s .3s both,heroBuzz 4.3s 2.2s infinite}
+.hero.noir .title em{margin:.45em auto 0;color:#dffcff;font-size:.4em;letter-spacing:.55em;margin-right:-.55em;text-shadow:0 0 6px #19e3ff,0 0 18px #19e3ff,0 0 40px rgba(25,227,255,.6)}
+.hero.noir .stripe{margin:16px auto 0;width:min(240px,55vw);height:3px;background:#ff2d6f;box-shadow:0 0 8px #ff2d6f,0 0 22px #ff2d6f;animation:heroLine .5s 1.5s both cubic-bezier(.2,.9,.3,1)}
+.hero.noir .sub{margin:12px auto 0;color:#d9d2e6}
+.hero-bottom{display:grid;justify-items:start}
+.hero.noir .play-btn{background:linear-gradient(180deg,#ff4a83,#d81b5e);color:#fff;box-shadow:0 0 0 1px rgba(255,255,255,.18) inset,0 0 18px rgba(255,45,111,.65),0 10px 34px rgba(255,45,111,.35)}
+.hero.noir .meta{color:#c7c0d4}
+.hero.noir .act{background:rgba(12,14,22,.5);border-color:rgba(160,230,255,.28);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.hero.noir .offline{color:#b9b3c6}
+.hero.noir .offline.ok{color:#9ff0ff}
+.hero.noir .offline i{background:linear-gradient(90deg,#19e3ff var(--p),rgba(255,255,255,.15) var(--p))}
+@keyframes heroIgnite{0%{opacity:0}8%{opacity:.7}12%{opacity:0}24%{opacity:0}28%{opacity:.5}34%{opacity:.1}42%{opacity:.9}47%{opacity:.25}55%,100%{opacity:1}}
+@keyframes heroBuzz{0%,100%{opacity:1}3%{opacity:.78}5%{opacity:1}61%{opacity:1}62%{opacity:.88}64%{opacity:1}}
+@keyframes heroLine{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media (prefers-reduced-motion:reduce){.hero.noir .title,.hero.noir .stripe{animation:none}}
 .play-btn .ic{width:24px;height:24px}
 .meta{margin-top:12px;font:400 12.5px var(--mono);color:var(--mist)}
 .wrap{padding:8px 16px calc(32px + env(safe-area-inset-bottom,0px));max-width:1100px;margin:0 auto}
@@ -229,10 +254,52 @@ body.editing .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 .nt-title{margin:0;font:700 clamp(46px,14.5vw,150px)/.95 var(--display);text-transform:uppercase;letter-spacing:.06em;margin-right:-.06em;color:#ffe6ef;text-shadow:0 0 3px #fff,0 0 10px #ff2d6f,0 0 24px #ff2d6f,0 0 52px rgba(255,45,111,.75),0 0 96px rgba(255,45,111,.45)}
 .nt-line{height:3px;width:min(280px,60vw);margin:14px auto 0;background:#ff2d6f;box-shadow:0 0 8px #ff2d6f,0 0 22px #ff2d6f;transform-origin:50% 50%}
 .nt-year{margin-top:14px;font:600 clamp(22px,6.5vw,60px)/1 var(--display);letter-spacing:.55em;margin-right:-.55em;color:#dffcff;text-shadow:0 0 6px #19e3ff,0 0 18px #19e3ff,0 0 40px rgba(25,227,255,.6)}
-.nt-flash{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;background:radial-gradient(circle at 50% 22%,#fff 0,#ff6a9c 30%,rgba(255,45,111,0) 75%)}
+.nt-flash{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:0;background:radial-gradient(circle at 50% 22%,#fff 0,#ff6a9c 30%,rgba(255,45,111,0) 75%)}
+/* ---------- Финал: титры о героях в нео-нуаре (дым, дождь, неоновые мечи, пули, пробоины) — fnHTML/fnPlay ---------- */
+.fn{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at 50% 42%,#0e111b,#000 75%)}
+.fn-smoke{position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen}
+.fn-smoke i{position:absolute;bottom:-35%;width:75%;height:70%;border-radius:50%;background:radial-gradient(closest-side,rgba(175,190,215,.17),transparent);animation:fnRise 12s linear infinite}
+.fn-smoke i:nth-child(1){left:-15%;animation-duration:13s}
+.fn-smoke i:nth-child(2){left:28%;animation-duration:10s;animation-delay:-4s}
+.fn-smoke i:nth-child(3){left:58%;animation-duration:15s;animation-delay:-8s}
+@keyframes fnRise{0%{transform:translateY(0) scale(.8);opacity:0}20%{opacity:1}100%{transform:translateY(-125%) scale(1.45);opacity:0}}
+.fn-scene{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;text-align:center;padding:9vh 16px}
+.fn-swords{width:min(290px,70vw);height:auto;overflow:visible}
+.fn-sw path,.fn-sw circle{stroke-width:2.2;stroke-linejoin:round;fill:#07080d;fill-opacity:0}
+.fn-sw-a path,.fn-sw-a circle{stroke:#ff2d6f}
+.fn-sw-b path,.fn-sw-b circle{stroke:#19e3ff}
+.fn-sw-a{filter:drop-shadow(0 0 4px #ff2d6f) drop-shadow(0 0 12px rgba(255,45,111,.7))}
+.fn-sw-b{filter:drop-shadow(0 0 4px #19e3ff) drop-shadow(0 0 12px rgba(25,227,255,.7))}
+.fn-spark line{stroke:#fff6e8;stroke-width:2.4;stroke-linecap:round}
+.fn-spark circle{fill:#fff}
+.fn-spark{filter:drop-shadow(0 0 6px #ffd6a0) drop-shadow(0 0 16px #ff9a5a)}
+.fn-kick{margin-top:26px;font:600 clamp(18px,5.4vw,30px)/1 var(--display);letter-spacing:.32em;margin-right:-.32em;text-transform:uppercase;color:#dffcff;text-shadow:0 0 6px #19e3ff,0 0 18px #19e3ff,0 0 36px rgba(25,227,255,.5)}
+.fn-cast{display:grid;gap:clamp(16px,3.6vh,34px);width:min(440px,100%)}
+.fn-card{position:relative;display:flex;align-items:center;gap:18px}
+.fn-card:nth-child(even){flex-direction:row-reverse;text-align:right}
+.fn-ph{flex:none;width:var(--ps);height:var(--ps);border-radius:50%;background-repeat:no-repeat;box-shadow:0 0 0 2px #ff2d6f,0 0 14px rgba(255,45,111,.85),0 0 36px rgba(255,45,111,.35)}
+.fn-card:nth-child(even) .fn-ph{box-shadow:0 0 0 2px #19e3ff,0 0 14px rgba(25,227,255,.85),0 0 36px rgba(25,227,255,.35)}
+.fn-nm b{display:block;font:700 clamp(30px,9.2vw,64px)/1 var(--display);text-transform:uppercase;letter-spacing:.06em;color:#ffe6ef;text-shadow:0 0 3px #fff,0 0 10px #ff2d6f,0 0 26px #ff2d6f,0 0 56px rgba(255,45,111,.6)}
+.fn-card:nth-child(even) .fn-nm b{color:#e6fdff;text-shadow:0 0 3px #fff,0 0 10px #19e3ff,0 0 26px #19e3ff,0 0 56px rgba(25,227,255,.55)}
+.fn-hole{position:absolute;top:50%;width:var(--hs);height:var(--hs);margin-top:calc(var(--hs) / -2);pointer-events:none}
+.fn-card .fn-hole{top:0;right:-4px}
+.fn-card:nth-child(even) .fn-hole{right:auto;left:-4px}
+.fn-crew{display:grid;gap:28px;justify-items:center;max-width:32ch}
+.fn-row span{display:block;font:500 12px/1.4 var(--mono);letter-spacing:.24em;text-transform:uppercase;color:#a8e6f4;text-shadow:0 0 8px rgba(25,227,255,.6)}
+.fn-row b{display:block;margin-top:8px;font:700 clamp(28px,8vw,52px)/1.05 var(--display);text-transform:uppercase;letter-spacing:.05em;color:#fff;text-shadow:0 0 10px rgba(255,45,111,.85),0 0 30px rgba(255,45,111,.4)}
+.fn-row small{display:block;margin-top:8px;color:#d4ccdc;font-size:14px}
+.fn-stats{font:500 13.5px var(--mono);letter-spacing:.22em;text-transform:uppercase;color:#ffd0dd;text-shadow:0 0 8px rgba(255,45,111,.6)}
+.fn-end .fn-swords{width:min(220px,56vw);margin-bottom:-36px;opacity:.85}
+.fn-end .nt-head{position:static}
+.fn-by{margin-top:22px;font:500 12px var(--mono);letter-spacing:.4em;margin-right:-.4em;text-transform:uppercase;color:#bfeef8;text-shadow:0 0 8px rgba(25,227,255,.6)}
+.fn-bul{position:absolute;left:0;width:220px;height:12px;pointer-events:none;opacity:0}
+.fn-bul i{position:absolute;right:30px;top:5px;width:190px;height:2px;border-radius:2px;background:linear-gradient(90deg,rgba(255,200,150,0),rgba(255,214,170,.95))}
+.fn-bul svg{position:absolute;right:0;top:0;width:34px;height:12px;filter:drop-shadow(0 0 4px rgba(255,190,120,.8))}
+.fn-glass{position:absolute;inset:0;pointer-events:none}
+.fn-glass .fn-hole{top:auto;margin:calc(var(--hs) / -2) 0 0 calc(var(--hs) / -2)}
 /* пауза фильма останавливает и дождь, и мигание неона */
 .film.paused .layer,.film.paused .layer *{animation-play-state:paused!important}
-@media (prefers-reduced-motion:reduce){.nt-rain,.nt-haze{display:none}.nt-light i{animation:none}}
+@media (prefers-reduced-motion:reduce){.nt-rain,.nt-haze,.fn-smoke{display:none}.nt-light i{animation:none}}
 @media (prefers-reduced-motion:reduce){.ft-eyebrow,.ft-title,.ft-year,.ft-hint{animation-duration:.01s}.ft-line{animation-duration:.01s}}
 </style>
 </head>
@@ -320,20 +387,25 @@ body.editing .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 }
 </script>
 
-<header class="hero">
+<header class="hero" id="hero">
   <div class="hero-bg" id="hero-bg"></div>
-  <div class="eyebrow" id="h-eyebrow">ND представляет</div>
-  <h1 class="title">Гардарика<em>2026</em></h1>
-  <div class="stripe"></div>
-  <p class="sub" id="h-sub" hidden></p>
-  <button class="play-btn" id="play"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>Смотреть фильм</button>
-  <div class="meta" id="meta"></div>
-  <div class="acts">
-    <button class="act" id="inst-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>Установить приложение</button>
-    <button class="act" id="share-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M5 13v8h14v-8"/></svg>Отправить друзьям QR-код</button>
-    <button class="act" id="qr-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2M14 18h2v2M18 18h2v2"/></svg>Показать QR-код</button>
+  <div class="hero-top">
+    <div class="eyebrow" id="h-eyebrow">ND представляет</div>
+    <h1 class="title">Гардарика<em>2026</em></h1>
+    <div class="stripe"></div>
+    <p class="sub" id="h-sub" hidden></p>
   </div>
-  <div class="offline" id="offline" hidden></div>
+  <div class="hero-gap"></div>
+  <div class="hero-bottom">
+    <button class="play-btn" id="play"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>Смотреть фильм</button>
+    <div class="meta" id="meta"></div>
+    <div class="acts">
+      <button class="act" id="inst-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>Установить приложение</button>
+      <button class="act" id="share-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M5 13v8h14v-8"/></svg>Отправить друзьям QR-код</button>
+      <button class="act" id="qr-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2M14 18h2v2M18 18h2v2"/></svg>Показать QR-код</button>
+    </div>
+    <div class="offline" id="offline" hidden></div>
+  </div>
 </header>
 <main class="wrap">
   <div id="frames"></div>
@@ -412,8 +484,15 @@ function renderCover(){
   if (DATA.subtitle){ $("#h-sub").textContent = DATA.subtitle; $("#h-sub").hidden = false; }
   $("#h-eyebrow").textContent = (DATA.author || "ND") + " представляет";
   if (DATA.intro && DATA.intro.src){ const im = new Image(); im.src = DATA.intro.src; } /* начало фильма — без задержки */
-  const hero = PHOTOS.find(p => p.hero) || PHOTOS.find(p => !p.isVideo);
-  if (hero) $("#hero-bg").innerHTML = `<img src="${esc(hero.src)}" alt="">`;
+  const I = DATA.intro;
+  if (I && I.src){
+    /* обложка в нео-нуаре: ночной кадр втроём, неон, дымка, дождь */
+    $("#hero").classList.add("noir");
+    if (!$("#hero-bg").firstChild) $("#hero-bg").outerHTML = `<div class="hero-bg" id="hero-bg"><img src="${esc(I.src)}" alt=""></div><div class="nt-light nt-l"><i></i></div><div class="nt-light nt-r"><i></i></div><div class="nt-haze"><i></i><i></i></div><div class="nt-rain"></div>`;
+  } else {
+    const hero = PHOTOS.find(p => p.hero) || PHOTOS.find(p => !p.isVideo);
+    if (hero) $("#hero-bg").innerHTML = `<img src="${esc(hero.src)}" alt="">`;
+  }
   const nP = PHOTOS.filter(p => !p.isVideo).length, nV = PHOTOS.length - nP;
   $("#meta").textContent = PHOTOS.length
     ? [nP ? nP + " " + plural(nP, "фото", "фото", "фото") : "", nV ? nV + " " + plural(nV, "видео", "видео", "видео") : ""].filter(Boolean).join(" · ") + " · ≈ " + Math.max(1, Math.round(filmSeconds() / 60)) + " мин"
@@ -647,6 +726,40 @@ const Music = {
       if (second) this.voice(t, e.m - 12, Math.max(.25, e.d * this.beat * .95), .05, "box");
     }
   },
+  /* звуки финала (Music.sfx): звон мечей, выстрел, свист пули, удар — по расписанию от «сейчас»;
+     уходят вместе с кадром (stopSfx в go) */
+  fx:[],
+  sfx(kind, delay){
+    const c = this.ctx; if (!c || !this.on) return;
+    const t = c.currentTime + Math.max(0, delay), keep = n => { this.fx.push(n); return n; };
+    if (kind === "boom"){ this.impact(t); return; }
+    if (kind === "clang"){
+      [[1, .16, 1.6], [2.76, .1, 1.2], [5.4, .07, .8], [8.93, .05, .5], [13.34, .03, .35]].forEach(([r, v, d]) => {
+        const o = keep(c.createOscillator()), g = c.createGain();
+        o.type = "sine"; o.frequency.value = 610 * r * (1 + (Math.random() - .5) * .004);
+        g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(v, t + .003); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+        o.connect(g); g.connect(this.bus); o.start(t); o.stop(t + d + .05);
+      });
+    }
+    const n = keep(c.createBufferSource()), f = c.createBiquadFilter(), g = c.createGain();
+    n.buffer = this.noise();
+    if (kind === "clang"){ f.type = "highpass"; f.frequency.value = 3000; g.gain.setValueAtTime(.18, t); g.gain.exponentialRampToValueAtTime(.0001, t + .05); }
+    if (kind === "shot"){
+      f.type = "lowpass"; f.frequency.value = 5200;
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.6, t + .002); g.gain.exponentialRampToValueAtTime(.0001, t + .32);
+      const o = keep(c.createOscillator()), h = c.createGain();
+      o.type = "sine"; o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(45, t + .18);
+      h.gain.setValueAtTime(.0001, t); h.gain.exponentialRampToValueAtTime(.5, t + .004); h.gain.exponentialRampToValueAtTime(.0001, t + .25);
+      o.connect(h); h.connect(this.drums); o.start(t); o.stop(t + .3);
+      const tail = c.createGain(); tail.gain.value = .35; g.connect(tail); tail.connect(this.bus);   /* эхо выстрела */
+    }
+    if (kind === "whiz"){
+      f.type = "bandpass"; f.Q.value = 5; f.frequency.setValueAtTime(4200, t); f.frequency.exponentialRampToValueAtTime(900, t + .3);
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.16, t + .12); g.gain.exponentialRampToValueAtTime(.0001, t + .32);
+    }
+    n.connect(f); f.connect(g); g.connect(this.drums); n.start(t, Math.random() * .5); n.stop(t + .4);
+  },
+  stopSfx(){ this.fx.forEach(n => { try { n.stop(); } catch(e){} }); this.fx = []; },
   riser(t, dur){
     const c = this.ctx, n = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
     n.buffer = this.noise(); n.loop = true;
@@ -786,6 +899,7 @@ function frameHTML(f){
     const cap = p.title || p.memory ? `<div class="cap">${p.title ? `<div class="cap-t">${esc(p.title)}</div>` : ""}${p.memory ? `<div class="cap-hand">${esc(p.memory)}</div>` : ""}</div>` : "";
     return `<img class="bg" src="${esc(p.img)}" alt="">${media}<div class="vign"></div><div class="grain"></div>${cap}`;
   }
+  if (DATA.intro && DATA.intro.src) return fnHTML();
   return `<div class="credits">${creditsHTML()}</div>`;
 }
 /* ---------- Начало фильма: нео-нуар ---------- */
@@ -858,6 +972,125 @@ function ntPlay(layer){
   /* неон гудит */
   A(q(".nt-head"), [{opacity:1}, {opacity:.8, offset:.05}, {opacity:1, offset:.08}, {opacity:1, offset:.6}, {opacity:.9, offset:.62}, {opacity:1}], 4.5, .7, {iterations:Infinity, fill:"forwards"});
 }
+/* ---------- Финал: титры о героях в нео-нуаре ---------- */
+const SWORD = `<path d="M0-150 7-132 7 55-7 55-7-132Z"/><path d="M-44 55H44V64H-44Z"/><path d="M-5 64H5V101H-5Z"/><circle cx="0" cy="109" r="8"/>`;
+function swordsSVG(spark){
+  return `<svg class="fn-swords" viewBox="-185 -175 370 330" aria-hidden="true">
+    <g class="fn-sw fn-sw-a"><g transform="rotate(-38 0 -25)">${SWORD.replace(/<(path|circle)/g, '<$1 pathLength="1"')}</g></g>
+    <g class="fn-sw fn-sw-b"><g transform="rotate(38 0 -25)">${SWORD.replace(/<(path|circle)/g, '<$1 pathLength="1"')}</g></g>
+    ${spark ? `<g class="fn-spark" transform="translate(0 -25)">${Array.from({length:12}, (_, k) => { const a = k / 12 * 6.283 + (k % 2) * .2, r1 = 10, r2 = k % 2 ? 34 : 56; return `<line x1="${(Math.cos(a) * r1).toFixed(1)}" y1="${(Math.sin(a) * r1).toFixed(1)}" x2="${(Math.cos(a) * r2).toFixed(1)}" y2="${(Math.sin(a) * r2).toFixed(1)}"/>`; }).join("")}<circle r="7"/></g>` : ""}
+  </svg>`;
+}
+/* пробоина от пули в «стекле» экрана: дырка, светлый край и трещины (каждая своя — по seed) */
+function holeSVG(seed){
+  let x = seed * 9301 + 49297;
+  const rnd = () => (x = (x * 9301 + 49297) % 233280) / 233280;
+  let lines = "";
+  const n = 9 + Math.floor(rnd() * 4);
+  for (let k = 0; k < n; k++){
+    const a = k / n * 6.283 + rnd() * .5, r2 = 22 + rnd() * 26, m = r2 * (.45 + rnd() * .2), b = (rnd() - .5) * .35;
+    lines += `<path d="M${(Math.cos(a) * 7).toFixed(1)} ${(Math.sin(a) * 7).toFixed(1)}L${(Math.cos(a + b) * m).toFixed(1)} ${(Math.sin(a + b) * m).toFixed(1)}L${(Math.cos(a) * r2).toFixed(1)} ${(Math.sin(a) * r2).toFixed(1)}"/>`;
+  }
+  const ring = Array.from({length:n}, (_, k) => { const a = k / n * 6.283, r = 15 + rnd() * 5; return `${(Math.cos(a) * r).toFixed(1)},${(Math.sin(a) * r).toFixed(1)}`; }).join(" ");
+  return `<svg viewBox="-50 -50 100 100" width="100%" height="100%"><g fill="none" stroke="rgba(225,238,255,.7)" stroke-width="1" stroke-linejoin="round">${lines}<polygon points="${ring}" stroke="rgba(225,238,255,.45)"/></g>
+    <circle r="11" fill="rgba(255,255,255,.08)"/><circle r="6" fill="#020203" stroke="rgba(255,255,255,.85)" stroke-width="1.6"/></svg>`;
+}
+const BULLET = `<svg viewBox="0 0 34 12"><rect x="0" y="2" width="20" height="8" rx="1" fill="#c9a14a"/><rect x="0" y="2" width="2.5" height="8" fill="#8a6a2a"/><path d="M20 2h4c6 0 10 2 10 4s-4 4-10 4h-4z" fill="#b5653a"/></svg>`;
+function fnHTML(){
+  const I = DATA.intro, ps = Math.round(Math.min(innerWidth * .27, innerHeight * .13, 120));
+  const where = Object.fromEntries((I.cast || []).map(([n, x, y]) => [n, [x, y]]));
+  const k = .62 * ps / (.11 * I.w), bw = I.w * k, bh = I.h * k;
+  const cast = (DATA.cast || []).filter(Boolean);
+  const cards = cast.map((n, i) => {
+    const [x, y] = where[n] || [.5, .42];
+    const pos = `${(ps / 2 - x * bw).toFixed(0)}px ${(ps / 2 - (y - .012) * bh).toFixed(0)}px`;
+    return `<div class="fn-card"><div class="fn-ph" style="--ps:${ps}px;background-image:url('${esc(I.src)}');background-size:${bw.toFixed(0)}px ${bh.toFixed(0)}px;background-position:${pos}"></div>
+      <div class="fn-nm"><b>${esc(n)}</b></div><div class="fn-hole" style="--hs:${Math.round(ps * .62)}px">${holeSVG(i + 3)}</div></div>`;
+  }).join("");
+  const nP = PHOTOS.filter(p => !p.isVideo).length, nV = PHOTOS.length - nP;
+  const stats = [nP ? nP + " фото" : "", nV ? nV + " видео" : ""].filter(Boolean).join(" · ");
+  return `<div class="fn">
+    <div class="nt-light nt-l"><i></i></div><div class="nt-light nt-r"><i></i></div><div class="nt-haze"><i></i><i></i></div>
+    <div class="fn-smoke"><i></i><i></i><i></i></div><div class="nt-rain"></div>
+    <div class="fn-scene fn-s1">${swordsSVG(true)}<div class="fn-kick">В главных ролях</div></div>
+    <div class="fn-scene fn-s2"><div class="fn-cast">${cards}</div></div>
+    <div class="fn-scene fn-s3"><div class="fn-crew">
+      <div class="fn-row"><span>Режиссёр, оператор и главная героиня</span><b>${esc(DATA.author || "ND")}</b></div>
+      <div class="fn-row"><span>Музыка</span><b>${TUNE.name}</b><small>бит в гангстерском стиле, сочинён для этого фильма</small></div>
+      ${stats ? `<div class="fn-stats">${stats}</div>` : ""}</div></div>
+    <div class="fn-scene fn-end">${swordsSVG(false)}<div class="nt-head"><h2 class="nt-title">${esc(DATA.title)}</h2><div class="nt-line"></div><div class="nt-year">${esc(DATA.year)}</div></div><div class="fn-by">фильм ${esc(DATA.author || "ND")}</div></div>
+    <div class="fn-glass"><div class="fn-hole" style="--hs:110px;left:72%;top:22%">${holeSVG(11)}</div><div class="fn-hole" style="--hs:80px;left:20%;top:78%">${holeSVG(17)}</div></div>
+    <div class="fn-bullets">${[18, 64, 40, 82].map(y => `<div class="fn-bul" style="top:${y}%"><i></i>${BULLET}</div>`).join("")}</div>
+    <div class="nt-flash"></div></div><div class="grain"></div>`;
+}
+/* сцены по тактам (10 тактов): 0–2 — мечи рисуются и скрещиваются со звоном, «В главных ролях», пролетают пули;
+   2,3–5,6 — выстрел, пробоина и карточка героя, по одному на такт; 5,8–7,6 — режиссёр, музыка, кадры;
+   7,7–10 — финальная заставка: мечи, неоновое «ГАРДАРИКА» с ударом, «2026». Звуки — в том же времени (Music.sfx) */
+function fnPlay(layer){
+  const b = BAR() * 1000, bl = barLeft();
+  const off = Music.on && bl < .85 ? bl * b : 0;   /* титры начинаются со следующего такта музыки */
+  const A = (el, kf, start, dur, opt) => { if (el) film.anims.push(el.animate(kf, Object.assign({delay:off + start * b, duration:dur * b, fill:"both", easing:"linear"}, opt || {}))); };
+  const S = (kind, at) => Music.sfx(kind, (off + at * b) / 1000);
+  const q = sel => $(sel, layer), qa = sel => [...layer.querySelectorAll(sel)];
+  const fade = (el, t0, t1, t2, t3) => A(el, [{opacity:0}, {opacity:1, offset:(t1 - t0) / (t3 - t0)}, {opacity:1, offset:(t2 - t0) / (t3 - t0)}, {opacity:0}], t0, t3 - t0);
+  /* вспышки и встряски на одном элементе: только после своего начала (fill: forwards) и созданы по порядку времени */
+  const shake = at => A(q(".fn"), [{transform:"none"}, {transform:"translate(-5px,3px)", offset:.2}, {transform:"translate(4px,-3px)", offset:.45}, {transform:"translate(-2px,1px)", offset:.7}, {transform:"none"}], at, .12, {fill:"forwards"});
+  const flash = (at, v) => A(q(".nt-flash"), [{opacity:0}, {opacity:v, offset:.1}, {opacity:0}], at, .2, {fill:"forwards"});
+  ["nt-l", "nt-r", "nt-haze", "fn-smoke"].forEach((c, i) => A(q("." + c), [{opacity:0}, {opacity:1}], .1 * i, .8));
+  A(q(".nt-rain"), [{opacity:0}, {opacity:.45}], 0, .8);
+  /* 1: мечи */
+  const s1 = q(".fn-s1");
+  fade(s1, 0, .05, 1.9, 2.25);
+  qa(".fn-s1 .fn-sw path, .fn-s1 .fn-sw circle").forEach((el, i) => {
+    A(el, [{strokeDasharray:"1 1", strokeDashoffset:1}, {strokeDasharray:"1 1", strokeDashoffset:0}], .1 + (i % 4) * .05, .75, {easing:"ease-in-out"});
+    A(el, [{fillOpacity:0}, {fillOpacity:1}], .95, .15);
+  });
+  A(q(".fn-s1 .fn-sw-a"), [{transform:"translate(-70px,0)"}, {transform:"none"}], .1, .9, {easing:"cubic-bezier(.3,.1,.2,1)"});
+  A(q(".fn-s1 .fn-sw-b"), [{transform:"translate(70px,0)"}, {transform:"none"}], .1, .9, {easing:"cubic-bezier(.3,.1,.2,1)"});
+  A(q(".fn-s1 .fn-spark"), [{opacity:0, transform:"translate(0px,-25px) scale(.3)"}, {opacity:1, transform:"translate(0px,-25px) scale(1)", offset:.25}, {opacity:0, transform:"translate(0px,-25px) scale(1.5)"}], 1, .16);
+  S("clang", 1); flash(1, .55); shake(1);
+  A(q(".fn-kick"), [{opacity:0, letterSpacing:".6em"}, {opacity:1, letterSpacing:".32em"}], 1.1, .45, {easing:"ease-out"});
+  /* пули пролетают */
+  const fly = (el, at, dir) => {
+    const w = innerWidth + 260;
+    A(el, [{opacity:1, transform:`translateX(${dir > 0 ? -240 : w}px) scaleX(${dir})`}, {opacity:1, transform:`translateX(${dir > 0 ? w : -240}px) scaleX(${dir})`}], at, .1);
+    S("whiz", at);
+  };
+  const buls = qa(".fn-bul");
+  fly(buls[0], .55, 1); fly(buls[1], 1.6, -1); fly(buls[2], 6.2, 1); fly(buls[3], 7.35, -1);
+  /* 2: герои — выстрел, пробоина, карточка */
+  const s2 = q(".fn-s2");
+  fade(s2, 2.2, 2.25, 5.5, 5.8);
+  qa(".fn-card").forEach((card, i) => {
+    const t = 2.3 + i;
+    S("shot", t); flash(t, .45); shake(t);
+    A(card.querySelector(".fn-hole"), [{opacity:0, transform:"scale(1.7)"}, {opacity:1, transform:"scale(1)"}], t, .05);
+    A(card.querySelector(".fn-ph"), [{opacity:0, transform:"scale(.6) rotate(-12deg)"}, {opacity:1, transform:"scale(1.08) rotate(0)", offset:.7}, {opacity:1, transform:"scale(1)"}], t + .04, .3, {easing:"ease-out"});
+    A(card.querySelector(".fn-nm"), [{opacity:0, transform:`translateX(${i % 2 ? -40 : 40}px)`, filter:"blur(6px)"}, {opacity:1, transform:"none", filter:"blur(0)"}], t + .1, .3, {easing:"cubic-bezier(.2,.9,.3,1)"});
+  });
+  /* 3: режиссёр и музыка */
+  fade(q(".fn-s3"), 5.8, 5.85, 7.45, 7.7);
+  qa(".fn-crew > *").forEach((el, i) => A(el, [{opacity:0, transform:"translateY(16px)", filter:"blur(5px)"}, {opacity:1, transform:"none", filter:"blur(0)"}], 5.9 + i * .45, .35, {easing:"ease-out"}));
+  /* стекло: ещё две пробоины поверх всего — в конце третьей сцены */
+  qa(".fn-glass .fn-hole").forEach((el, i) => { const t = 7.0 + i * .25; S("shot", t); flash(t, .35); shake(t); A(el, [{opacity:0, transform:"scale(1.7)"}, {opacity:1, transform:"scale(1)", offset:.03}, {opacity:1, transform:"scale(1)", offset:.9}, {opacity:0, transform:"scale(1)"}], t, 3.0 - i * .25); });
+  /* 4: финальная заставка */
+  const s4 = q(".fn-end");
+  A(s4, [{opacity:0}, {opacity:1}], 7.7, .15);
+  qa(".fn-end .fn-sw path, .fn-end .fn-sw circle").forEach(el => {
+    A(el, [{strokeDasharray:"1 1", strokeDashoffset:1}, {strokeDasharray:"1 1", strokeDashoffset:0}], 7.7, .5, {easing:"ease-in-out"});
+    A(el, [{fillOpacity:0}, {fillOpacity:1}], 8.15, .15);
+  });
+  const d = .3 / .7;
+  A(q(".fn-end .nt-title"), [{opacity:0, transform:"scale(1)", offset:0}, {opacity:.7, transform:"scale(1)", offset:.1}, {opacity:0, transform:"scale(1)", offset:.18},
+    {opacity:.5, transform:"scale(1)", offset:.28}, {opacity:.1, transform:"scale(1)", offset:.34}, {opacity:.9, transform:"scale(1)", offset:d - .02},
+    {opacity:1, transform:"scale(1.12)", offset:d, easing:"cubic-bezier(.2,.9,.3,1)"}, {opacity:1, transform:"scale(1)", offset:1}], 7.7, .7);
+  S("boom", 8); flash(8, .7); shake(8);
+  A(q(".fn-end .nt-line"), [{transform:"scaleX(0)"}, {transform:"scaleX(1)"}], 8, .35, {easing:"cubic-bezier(.2,.9,.3,1)"});
+  A(q(".fn-end .nt-year"), [{opacity:0, transform:"translateY(12px) scale(1.2)", filter:"blur(6px)"}, {opacity:1, transform:"none", filter:"blur(0)"}], 8.08, .35, {easing:"ease-out"});
+  A(q(".fn-by"), [{opacity:0}, {opacity:1}], 8.6, .5);
+  A(q(".fn-end .nt-head"), [{opacity:1}, {opacity:.8, offset:.05}, {opacity:1, offset:.08}, {opacity:1, offset:.6}, {opacity:.9, offset:.62}, {opacity:1}], 8.5, .7, {iterations:Infinity, fill:"forwards"});
+  film.left = 10 + (off ? 1 : 0);
+}
 function creditsHTML(){
   const nP = PHOTOS.filter(p => !p.isVideo).length, nV = PHOTOS.length - nP;
   const cast = (DATA.cast || []).filter(Boolean);
@@ -908,6 +1141,7 @@ function animateFrame(layer, f){
   }
   if (f.t === "title" && $(".nt", layer)) ntPlay(layer);
   if (!reduce) layer.querySelectorAll(".kb").forEach(kb => film.anims.push(kb.animate(KB[Math.floor(Math.random() * KB.length)], {duration:dur, easing:"linear", fill:"forwards"})));
+  if (f.t === "credits" && $(".fn", layer)){ fnPlay(layer); return; }
   if (f.t === "credits"){
     const roll = $(".roll", layer), H = layer.clientHeight, h = roll.offsetHeight;
     const ms = Math.max(16000, (h + H * .55) / 46 * 1000);
@@ -937,7 +1171,7 @@ function go(i){
   const prevTok = prev.dataset.tok;
   setTimeout(() => { if (prev.dataset.tok === prevTok && !prev.classList.contains("on")) prev.innerHTML = ""; }, 1500);
   film.cur ^= 1;
-  Music.stopClip();
+  Music.stopClip(); Music.stopSfx();
   animateFrame(next, f);
   if (!film.playing) film.anims.forEach(a => a.pause());
   $("#f-bar").style.width = (film.frames.length > 1 ? i / (film.frames.length - 1) * 100 : 100) + "%";
@@ -999,7 +1233,7 @@ function endFilm(){
 function closeFilm(){
   film.playing = false;
   Ticker.stop();
-  Music.stopClip();
+  Music.stopClip(); Music.stopSfx();
   setTimeout(dropVideos, 1600);
   Music.stop(1.2);
   film.anims.forEach(a => { try { a.cancel(); } catch(e){} }); film.anims = [];
@@ -1153,7 +1387,7 @@ function gateHTML(){
 }
 function openGate(){
   $("#gate-body").innerHTML = gateHTML();
-  const hero = ALL.find(p => p.hero) || ALL.find(p => !p.isVideo);
+  const hero = DATA.intro && DATA.intro.src ? {src:DATA.intro.src} : ALL.find(p => p.hero) || ALL.find(p => !p.isVideo);
   if (hero && !$("#gate-bg").firstChild) $("#gate-bg").innerHTML = `<img src="${esc(hero.src)}" alt="">`;
   $("#gate").hidden = false;
   document.body.classList.add("noscroll");

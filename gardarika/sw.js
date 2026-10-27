@@ -1,7 +1,7 @@
 /* Фильм «Гардарика 2026»: хранит фильм на телефоне целиком — страницу, фото, видео, звук видео и шрифты,
    чтобы он открывался и смотрелся без интернета. Фото и видео сохраняет сама страница (saveOffline в index.html)
    в кэш MEDIA, отсюда они отдаются без сети. */
-const SHELL = "gard-shell-v2", MEDIA = "gard-media";
+const SHELL = "gard-shell-v3", MEDIA = "gard-media";
 const FILES = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/apple-touch-icon.png",
   "./icons/qr.svg", "./icons/invite.jpg"];
 const BASE = new URL("./", self.registration.scope).pathname;
