@@ -1315,6 +1315,7 @@ async function saveOffline(){
   try {
     await navigator.serviceWorker.ready;
     try { if (navigator.storage && navigator.storage.persist) await navigator.storage.persist(); } catch(e){}
+    await saveFonts();   /* сначала шрифты (они маленькие): «✓ Фильм сохранён» — когда сохранено всё */
     const c = await caches.open(MEDIA_CACHE), all = mediaURLs(), keys = await c.keys();
     keys.forEach(r => { if (!all.includes(r.url)) c.delete(r); }); /* кадры, убранные из фильма */
     const have = new Set(keys.map(r => r.url));
@@ -1325,7 +1326,6 @@ async function saveOffline(){
       try { const r = await fetch(u, {cache:"no-cache"}); if (r.ok){ await c.put(u, r); done++; } } catch(e){}
       showOffline(done, all.length);
     }
-    await saveFonts();
   } catch(e){}
   saving = false;
 }
