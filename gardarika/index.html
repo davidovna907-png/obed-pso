@@ -214,9 +214,11 @@ body.editing .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
  {"id": "g004", "src": "photos/g004.jpg", "thumb": "photos/t/g004.jpg", "w": 1081, "h": 1920},
  {"id": "g005", "src": "photos/g005.jpg", "thumb": "photos/t/g005.jpg", "w": 1125, "h": 2000},
  {"id": "g074", "type": "video", "src": "photos/g074.mp4", "poster": "photos/g074.jpg", "thumb": "photos/t/g074.jpg", "w": 720, "h": 1280, "dur": 5.7, "sound": true, "date": "2026-10-24", "time": "12:43:48"},
+ {"id": "g075", "type": "video", "src": "photos/g075.mp4", "poster": "photos/g075.jpg", "thumb": "photos/t/g075.jpg", "w": 720, "h": 1280, "dur": 9.3, "sound": true, "date": "2026-10-24", "time": "12:43:48"},
  {"id": "g006", "type": "video", "src": "photos/g006.mp4", "poster": "photos/g006.jpg", "thumb": "photos/t/g006.jpg", "w": 720, "h": 1280, "dur": 16.4, "sound": true, "date": "2026-10-24", "time": "12:44:14"},
  {"id": "g007", "type": "video", "src": "photos/g007.mp4", "poster": "photos/g007.jpg", "thumb": "photos/t/g007.jpg", "w": 720, "h": 1280, "dur": 3.4, "sound": true, "date": "2026-10-24", "time": "12:44:33"},
  {"id": "g008", "src": "photos/g008.jpg", "thumb": "photos/t/g008.jpg", "w": 1125, "h": 2000},
+ {"id": "g076", "src": "photos/g076.jpg", "thumb": "photos/t/g076.jpg", "w": 1125, "h": 2000},
  {"id": "g009", "src": "photos/g009.jpg", "thumb": "photos/t/g009.jpg", "w": 1500, "h": 2000},
  {"id": "g010", "src": "photos/g010.jpg", "thumb": "photos/t/g010.jpg", "w": 1500, "h": 2000},
  {"id": "g011", "src": "photos/g011.jpg", "thumb": "photos/t/g011.jpg", "w": 1500, "h": 2000},
@@ -288,8 +290,8 @@ body.editing .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   <div class="meta" id="meta"></div>
   <div class="acts">
     <button class="act" id="inst-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>Установить приложение</button>
-    <button class="act" id="share-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M5 13v8h14v-8"/></svg>Поделиться приложением</button>
-    <button class="act" id="qr-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2M14 18h2v2M18 18h2v2"/></svg>QR-код</button>
+    <button class="act" id="share-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M5 13v8h14v-8"/></svg>Отправить друзьям QR-код</button>
+    <button class="act" id="qr-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2M14 18h2v2M18 18h2v2"/></svg>Показать QR-код</button>
   </div>
   <div class="offline" id="offline" hidden></div>
 </header>
@@ -316,8 +318,8 @@ body.editing .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
     <button class="sheet-x" id="qr-x" aria-label="Закрыть"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <h3 id="qr-h">Приложение по QR-коду</h3>
     <img class="qr-img" src="icons/qr.svg" alt="QR-код приложения «Гардарика 2026»">
-    <p>Пусть герои фильма наведут на код камеру телефона: приложение откроется сразу в Safari или Chrome, там — кнопка «Установить приложение».</p>
-    <button class="act" id="qr-share"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M5 13v8h14v-8"/></svg>Отправить приглашение с QR-кодом</button>
+    <p>Покажите код героям фильма: пусть наведут на него камеру телефона — приложение откроется сразу в Safari или Chrome, там кнопка «Установить приложение».</p>
+    <button class="act" id="qr-share"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M5 13v8h14v-8"/></svg>Отправить друзьям</button>
   </div>
 </div>
 <div class="del-bar" id="del-bar" hidden><span id="del-count"></span><button id="del-send">Отправить список</button><button id="del-done">Готово</button></div>
@@ -339,7 +341,7 @@ body.editing .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   </div>
   <div class="f-end" id="f-end" hidden>
     <h3>Конец фильма</h3>
-    <div class="row"><button class="main" id="f-again">Смотреть ещё раз</button><button id="f-share">Поделиться приложением</button><button id="f-done">Закрыть</button></div>
+    <div class="row"><button class="main" id="f-again">Смотреть ещё раз</button><button id="f-share">Отправить друзьям QR-код</button><button id="f-done">Закрыть</button></div>
   </div>
 </div>
 
@@ -957,7 +959,7 @@ async function saveOffline(){
 addEventListener("online", saveOffline);
 addEventListener("offline", () => { if (!$("#offline").classList.contains("ok")) saveOffline(); });
 
-/* ---------- Установка приложения и «Поделиться приложением» ----------
+/* ---------- Установка приложения и «Отправить друзьям QR-код» ----------
    Магазины приложений здесь не нужны: фильм ставится на телефон как веб-приложение (значок на экране,
    открывается без адресной строки, работает без интернета). Кто открыл ссылку в браузере, сразу видит
    экран установки с шагами под свой телефон; Android ставит в одно касание. Если ссылка открылась внутри
@@ -1044,27 +1046,27 @@ $("#inst-btn").onclick = openGate;
 $("#gate-skip").onclick = closeGate;
 document.addEventListener("keydown", e => { if (e.key === "Escape"){ if (!$("#gate").hidden) closeGate(); if (!$("#qr-sheet").hidden) $("#qr-sheet").hidden = true; } });
 
-const SHARE_TEXT = "🎬 «Гардарика 2026» — фильм-приложение. Откройте ссылку и нажмите «Установить приложение»: фильм появится на экране телефона со своим значком и будет смотреться без интернета.";
-async function share(){
+const SHARE_TEXT = "🎬 «Гардарика 2026» — фильм-приложение. Наведите камеру телефона на QR-код или откройте ссылку и нажмите «Установить приложение»: фильм появится на экране телефона со своим значком и будет смотреться без интернета.";
+/* друзьям приложение уходит картинкой-приглашением с QR-кодом (icons/invite.jpg) вместе с текстом и ссылкой:
+   QR-код можно навести камерой с другого телефона, а на своём — долгим нажатием на код в картинке (iPhone) или через Google Объектив */
+async function shareApp(){
+  try {
+    const blob = await (await fetch("icons/invite.jpg")).blob();
+    const file = new File([blob], "Гардарика-2026-QR.jpg", {type:"image/jpeg"});
+    if (navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file], title:"Гардарика 2026", text:SHARE_TEXT + "\n" + APP_URL}); return; }
+  } catch(e){ if (e && e.name === "AbortError") return; }
+  /* картинку отправить нельзя (компьютер, старый браузер) — текст со ссылкой */
   if (navigator.share){ try { await navigator.share({title:"Гардарика 2026", text:SHARE_TEXT, url:APP_URL}); } catch(e){} return; }
   try { await navigator.clipboard.writeText(SHARE_TEXT + "\n" + APP_URL); toast("Приглашение скопировано — вставьте его в чат"); }
   catch(e){ prompt("Ссылка на приложение:", APP_URL); }
+  const a = document.createElement("a"); a.href = "icons/invite.jpg"; a.download = "Гардарика-2026-QR.jpg"; document.body.appendChild(a); a.click(); a.remove();
 }
-/* картинка-приглашение с QR-кодом (icons/invite.jpg): её можно переслать, распечатать или показать с экрана */
-async function shareInvite(){
-  try {
-    const blob = await (await fetch("icons/invite.jpg")).blob();
-    const file = new File([blob], "Гардарика-2026-приглашение.jpg", {type:"image/jpeg"});
-    if (navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file], title:"Гардарика 2026", text:SHARE_TEXT + "\n" + APP_URL}); return; }
-  } catch(e){ if (e && e.name === "AbortError") return; }
-  const a = document.createElement("a"); a.href = "icons/invite.jpg"; a.download = "Гардарика-2026-приглашение.jpg"; document.body.appendChild(a); a.click(); a.remove();
-}
-$("#share-btn").onclick = share;
-$("#f-share").onclick = share;
+$("#share-btn").onclick = shareApp;
+$("#f-share").onclick = shareApp;
 $("#qr-btn").onclick = () => { $("#qr-sheet").hidden = false; };
 $("#qr-x").onclick = () => { $("#qr-sheet").hidden = true; };
 $("#qr-sheet").addEventListener("click", e => { if (e.target.id === "qr-sheet") $("#qr-sheet").hidden = true; });
-$("#qr-share").onclick = shareInvite;
+$("#qr-share").onclick = shareApp;
 
 renderCover();
 renderInstall();
