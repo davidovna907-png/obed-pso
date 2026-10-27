@@ -60,6 +60,26 @@ button{font:inherit;color:inherit}
 .tile img{width:100%;height:100%;object-fit:cover;display:block}
 .tile .vid{position:absolute;right:6px;bottom:6px;display:flex;align-items:center;gap:3px;padding:2px 6px;border-radius:6px;background:rgba(0,0,0,.6);font:500 11px var(--mono);color:#fff}
 .tile .vid .ic{width:12px;height:12px}
+/* ВРЕМЕННО: удаление кадров, пока автор отбирает кадры (см. DEL в скрипте) */
+.h2-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:18px 0 12px}
+.h2-row .h2{margin:0}
+.del-btn{min-height:40px;padding:0 14px;font-size:13.5px}
+.del-hint{margin:-4px 0 12px;color:var(--mist);font-size:13.5px;line-height:1.45}
+.tile .num{position:absolute;left:5px;top:5px;min-width:24px;height:22px;padding:0 6px;border-radius:11px;background:rgba(0,0,0,.65);color:#fff;font:500 12px/22px var(--mono);text-align:center}
+.tile .gone-mark{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:rgba(20,6,5,.62);color:#ffd9d6;font:600 13px var(--body)}
+.tile.gone img{filter:grayscale(1) brightness(.55)}
+.tile.gone .gone-mark{display:flex}
+.tile.gone{outline:2px solid var(--red);outline-offset:-2px}
+.del-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:max(10px,calc(env(safe-area-inset-bottom,0px) - 12px));z-index:45;width:min(520px,calc(100% - 24px));display:flex;align-items:center;gap:8px;padding:7px 7px 7px 16px;border-radius:999px;background:rgba(30,26,20,.62);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 10px 30px rgba(0,0,0,.45)}
+#del-count{flex:1;min-width:0;font:500 13.5px var(--body);white-space:nowrap;display:flex;align-items:center;gap:6px}
+#del-count .ic{width:18px;height:18px;flex:none}
+@media (max-width:359px){.del-bar{padding-left:12px;gap:6px}#del-count .lw{display:none}.del-bar button{padding:0 11px;font-size:13px}}
+.del-bar button{min-height:44px;padding:0 14px;border-radius:999px;border:0;font:600 14px var(--body);cursor:pointer;white-space:nowrap}
+#del-send{background:var(--gold);color:#1a1205}
+#del-send:disabled{opacity:.45;cursor:default}
+#del-done{background:rgba(255,255,255,.12);color:var(--ink)}
+body.editing .wrap{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+body.editing .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 .empty{border:1px dashed var(--line);border-radius:14px;padding:22px 18px;color:var(--mist);text-align:center}
 .empty b{color:var(--ink);display:block;margin-bottom:6px;font-weight:600}
 .note{margin-top:22px;padding:14px 16px;border-radius:14px;background:var(--deep);border:1px solid var(--line);color:var(--mist);font-size:14px}
@@ -160,11 +180,8 @@ button{font:inherit;color:inherit}
  "photos": [
  {"id": "g001", "src": "photos/g001.jpg", "thumb": "photos/t/g001.jpg", "w": 1500, "h": 2000},
  {"id": "g002", "src": "photos/g002.jpg", "thumb": "photos/t/g002.jpg", "w": 1500, "h": 2000},
- {"id": "g055", "src": "photos/g055.jpg", "thumb": "photos/t/g055.jpg", "w": 1500, "h": 2000},
  {"id": "g056", "src": "photos/g056.jpg", "thumb": "photos/t/g056.jpg", "w": 1500, "h": 2000},
- {"id": "g057", "src": "photos/g057.jpg", "thumb": "photos/t/g057.jpg", "w": 1500, "h": 2000},
  {"id": "g003", "src": "photos/g003.jpg", "thumb": "photos/t/g003.jpg", "w": 1081, "h": 1920},
- {"id": "g058", "src": "photos/g058.jpg", "thumb": "photos/t/g058.jpg", "w": 1081, "h": 1920},
  {"id": "g004", "src": "photos/g004.jpg", "thumb": "photos/t/g004.jpg", "w": 1081, "h": 1920},
  {"id": "g005", "src": "photos/g005.jpg", "thumb": "photos/t/g005.jpg", "w": 1125, "h": 2000},
  {"id": "g006", "type": "video", "src": "photos/g006.mp4", "poster": "photos/g006.jpg", "thumb": "photos/t/g006.jpg", "w": 720, "h": 1280, "dur": 16.4, "sound": true, "date": "2026-10-24", "time": "12:44:14"},
@@ -188,19 +205,18 @@ button{font:inherit;color:inherit}
  {"id": "g023", "src": "photos/g023.jpg", "thumb": "photos/t/g023.jpg", "w": 1500, "h": 2000},
  {"id": "g024", "src": "photos/g024.jpg", "thumb": "photos/t/g024.jpg", "w": 1500, "h": 2000},
  {"id": "g025", "type": "video", "src": "photos/g025.mp4", "poster": "photos/g025.jpg", "thumb": "photos/t/g025.jpg", "w": 720, "h": 1280, "dur": 5.2, "sound": true, "date": "2026-10-24", "time": "12:29:01"},
- {"id": "g026", "src": "photos/g026.jpg", "thumb": "photos/t/g026.jpg", "w": 2000, "h": 1825},
- {"id": "g027", "src": "photos/g027.jpg", "thumb": "photos/t/g027.jpg", "w": 1290, "h": 2000},
+ {"id": "g040", "src": "photos/g040.jpg", "thumb": "photos/t/g040.jpg", "w": 1125, "h": 2000},
+ {"id": "g041", "src": "photos/g041.jpg", "thumb": "photos/t/g041.jpg", "w": 1125, "h": 2000},
  {"id": "g032", "src": "photos/g032.jpg", "thumb": "photos/t/g032.jpg", "w": 1125, "h": 2000},
  {"id": "g033", "src": "photos/g033.jpg", "thumb": "photos/t/g033.jpg", "w": 1125, "h": 2000},
  {"id": "g034", "type": "video", "src": "photos/g034.mp4", "poster": "photos/g034.jpg", "thumb": "photos/t/g034.jpg", "w": 720, "h": 1280, "dur": 16.9, "sound": true, "date": "2026-10-24", "time": "12:38:15"},
  {"id": "g035", "src": "photos/g035.jpg", "thumb": "photos/t/g035.jpg", "w": 1125, "h": 2000},
+ {"id": "g027", "src": "photos/g027.jpg", "thumb": "photos/t/g027.jpg", "w": 1290, "h": 2000},
  {"id": "g039", "type": "video", "src": "photos/g039.mp4", "poster": "photos/g039.jpg", "thumb": "photos/t/g039.jpg", "w": 720, "h": 1280, "dur": 8.6, "sound": true, "date": "2026-10-24", "time": "12:42:07"},
- {"id": "g059", "src": "photos/g059.jpg", "thumb": "photos/t/g059.jpg", "w": 1081, "h": 1920},
- {"id": "g040", "src": "photos/g040.jpg", "thumb": "photos/t/g040.jpg", "w": 1125, "h": 2000},
+ {"id": "g026", "src": "photos/g026.jpg", "thumb": "photos/t/g026.jpg", "w": 2000, "h": 1825},
+ {"id": "g042", "src": "photos/g042.jpg", "thumb": "photos/t/g042.jpg", "w": 1382, "h": 2000},
  {"id": "g060", "src": "photos/g060.jpg", "thumb": "photos/t/g060.jpg", "w": 1500, "h": 2000},
  {"id": "g061", "src": "photos/g061.jpg", "thumb": "photos/t/g061.jpg", "w": 1500, "h": 2000},
- {"id": "g041", "src": "photos/g041.jpg", "thumb": "photos/t/g041.jpg", "w": 1125, "h": 2000},
- {"id": "g042", "src": "photos/g042.jpg", "thumb": "photos/t/g042.jpg", "w": 1382, "h": 2000},
  {"id": "g043", "src": "photos/g043.jpg", "thumb": "photos/t/g043.jpg", "w": 1500, "h": 2000},
  {"id": "g047", "src": "photos/g047.jpg", "thumb": "photos/t/g047.jpg", "w": 1500, "h": 2000},
  {"id": "g048", "src": "photos/g048.jpg", "thumb": "photos/t/g048.jpg", "w": 1253, "h": 2000},
@@ -226,10 +242,10 @@ button{font:inherit;color:inherit}
  {"id": "g036", "src": "photos/g036.jpg", "thumb": "photos/t/g036.jpg", "w": 1500, "h": 2000},
  {"id": "g037", "src": "photos/g037.jpg", "thumb": "photos/t/g037.jpg", "w": 1500, "h": 2000},
  {"id": "g038", "src": "photos/g038.jpg", "thumb": "photos/t/g038.jpg", "w": 1602, "h": 2000},
- {"id": "g019", "src": "photos/g019.jpg", "thumb": "photos/t/g019.jpg", "w": 1500, "h": 2000},
- {"id": "g020", "src": "photos/g020.jpg", "thumb": "photos/t/g020.jpg", "w": 1500, "h": 2000},
  {"id": "g030", "src": "photos/g030.jpg", "thumb": "photos/t/g030.jpg", "w": 1500, "h": 2000},
- {"id": "g031", "src": "photos/g031.jpg", "thumb": "photos/t/g031.jpg", "w": 1500, "h": 2000}
+ {"id": "g031", "src": "photos/g031.jpg", "thumb": "photos/t/g031.jpg", "w": 1500, "h": 2000},
+ {"id": "g019", "src": "photos/g019.jpg", "thumb": "photos/t/g019.jpg", "w": 1500, "h": 2000},
+ {"id": "g020", "src": "photos/g020.jpg", "thumb": "photos/t/g020.jpg", "w": 1500, "h": 2000}
  ]
 }
 </script>
@@ -262,6 +278,7 @@ button{font:inherit;color:inherit}
     <p>После этого фильм открывается со значка «Гардарика», как приложение, и смотрится без интернета.</p>
   </div>
 </div>
+<div class="del-bar" id="del-bar" hidden><span id="del-count"></span><button id="del-send">Отправить список</button><button id="del-done">Готово</button></div>
 <div class="toast" id="toast" role="status"></div>
 
 <div class="film" id="film" hidden>
@@ -291,7 +308,17 @@ const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&":"&amp;
 const plural = (n, a, b, c) => { const m = n % 10, h = n % 100; return m === 1 && h !== 11 ? a : m >= 2 && m <= 4 && (h < 12 || h > 14) ? b : c; };
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const DATA = JSON.parse($("#album-data").textContent);
-const PHOTOS = (DATA.photos || []).filter(p => p && p.src && p.film !== false).map(p => ({...p, isVideo:p.type === "video", img:p.poster || p.src}));
+const ALL = (DATA.photos || []).filter(p => p && p.src && p.film !== false).map(p => ({...p, isVideo:p.type === "video", img:p.poster || p.src}));
+/* ВРЕМЕННО, пока автор отбирает кадры: удалённые кнопкой «Удалить кадры» хранятся только на этом телефоне
+   (localStorage gard-del) и сразу не идут в фильм; список автор присылает в чат, кадры удаляются из album-data
+   окончательно, а когда фильм готов — эта кнопка убирается (её код: DEL, renderCover, #del-bar) */
+const store = {
+  get(k, d){ try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch(e){ return d; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+};
+const DEL = new Set(store.get("gard-del", []).filter(id => ALL.some(p => p.id === id)));
+let PHOTOS = ALL.filter(p => !DEL.has(p.id));
+let editing = false;
 const I_PLAY = `<svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>`;
 const I_PAUSE = `<svg class="ic fill" viewBox="0 0 24 24"><rect x="6" y="4.5" width="4" height="15" rx="1"/><rect x="14" y="4.5" width="4" height="15" rx="1"/></svg>`;
 
@@ -305,12 +332,49 @@ function renderCover(){
   $("#meta").textContent = PHOTOS.length
     ? [nP ? nP + " " + plural(nP, "фото", "фото", "фото") : "", nV ? nV + " " + plural(nV, "видео", "видео", "видео") : ""].filter(Boolean).join(" · ") + " · ≈ " + Math.max(1, Math.round(filmSeconds() / 60)) + " мин"
     : "Пока без кадров: можно посмотреть, как будет выглядеть фильм";
-  $("#frames").innerHTML = PHOTOS.length
-    ? `<h2 class="h2">Кадры фильма</h2><div class="grid">${PHOTOS.map((p, i) => `<button class="tile" data-i="${i}" aria-label="${esc(p.title || "Кадр " + (i + 1))}"><img src="${esc(p.thumb || p.img)}" alt="" loading="lazy">${p.isVideo ? `<span class="vid"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>${Math.round(p.dur || 0)} с</span>` : ""}</button>`).join("")}</div>`
-    : `<div class="empty"><b>Здесь появятся кадры</b>Пришлите фото и видео в чат — они станут фильмом «Гардарика 2026».</div>`;
+  const vid = p => p.isVideo ? `<span class="vid"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>${Math.round(p.dur || 0)} с</span>` : "";
+  const delBtn = `<button class="act del-btn" id="del-start"><svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Удалить кадры</button>`;
+  if (editing){
+    /* в правке видны все кадры с номерами по порядку фильма; нажатие убирает кадр или возвращает его */
+    $("#frames").innerHTML = `<h2 class="h2">Удаление кадров</h2>
+      <p class="del-hint">Нажмите на кадр, чтобы убрать его из фильма, ещё раз — вернуть. На этом телефоне фильм сразу идёт без них. Когда закончите, нажмите «Отправить список» и пришлите его в чат — удалю окончательно.</p>
+      <div class="grid">${ALL.map((p, i) => `<button class="tile${DEL.has(p.id) ? " gone" : ""}" data-id="${esc(p.id)}" aria-pressed="${DEL.has(p.id)}" aria-label="Кадр ${i + 1}${DEL.has(p.id) ? ", удалён" : ""}"><img src="${esc(p.thumb || p.img)}" alt="" loading="lazy"><span class="num">${i + 1}</span>${vid(p)}<span class="gone-mark"><svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Удалён</span></button>`).join("")}</div>`;
+  } else {
+    $("#frames").innerHTML = PHOTOS.length || DEL.size
+      ? `<div class="h2-row"><h2 class="h2">Кадры фильма</h2>${delBtn}</div>${DEL.size ? `<p class="del-hint">Убрано из фильма на этом телефоне: ${DEL.size}. Список можно отправить в чат из «Удалить кадры».</p>` : ""}<div class="grid">${PHOTOS.map((p, i) => `<button class="tile" data-i="${i}" aria-label="${esc(p.title || "Кадр " + (i + 1))}"><img src="${esc(p.thumb || p.img)}" alt="" loading="lazy">${vid(p)}</button>`).join("")}</div>`
+      : `<div class="empty"><b>Здесь появятся кадры</b>Пришлите фото и видео в чат — они станут фильмом «Гардарика 2026».</div>`;
+  }
+  $("#del-bar").hidden = !editing;
+  $("#del-count").innerHTML = `<svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg><span class="lw">Удалено:</span> ${DEL.size}`;
+  $("#del-send").disabled = !DEL.size;
 }
-$("#frames").onclick = e => { const t = e.target.closest(".tile"); if (t) openFilm(+t.dataset.i + 1); };
+function setEditing(on){
+  editing = on;
+  document.body.classList.toggle("editing", on);
+  renderCover();
+}
+function toggleDel(id){
+  if (DEL.has(id)) DEL.delete(id); else DEL.add(id);
+  store.set("gard-del", [...DEL]);
+  PHOTOS = ALL.filter(p => !DEL.has(p.id));
+  renderCover();
+}
+async function sendDel(){
+  const list = ALL.map((p, i) => DEL.has(p.id) ? `№${i + 1} (${p.id})` : null).filter(Boolean);
+  if (!list.length) return;
+  const text = `Гардарика 2026 — удалить из фильма кадры (${list.length}): ${list.join(", ")}`;
+  if (navigator.share){ try { await navigator.share({text}); return; } catch(e){ if (e && e.name === "AbortError") return; } }
+  try { await navigator.clipboard.writeText(text); toast("Список скопирован — вставьте его в чат"); }
+  catch(e){ prompt("Скопируйте список и пришлите в чат:", text); }
+}
+$("#frames").onclick = e => {
+  if (e.target.closest("#del-start")){ setEditing(true); return; }
+  const t = e.target.closest(".tile"); if (!t) return;
+  if (editing) toggleDel(t.dataset.id); else openFilm(+t.dataset.i + 1);
+};
 $("#play").onclick = () => openFilm(0);
+$("#del-send").onclick = sendDel;
+$("#del-done").onclick = () => setEditing(false);
 
 /* ---------- Музыка: «Гардарика» — свой бит в гангстерском стиле (до минор, 90 ударов в минуту) ----------
    Вступление — фортепиано и струнные без барабанов, на 5-м такте «падает» бит: бочка, малый с хлопком,
@@ -809,7 +873,7 @@ function toast(t){ const el = $("#toast"); el.textContent = t; el.classList.add(
 const MEDIA_CACHE = "gard-media";
 const mediaURLs = () => {
   const s = new Set();
-  PHOTOS.forEach(p => [p.src, p.thumb, p.poster, hasClip(p) ? clipURL(p) : null].forEach(u => { if (u) s.add(new URL(u, location.href).href); }));
+  ALL.forEach(p => [p.src, p.thumb, p.poster, hasClip(p) ? clipURL(p) : null].forEach(u => { if (u) s.add(new URL(u, location.href).href); }));
   return [...s];
 };
 function showOffline(done, total){
@@ -821,7 +885,7 @@ function showOffline(done, total){
 }
 let saving = false;
 async function saveOffline(){
-  if (saving || !("caches" in window) || !("serviceWorker" in navigator) || !PHOTOS.length) return;
+  if (saving || !("caches" in window) || !("serviceWorker" in navigator) || !ALL.length) return;
   saving = true;
   try {
     await navigator.serviceWorker.ready;
