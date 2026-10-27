@@ -97,6 +97,33 @@ body.editing .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 .sheet-box ol{margin:0;padding-left:22px;display:grid;gap:8px}
 .sheet-box p{margin:12px 0 0;color:var(--mist);font-size:14px}
 .sheet-x{position:absolute;top:10px;right:10px;width:44px;height:44px;border:0;border-radius:50%;background:rgba(255,255,255,.08);cursor:pointer;display:grid;place-items:center}
+/* экран установки приложения */
+.gate{position:fixed;inset:0;z-index:65;overflow-y:auto;overscroll-behavior:contain;background:var(--night);display:grid;justify-items:center;align-items:center;padding:calc(24px + env(safe-area-inset-top,0px)) 16px calc(24px + env(safe-area-inset-bottom,0px))}
+.gate-bg{position:fixed;inset:0;z-index:-1;overflow:hidden}
+.gate-bg img{width:100%;height:100%;object-fit:cover;filter:blur(18px) brightness(.32) saturate(.8);transform:scale(1.1)}
+.gate-box{position:relative;width:100%;max-width:440px;display:grid;justify-items:center;text-align:center;gap:10px}
+.gate-icon{width:96px;height:96px;border-radius:22px;box-shadow:0 12px 34px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.12)}
+.gate-h{margin:8px 0 0;font:700 clamp(34px,10vw,46px)/1 var(--display);text-transform:uppercase;letter-spacing:.03em}
+.gate-sub{margin:0;font:500 12.5px var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.gate-lead{margin:6px 0 4px;color:#d9d2c4;font-size:15.5px;line-height:1.5}
+#gate-body{width:100%;display:grid;gap:12px;justify-items:center}
+.gate-main{display:flex;align-items:center;justify-content:center;width:100%;min-height:54px;border:0;border-radius:999px;background:var(--gold);color:#1a1205;font:600 17px var(--body);text-decoration:none;cursor:pointer;box-shadow:0 10px 30px rgba(217,169,69,.25)}
+.gate-steps{width:100%;margin:0;padding:14px 16px 14px 38px;box-sizing:border-box;text-align:left;display:grid;gap:12px;border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);font-size:15.5px;line-height:1.45}
+.gate-steps li::marker{color:var(--gold);font-weight:700}
+.gate-steps span{display:block;color:var(--mist);font-size:13.5px;margin-top:2px}
+.ic-in{display:inline-block;width:20px;height:20px;vertical-align:-4px;margin:0 2px;stroke:var(--gold-2);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ic-in circle{fill:var(--gold-2);stroke:none}
+.gate-note{margin:0;color:var(--mist);font-size:13.5px;line-height:1.5;text-align:left;width:100%}
+.gate-warn{margin:0;width:100%;box-sizing:border-box;padding:12px 14px;border-radius:14px;background:rgba(200,49,43,.16);border:1px solid rgba(200,49,43,.45);color:#ffd9d6;font-size:14.5px;line-height:1.45;text-align:left}
+.gate-done{width:100%;box-sizing:border-box;padding:14px;border-radius:14px;background:rgba(217,169,69,.14);border:1px solid rgba(217,169,69,.45);color:var(--gold-2);font-weight:600}
+.gate-link,.gate-skip{min-height:44px;padding:0 18px;border:0;background:none;color:var(--ink);font:500 15px var(--body);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.gate-skip{margin-top:6px;color:var(--mist)}
+.gate-inline{color:var(--gold-2)}
+.gate-qr{width:min(240px,70vw);background:#fff;border-radius:18px;padding:10px}
+.qr-box{text-align:center;display:grid;justify-items:center;gap:12px}
+.qr-box h3{margin:0 48px 0 0;justify-self:start}
+.qr-img{width:min(260px,72vw);background:#fff;border-radius:18px;padding:10px}
+.qr-box p{margin:0;text-align:left}
 .toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;z-index:70;padding:10px 16px;border-radius:999px;background:#262119;border:1px solid var(--line);color:var(--ink);font-size:14px;transition:.3s;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 
@@ -227,7 +254,7 @@ body.editing .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
  {"id": "g046", "type": "video", "src": "photos/g046.mp4", "poster": "photos/g046.jpg", "thumb": "photos/t/g046.jpg", "w": 840, "h": 1280, "dur": 7.6, "sound": true, "date": "2026-10-24", "time": "13:01:43"},
  {"id": "g051", "src": "photos/g051.jpg", "thumb": "photos/t/g051.jpg", "w": 1500, "h": 2000},
  {"id": "g052", "src": "photos/g052.jpg", "thumb": "photos/t/g052.jpg", "w": 1500, "h": 2000},
- {"id": "g053", "type": "video", "src": "photos/g053.mp4", "poster": "photos/g053.jpg", "thumb": "photos/t/g053.jpg", "w": 720, "h": 1280, "dur": 6.1, "sound": true},
+ {"id": "g053", "type": "video", "src": "photos/g053.mp4?v=2", "poster": "photos/g053.jpg?v=2", "thumb": "photos/t/g053.jpg?v=2", "w": 720, "h": 1280, "dur": 8.8, "sound": true},
  {"id": "g062", "type": "video", "src": "photos/g062.mp4", "poster": "photos/g062.jpg", "thumb": "photos/t/g062.jpg", "w": 720, "h": 1280, "dur": 3.8, "sound": true, "date": "2026-10-24", "time": "13:04:46"},
  {"id": "g054", "src": "photos/g054.jpg", "thumb": "photos/t/g054.jpg", "w": 1500, "h": 2000},
  {"id": "g063", "src": "photos/g063.jpg", "thumb": "photos/t/g063.jpg", "w": 1280, "h": 591},
@@ -259,8 +286,9 @@ body.editing .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   <button class="play-btn" id="play"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>Смотреть фильм</button>
   <div class="meta" id="meta"></div>
   <div class="acts">
-    <button class="act" id="inst-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>Установить на телефон</button>
-    <button class="act" id="share-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M5 13v8h14v-8"/></svg>Поделиться</button>
+    <button class="act" id="inst-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>Установить приложение</button>
+    <button class="act" id="share-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M5 13v8h14v-8"/></svg>Поделиться приложением</button>
+    <button class="act" id="qr-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2M14 18h2v2M18 18h2v2"/></svg>QR-код</button>
   </div>
   <div class="offline" id="offline" hidden></div>
 </header>
@@ -270,12 +298,25 @@ body.editing .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
     <b>Без интернета.</b> При первом открытии фильм целиком сохраняется на телефон. Установите его на экран «Домой» — он будет открываться со значка «Гардарика», как приложение, и смотреться без сети. Кнопка «Поделиться» отправляет фильм кому угодно: им тоже достаточно открыть его один раз с интернетом.</div>
 </main>
 
-<div class="sheet" id="inst-sheet" hidden>
-  <div class="sheet-box" role="dialog" aria-labelledby="inst-h">
-    <button class="sheet-x" id="inst-x" aria-label="Закрыть"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-    <h3 id="inst-h">Фильм на экран «Домой»</h3>
-    <ol id="inst-steps"></ol>
-    <p>После этого фильм открывается со значка «Гардарика», как приложение, и смотрится без интернета.</p>
+<!-- Экран установки: его видит каждый, кто открыл фильм по ссылке в браузере (не из установленного приложения) -->
+<div class="gate" id="gate" hidden role="dialog" aria-modal="true" aria-labelledby="gate-h">
+  <div class="gate-bg" id="gate-bg"></div>
+  <div class="gate-box">
+    <img class="gate-icon" src="icons/icon-192.png" alt="" width="96" height="96">
+    <h2 class="gate-h" id="gate-h">Гардарика 2026</h2>
+    <p class="gate-sub">Фильм-приложение · ND</p>
+    <p class="gate-lead">Установите его на телефон: фильм будет открываться со своего значка, как обычное приложение, и смотреться без интернета.</p>
+    <div id="gate-body"></div>
+    <button class="gate-skip" id="gate-skip">Смотреть без установки</button>
+  </div>
+</div>
+<div class="sheet" id="qr-sheet" hidden>
+  <div class="sheet-box qr-box" role="dialog" aria-labelledby="qr-h">
+    <button class="sheet-x" id="qr-x" aria-label="Закрыть"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <h3 id="qr-h">Приложение по QR-коду</h3>
+    <img class="qr-img" src="icons/qr.svg" alt="QR-код приложения «Гардарика 2026»">
+    <p>Пусть герои фильма наведут на код камеру телефона: приложение откроется сразу в Safari или Chrome, там — кнопка «Установить приложение».</p>
+    <button class="act" id="qr-share"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M5 13v8h14v-8"/></svg>Отправить приглашение с QR-кодом</button>
   </div>
 </div>
 <div class="del-bar" id="del-bar" hidden><span id="del-count"></span><button id="del-send">Отправить список</button><button id="del-done">Готово</button></div>
@@ -297,7 +338,7 @@ body.editing .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   </div>
   <div class="f-end" id="f-end" hidden>
     <h3>Конец фильма</h3>
-    <div class="row"><button class="main" id="f-again">Смотреть ещё раз</button><button id="f-share">Поделиться</button><button id="f-done">Закрыть</button></div>
+    <div class="row"><button class="main" id="f-again">Смотреть ещё раз</button><button id="f-share">Поделиться приложением</button><button id="f-done">Закрыть</button></div>
   </div>
 </div>
 
@@ -311,7 +352,8 @@ const DATA = JSON.parse($("#album-data").textContent);
 const ALL = (DATA.photos || []).filter(p => p && p.src && p.film !== false).map(p => ({...p, isVideo:p.type === "video", img:p.poster || p.src}));
 /* ВРЕМЕННО, пока автор отбирает кадры: удалённые кнопкой «Удалить кадры» хранятся только на этом телефоне
    (localStorage gard-del) и сразу не идут в фильм; список автор присылает в чат, кадры удаляются из album-data
-   окончательно, а когда фильм готов — эта кнопка убирается (её код: DEL, renderCover, #del-bar) */
+   окончательно, а когда фильм готов — эта кнопка убирается (её код: DEL, ветка editing в renderCover, #del-bar;
+   store оставить — им пользуется экран установки) */
 const store = {
   get(k, d){ try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch(e){ return d; } },
   set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
@@ -906,60 +948,119 @@ async function saveOffline(){
 addEventListener("online", saveOffline);
 addEventListener("offline", () => { if (!$("#offline").classList.contains("ok")) saveOffline(); });
 
-/* ---------- Установка на экран «Домой» и «Поделиться» ---------- */
+/* ---------- Установка приложения и «Поделиться приложением» ----------
+   Магазины приложений здесь не нужны: фильм ставится на телефон как веб-приложение (значок на экране,
+   открывается без адресной строки, работает без интернета). Кто открыл ссылку в браузере, сразу видит
+   экран установки с шагами под свой телефон; Android ставит в одно касание. Если ссылка открылась внутри
+   Telegram, WhatsApp и т. п., установить оттуда нельзя — экран предлагает открыть её в Safari / Chrome */
 const UA = navigator.userAgent;
+const APP_URL = location.origin + location.pathname.replace(/index\.html$/, "");
 const isIOS = /iPad|iPhone|iPod/.test(UA) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 const isAndroid = /Android/i.test(UA);
+const isPhone = isIOS || isAndroid;
 const isStandalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
-const INSTALL_STEPS = {
-  ios: [
-    "Откройте фильм в <b>Safari</b>. Если ссылка открылась в Telegram или WhatsApp, нажмите «…» или значок компаса → «Открыть в Safari».",
-    "Нажмите <b>«Поделиться»</b>: квадрат со стрелкой вверх. В новых iOS он прячется под кнопкой <b>«…»</b> внизу справа.",
-    "Пролистайте список и выберите <b>«На экран „Домой“»</b>.",
-    "Оставьте включённым «Открыть как веб-приложение» и нажмите <b>«Добавить»</b>. Откройте фильм со значка и дождитесь надписи «Фильм сохранён»."
-  ],
-  android: [
-    "Откройте фильм в <b>Chrome</b>.",
-    "Нажмите меню <b>⋮</b> вверху справа.",
-    "Выберите <b>«Установить приложение»</b> или <b>«Добавить на главный экран»</b> → <b>«Установить»</b>."
-  ],
-  other: [
-    "Откройте фильм на телефоне: в Safari (iPhone) или Chrome (Android).",
-    "На компьютере в Chrome или Edge: значок установки в адресной строке → <b>«Установить»</b>."
-  ]
-};
-let installEvt = null;
+const inApp = /FBAN|FBAV|Instagram|Line\/|Telegram|WhatsApp|VKClient|vkclient|OKApp|MicroMessenger|; wv\)/i.test(UA) || (isIOS && !/Safari\//.test(UA));
+const iosOther = isIOS && /CriOS|FxiOS|EdgiOS|OPiOS|YaBrowser/.test(UA);
+const samsung = /SamsungBrowser/.test(UA);
+const I_SHARE = `<svg class="ic-in" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M5 13v8h14v-8"/></svg>`;
+const I_ADD = `<svg class="ic-in" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg>`;
+const I_DOTS = `<svg class="ic-in" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18" cy="12" r="1.6"/></svg>`;
+const I_DOTSV = `<svg class="ic-in" viewBox="0 0 24 24"><circle cx="12" cy="6" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="18" r="1.6"/></svg>`;
+const AFTER = `<p class="gate-note">Потом откройте «Гардарику» со значка на экране — один раз при интернете (лучше по Wi-Fi): фильм сохранится в телефон и дальше будет смотреться без сети.</p>`;
+const COPY = `<button class="gate-link" data-act="copy">Скопировать ссылку</button>`;
+let installEvt = null, installed = false;
+function gateHTML(){
+  if (installed) return `<div class="gate-done">✓ Готово! Значок «Гардарика» появится на экране телефона.</div>${AFTER}`;
+  if (!isPhone){
+    return `<img class="gate-qr" src="icons/qr.svg" alt="QR-код приложения"><p class="gate-note">Наведите на код камеру телефона — приложение откроется там, нажмите «Установить приложение».</p>`
+      + (installEvt ? `<button class="gate-main" data-act="prompt">Установить на компьютер</button>` : "");
+  }
+  if (isAndroid){
+    if (installEvt) return `<button class="gate-main" data-act="prompt">Установить приложение</button>${AFTER}`;
+    if (inApp){
+      const intent = `intent://${APP_URL.replace(/^https?:\/\//, "")}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(APP_URL)};end`;
+      return `<p class="gate-warn">Ссылка открылась внутри мессенджера — отсюда приложение не установить.</p>
+        <a class="gate-main" href="${esc(intent)}">Открыть в Chrome</a>
+        <p class="gate-note">Если не открылось: меню ${I_DOTSV} вверху справа → «Открыть в браузере» / «Открыть в Chrome».</p>${COPY}`;
+    }
+    if (samsung) return `<ol class="gate-steps"><li>Нажмите меню <b>≡</b> внизу справа.</li><li><b>«Добавить страницу на»</b> → <b>«Главный экран»</b>.</li><li>Нажмите <b>«Добавить»</b>.</li></ol>${AFTER}`;
+    return `<ol class="gate-steps"><li>Нажмите меню ${I_DOTSV} вверху справа.</li><li><b>«Установить приложение»</b> или <b>«Добавить на главный экран»</b>.</li><li>Нажмите <b>«Установить»</b>.</li></ol>
+      <p class="gate-note">Если меню другое (ссылка открыта в Telegram): ${I_DOTSV} → «Открыть в Chrome», дальше — по шагам.</p>${AFTER}`;
+  }
+  /* iPhone */
+  if (inApp){
+    return `<p class="gate-warn">Ссылка открылась внутри мессенджера — отсюда приложение не установить, нужен Safari.</p>
+      <a class="gate-main" href="x-safari-${esc(APP_URL)}">Открыть в Safari</a>
+      <p class="gate-note">Если не открылось: нажмите ${I_DOTS} или значок компаса → <b>«Открыть в Safari»</b>. Или скопируйте ссылку и вставьте её в Safari.</p>${COPY}`;
+  }
+  if (iosOther){
+    return `<ol class="gate-steps"><li>Нажмите ${I_SHARE} <b>«Поделиться»</b> в адресной строке.</li><li>Выберите ${I_ADD} <b>«На экран „Домой“»</b>.</li><li>Нажмите <b>«Добавить»</b>.</li></ol>
+      <p class="gate-note">Если такого пункта нет — откройте фильм в Safari: <a class="gate-inline" href="x-safari-${esc(APP_URL)}">открыть в Safari</a>.</p>${AFTER}`;
+  }
+  return `<ol class="gate-steps">
+      <li>Нажмите ${I_SHARE} <b>«Поделиться»</b> внизу экрана. <span>В новых iOS он прячется под кнопкой ${I_DOTS} справа внизу.</span></li>
+      <li>Пролистайте и выберите ${I_ADD} <b>«На экран „Домой“»</b>.</li>
+      <li>Оставьте включённым «Открыть как веб-приложение» и нажмите <b>«Добавить»</b>.</li></ol>${AFTER}`;
+}
+function openGate(){
+  $("#gate-body").innerHTML = gateHTML();
+  const hero = ALL.find(p => p.hero) || ALL.find(p => !p.isVideo);
+  if (hero && !$("#gate-bg").firstChild) $("#gate-bg").innerHTML = `<img src="${esc(hero.src)}" alt="">`;
+  $("#gate").hidden = false;
+  document.body.classList.add("noscroll");
+}
+function closeGate(){
+  $("#gate").hidden = true;
+  document.body.classList.remove("noscroll");
+  store.set("gard-gate-seen", true);
+}
 function renderInstall(){ $("#inst-btn").hidden = isStandalone(); }
-async function installFlow(){
-  if (installEvt){
+async function copyLink(){
+  try { await navigator.clipboard.writeText(APP_URL); toast("Ссылка скопирована — вставьте её в Safari или Chrome"); }
+  catch(e){ prompt("Ссылка на приложение:", APP_URL); }
+}
+$("#gate").addEventListener("click", async e => {
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  if (b.dataset.act === "copy") copyLink();
+  if (b.dataset.act === "prompt" && installEvt){
     const ev = installEvt; installEvt = null;
     ev.prompt();
-    try { const c = await ev.userChoice; if (c && c.outcome === "accepted") toast("Фильм появится на экране «Домой»"); } catch(e){}
-    return;
+    try { const c = await ev.userChoice; if (c && c.outcome === "accepted") installed = true; } catch(e){}
+    $("#gate-body").innerHTML = gateHTML();
   }
-  $("#inst-steps").innerHTML = INSTALL_STEPS[isIOS ? "ios" : isAndroid ? "android" : "other"].map(t => `<li>${t}</li>`).join("");
-  $("#inst-sheet").hidden = false;
-}
-const closeSheet = () => { $("#inst-sheet").hidden = true; };
-addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; });
-addEventListener("appinstalled", () => { installEvt = null; renderInstall(); toast("Фильм установлен"); });
-$("#inst-btn").onclick = installFlow;
-$("#inst-x").onclick = closeSheet;
-$("#inst-sheet").addEventListener("click", e => { if (e.target.id === "inst-sheet") closeSheet(); });
-document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#inst-sheet").hidden) closeSheet(); });
+});
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; if (!$("#gate").hidden) $("#gate-body").innerHTML = gateHTML(); });
+addEventListener("appinstalled", () => { installEvt = null; installed = true; renderInstall(); if (!$("#gate").hidden) $("#gate-body").innerHTML = gateHTML(); else toast("Приложение установлено"); });
+$("#inst-btn").onclick = openGate;
+$("#gate-skip").onclick = closeGate;
+document.addEventListener("keydown", e => { if (e.key === "Escape"){ if (!$("#gate").hidden) closeGate(); if (!$("#qr-sheet").hidden) $("#qr-sheet").hidden = true; } });
 
+const SHARE_TEXT = "🎬 «Гардарика 2026» — фильм-приложение. Откройте ссылку и нажмите «Установить приложение»: фильм появится на экране телефона со своим значком и будет смотреться без интернета.";
 async function share(){
-  const url = location.origin + location.pathname.replace(/index\.html$/, "");
-  const text = "Фильм «Гардарика 2026» 🎬 Откройте ссылку и добавьте фильм на экран «Домой»: после этого он смотрится без интернета.";
-  if (navigator.share){ try { await navigator.share({title:"Гардарика 2026", text, url}); } catch(e){} return; }
-  try { await navigator.clipboard.writeText(text + "\n" + url); toast("Ссылка на фильм скопирована"); }
-  catch(e){ prompt("Ссылка на фильм:", url); }
+  if (navigator.share){ try { await navigator.share({title:"Гардарика 2026", text:SHARE_TEXT, url:APP_URL}); } catch(e){} return; }
+  try { await navigator.clipboard.writeText(SHARE_TEXT + "\n" + APP_URL); toast("Приглашение скопировано — вставьте его в чат"); }
+  catch(e){ prompt("Ссылка на приложение:", APP_URL); }
+}
+/* картинка-приглашение с QR-кодом (icons/invite.jpg): её можно переслать, распечатать или показать с экрана */
+async function shareInvite(){
+  try {
+    const blob = await (await fetch("icons/invite.jpg")).blob();
+    const file = new File([blob], "Гардарика-2026-приглашение.jpg", {type:"image/jpeg"});
+    if (navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file], title:"Гардарика 2026", text:SHARE_TEXT + "\n" + APP_URL}); return; }
+  } catch(e){ if (e && e.name === "AbortError") return; }
+  const a = document.createElement("a"); a.href = "icons/invite.jpg"; a.download = "Гардарика-2026-приглашение.jpg"; document.body.appendChild(a); a.click(); a.remove();
 }
 $("#share-btn").onclick = share;
 $("#f-share").onclick = share;
+$("#qr-btn").onclick = () => { $("#qr-sheet").hidden = false; };
+$("#qr-x").onclick = () => { $("#qr-sheet").hidden = true; };
+$("#qr-sheet").addEventListener("click", e => { if (e.target.id === "qr-sheet") $("#qr-sheet").hidden = true; });
+$("#qr-share").onclick = shareInvite;
 
 renderCover();
 renderInstall();
+/* открыли ссылку в браузере (не установленное приложение) — сразу экран установки */
+if (!isStandalone() && !store.get("gard-gate-seen", false)) openGate();
 if ("serviceWorker" in navigator && location.protocol !== "file:"){
   navigator.serviceWorker.register("sw.js").then(saveOffline).catch(() => {});
 }
