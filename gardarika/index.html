@@ -134,6 +134,8 @@ body.editing .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 .layer .bg{position:absolute;inset:-6%;width:112%;height:112%;object-fit:cover;filter:blur(26px) brightness(.38) saturate(.7)}
 .layer .ph{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;will-change:transform}
 .layer .ph.cover{object-fit:cover}
+.layer video.ph{opacity:0;transition:opacity .35s ease}
+.layer video.ph.go{opacity:1}
 /* лёгкая «киношная» обработка фото: чуть контраста, виньетка */
 .layer img.ph{filter:contrast(1.06) saturate(.92)}
 .vign{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55))}
@@ -232,12 +234,13 @@ body.editing .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
  {"id": "g023", "src": "photos/g023.jpg", "thumb": "photos/t/g023.jpg", "w": 1500, "h": 2000},
  {"id": "g024", "src": "photos/g024.jpg", "thumb": "photos/t/g024.jpg", "w": 1500, "h": 2000},
  {"id": "g025", "type": "video", "src": "photos/g025.mp4", "poster": "photos/g025.jpg", "thumb": "photos/t/g025.jpg", "w": 720, "h": 1280, "dur": 5.2, "sound": true, "date": "2026-10-24", "time": "12:29:01"},
- {"id": "g040", "src": "photos/g040.jpg", "thumb": "photos/t/g040.jpg", "w": 1125, "h": 2000},
- {"id": "g041", "src": "photos/g041.jpg", "thumb": "photos/t/g041.jpg", "w": 1125, "h": 2000},
  {"id": "g032", "src": "photos/g032.jpg", "thumb": "photos/t/g032.jpg", "w": 1125, "h": 2000},
  {"id": "g033", "src": "photos/g033.jpg", "thumb": "photos/t/g033.jpg", "w": 1125, "h": 2000},
  {"id": "g034", "type": "video", "src": "photos/g034.mp4", "poster": "photos/g034.jpg", "thumb": "photos/t/g034.jpg", "w": 720, "h": 1280, "dur": 16.9, "sound": true, "date": "2026-10-24", "time": "12:38:15"},
  {"id": "g035", "src": "photos/g035.jpg", "thumb": "photos/t/g035.jpg", "w": 1125, "h": 2000},
+ {"id": "g040", "src": "photos/g040.jpg", "thumb": "photos/t/g040.jpg", "w": 1125, "h": 2000},
+ {"id": "g041", "src": "photos/g041.jpg", "thumb": "photos/t/g041.jpg", "w": 1125, "h": 2000},
+ {"id": "g073", "type": "video", "src": "photos/g073.mp4", "poster": "photos/g073.jpg", "thumb": "photos/t/g073.jpg", "w": 720, "h": 1280, "dur": 13.5, "sound": true, "date": "2026-10-24", "time": "12:40:50"},
  {"id": "g027", "src": "photos/g027.jpg", "thumb": "photos/t/g027.jpg", "w": 1290, "h": 2000},
  {"id": "g039", "type": "video", "src": "photos/g039.mp4", "poster": "photos/g039.jpg", "thumb": "photos/t/g039.jpg", "w": 720, "h": 1280, "dur": 8.6, "sound": true, "date": "2026-10-24", "time": "12:42:07"},
  {"id": "g026", "src": "photos/g026.jpg", "thumb": "photos/t/g026.jpg", "w": 2000, "h": 1825},
@@ -264,9 +267,6 @@ body.editing .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
  {"id": "g067", "src": "photos/g067.jpg", "thumb": "photos/t/g067.jpg", "w": 1081, "h": 1920},
  {"id": "g068", "src": "photos/g068.jpg", "thumb": "photos/t/g068.jpg", "w": 1081, "h": 1920},
  {"id": "g069", "src": "photos/g069.jpg", "thumb": "photos/t/g069.jpg", "w": 1280, "h": 591},
- {"id": "g028", "src": "photos/g028.jpg", "thumb": "photos/t/g028.jpg", "w": 1500, "h": 2000},
- {"id": "g029", "src": "photos/g029.jpg", "thumb": "photos/t/g029.jpg", "w": 1500, "h": 2000},
- {"id": "g036", "src": "photos/g036.jpg", "thumb": "photos/t/g036.jpg", "w": 1500, "h": 2000},
  {"id": "g037", "src": "photos/g037.jpg", "thumb": "photos/t/g037.jpg", "w": 1500, "h": 2000},
  {"id": "g038", "src": "photos/g038.jpg", "thumb": "photos/t/g038.jpg", "w": 1602, "h": 2000},
  {"id": "g030", "src": "photos/g030.jpg", "thumb": "photos/t/g030.jpg", "w": 1500, "h": 2000},
@@ -561,7 +561,8 @@ const Music = {
   stopClip(){
     this.clipTok++;
     const k = this.clip; this.clip = null;
-    if (k && this.ctx){ try { const t = this.ctx.currentTime; k.g.gain.setTargetAtTime(.0001, t, .06); k.src.stop(t + .35); } catch(e){} }
+    /* звук видео уходит плавно, вместе с проявлением следующего кадра (музыка в это время возвращается) */
+    if (k && this.ctx){ try { const t = this.ctx.currentTime; k.g.gain.setTargetAtTime(.0001, t, .25); k.src.stop(t + 1.3); } catch(e){} }
   },
   pause(){ if (this.ctx && this.ctx.suspend) this.ctx.suspend(); },
   resume(){ if (this.ctx && this.ctx.resume) this.ctx.resume(); },
@@ -679,7 +680,7 @@ const Music = {
 window.__filmMusic = Music; /* для проверки звука при доработках */
 
 /* ---------- Фильм ---------- */
-const film = {frames:[], i:0, left:0, playing:false, cur:0, anims:[], tok:0, calmT:0, wake:null, start:0, waitFor:null, waitT:0};
+const film = {frames:[], i:0, left:0, playing:false, cur:0, anims:[], tok:0, calmT:0, wake:null, start:0, fromVideo:false};
 const KB = [
   [{transform:"scale(1.02) translate(0,0)"}, {transform:"scale(1.13) translate(-1.5%,-1%)"}],
   [{transform:"scale(1.14) translate(1%,1%)"}, {transform:"scale(1.03) translate(0,0)"}],
@@ -693,8 +694,15 @@ function buildFrames(){
   frames.push({t:"credits"});
   return frames;
 }
-const barsOf = f => f.t === "video" ? Math.max(2, Math.ceil((f.p.dur || 6) / BAR())) : ({title:5, photo:2, demo:2, credits:10}[f.t]);
-function filmSeconds(){ return buildFrames().reduce((s, f) => s + (f.t === "credits" ? 20 : barsOf(f) * BAR()), 0); }
+/* видео сменяется само, чуть раньше своего конца (см. animateFrame); его такты — только запасной выход, если видео не пошло */
+const barsOf = f => f.t === "video" ? Math.ceil((f.p.dur || 6) / BAR()) + 2 : ({title:5, photo:2, demo:2, credits:10}[f.t]);
+/* доля такта музыки, оставшаяся до следующей смены кадров (1 — такт только начался) */
+function barLeft(){
+  const c = Music.ctx; if (!Music.on || !c || !Music.beat) return 1;
+  const bar = Music.beat * TUNE.beats, x = ((c.currentTime - Music.phraseStart) / bar) % 1;
+  return x < 0 ? 1 : 1 - x;
+}
+function filmSeconds(){ return buildFrames().reduce((s, f) => s + (f.t === "credits" ? 20 : f.t === "video" ? (f.p.dur || 6) : barsOf(f) * BAR()), 0); }
 function frameHTML(f){
   if (f.t === "title"){
     const bg = PHOTOS.find(p => p.hero) || PHOTOS.find(p => !p.isVideo);
@@ -728,9 +736,20 @@ function creditsHTML(){
 function animateFrame(layer, f){
   const dur = (barsOf(f) * BAR() + 1.6) * 1000;
   const v = $("video", layer);
-  Music.duck(false);
+  /* видео за видео (лестница): музыка остаётся тихой, не подскакивает между ними */
+  if (!(v && hasClip(f.p))) Music.duck(false);
   if (v){
     v.muted = true;
+    /* видео проявляется, когда действительно пошло (без скачка с обложки на первый кадр и без «загрузки»),
+       а следующий кадр начинает проявляться ещё до конца видео — без стоп-кадра в конце */
+    const tok = film.tok, lead = Math.min(.9, (f.p.dur || 6) * .2);
+    const show = () => v.classList.add("go");
+    const advance = () => { if (film.tok !== tok || !film.playing) return; film.fromVideo = true; go(film.i + 1); };
+    v.addEventListener("playing", show, {once:true});
+    v.addEventListener("error", show, {once:true});
+    setTimeout(show, 2500);
+    v.addEventListener("timeupdate", () => { if (v.duration && v.currentTime >= v.duration - lead) advance(); });
+    v.addEventListener("ended", advance);
     const pr = v.play(); if (pr && pr.catch) pr.catch(() => {});
     if (hasClip(f.p)){
       const here = () => film.frames[film.i] === f;
@@ -764,7 +783,9 @@ function go(i){
   film.i = i;
   const f = film.frames[i];
   film.left = barsOf(f);
-  film.waitFor = null; clearTimeout(film.waitT);
+  /* после видео смена пришлась на середину такта: кадр держим около двух тактов, как обычно */
+  if (film.fromVideo && f.t !== "video" && barLeft() < .5) film.left++;
+  film.fromVideo = false;
   const prev = $("#fl" + film.cur), next = $("#fl" + (film.cur ^ 1));
   const old = film.anims; film.anims = [];
   setTimeout(() => old.forEach(a => { try { a.cancel(); } catch(e){} }), 1500);
@@ -793,22 +814,9 @@ function go(i){
 function tick(){
   if (!film.playing || $("#film").hidden) return;
   if (--film.left > 0) return;
-  /* видео досматриваем до конца: такт мог оборвать его на секунду раньше */
   const f = film.frames[film.i], v = f && f.t === "video" ? $("#fl" + film.cur + " video") : null;
-  if (film.waitFor === f) return;
-  if (v && !v.ended && !v.paused && !v.error){
-    film.waitFor = f;
-    const i = film.i, tok = film.tok;
-    const next = () => {
-      clearTimeout(film.waitT); v.onended = null;
-      if (film.tok !== tok) return;
-      if (!film.playing){ film.waitFor = null; return; }
-      go(i + 1);
-    };
-    v.onended = next;
-    film.waitT = setTimeout(next, Math.max(500, ((v.duration || 0) - v.currentTime) * 1000 + 1500));
-    return;
-  }
+  /* видео идёт до своего конца и само переходит дальше; такт сменит его, только если оно не играет */
+  if (v && !v.error && !v.ended && !v.paused){ film.left = 1; return; }
   go(film.i + 1);
 }
 const Ticker = {
