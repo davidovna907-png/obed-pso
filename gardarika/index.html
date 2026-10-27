@@ -64,6 +64,21 @@ button{font:inherit;color:inherit}
 .empty b{color:var(--ink);display:block;margin-bottom:6px;font-weight:600}
 .note{margin-top:22px;padding:14px 16px;border-radius:14px;background:var(--deep);border:1px solid var(--line);color:var(--mist);font-size:14px}
 .note b{color:var(--ink)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.act{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.07);color:var(--ink);font:500 14.5px var(--body);cursor:pointer}
+.act .ic{width:18px;height:18px}
+.offline{margin-top:12px;font:400 12.5px/1.45 var(--mono);color:var(--mist);max-width:44ch}
+.offline i{display:block;height:3px;margin-top:6px;border-radius:3px;background:linear-gradient(90deg,var(--gold) var(--p),rgba(255,255,255,.15) var(--p))}
+.offline.ok{color:var(--gold-2)}
+/* подсказка «Установить на телефон» */
+.sheet{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.6);display:grid;align-items:end;justify-items:center;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.sheet-box{position:relative;width:100%;max-width:520px;background:var(--deep);border:1px solid var(--line);border-radius:20px;padding:20px 18px 18px}
+.sheet-box h3{margin:0 48px 12px 0;font:600 22px/1.2 var(--display);text-transform:uppercase;letter-spacing:.05em}
+.sheet-box ol{margin:0;padding-left:22px;display:grid;gap:8px}
+.sheet-box p{margin:12px 0 0;color:var(--mist);font-size:14px}
+.sheet-x{position:absolute;top:10px;right:10px;width:44px;height:44px;border:0;border-radius:50%;background:rgba(255,255,255,.08);cursor:pointer;display:grid;place-items:center}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;z-index:70;padding:10px 16px;border-radius:999px;background:#262119;border:1px solid var(--line);color:var(--ink);font-size:14px;transition:.3s;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
 
 /* ---------- Фильм ---------- */
 .film{position:fixed;inset:0;z-index:50;background:#000;overflow:hidden;color:#fff;user-select:none;-webkit-user-select:none;touch-action:none}
@@ -168,8 +183,15 @@ button{font:inherit;color:inherit}
  {"id": "g025", "type": "video", "src": "photos/g025.mp4", "poster": "photos/g025.jpg", "thumb": "photos/t/g025.jpg", "w": 720, "h": 1280, "dur": 5.2, "sound": true, "date": "2026-10-24", "time": "12:29:01"},
  {"id": "g026", "src": "photos/g026.jpg", "thumb": "photos/t/g026.jpg", "w": 2000, "h": 1825},
  {"id": "g027", "src": "photos/g027.jpg", "thumb": "photos/t/g027.jpg", "w": 1290, "h": 2000},
+ {"id": "g032", "src": "photos/g032.jpg", "thumb": "photos/t/g032.jpg", "w": 1125, "h": 2000},
+ {"id": "g033", "src": "photos/g033.jpg", "thumb": "photos/t/g033.jpg", "w": 1125, "h": 2000},
+ {"id": "g034", "type": "video", "src": "photos/g034.mp4", "poster": "photos/g034.jpg", "thumb": "photos/t/g034.jpg", "w": 720, "h": 1280, "dur": 16.9, "sound": true, "date": "2026-10-24", "time": "12:38:15"},
+ {"id": "g035", "src": "photos/g035.jpg", "thumb": "photos/t/g035.jpg", "w": 1125, "h": 2000},
  {"id": "g028", "src": "photos/g028.jpg", "thumb": "photos/t/g028.jpg", "w": 1500, "h": 2000},
  {"id": "g029", "src": "photos/g029.jpg", "thumb": "photos/t/g029.jpg", "w": 1500, "h": 2000},
+ {"id": "g036", "src": "photos/g036.jpg", "thumb": "photos/t/g036.jpg", "w": 1500, "h": 2000},
+ {"id": "g037", "src": "photos/g037.jpg", "thumb": "photos/t/g037.jpg", "w": 1500, "h": 2000},
+ {"id": "g038", "src": "photos/g038.jpg", "thumb": "photos/t/g038.jpg", "w": 1602, "h": 2000},
  {"id": "g019", "src": "photos/g019.jpg", "thumb": "photos/t/g019.jpg", "w": 1500, "h": 2000},
  {"id": "g020", "src": "photos/g020.jpg", "thumb": "photos/t/g020.jpg", "w": 1500, "h": 2000},
  {"id": "g030", "src": "photos/g030.jpg", "thumb": "photos/t/g030.jpg", "w": 1500, "h": 2000},
@@ -186,11 +208,27 @@ button{font:inherit;color:inherit}
   <p class="sub" id="h-sub" hidden></p>
   <button class="play-btn" id="play"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>Смотреть фильм</button>
   <div class="meta" id="meta"></div>
+  <div class="acts">
+    <button class="act" id="inst-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>Установить на телефон</button>
+    <button class="act" id="share-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M5 13v8h14v-8"/></svg>Поделиться</button>
+  </div>
+  <div class="offline" id="offline" hidden></div>
 </header>
 <main class="wrap">
   <div id="frames"></div>
-  <div class="note">Музыка — <b>«Гардарика»</b>, бит в гангстерском стиле, сочинён для этого фильма и звучит прямо в телефоне. На фото музыка громче, на видео со звуком стихает, чтобы было слышно само видео. Нажмите на кадр — фильм начнётся с него.</div>
+  <div class="note">Музыка — <b>«Гардарика»</b>, бит в гангстерском стиле, сочинён для этого фильма и звучит прямо в телефоне. На фото музыка громче, на видео со звуком стихает, чтобы было слышно само видео. Нажмите на кадр — фильм начнётся с него.<br><br>
+    <b>Без интернета.</b> При первом открытии фильм целиком сохраняется на телефон. Установите его на экран «Домой» — он будет открываться со значка «Гардарика», как приложение, и смотреться без сети. Кнопка «Поделиться» отправляет фильм кому угодно: им тоже достаточно открыть его один раз с интернетом.</div>
 </main>
+
+<div class="sheet" id="inst-sheet" hidden>
+  <div class="sheet-box" role="dialog" aria-labelledby="inst-h">
+    <button class="sheet-x" id="inst-x" aria-label="Закрыть"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <h3 id="inst-h">Фильм на экран «Домой»</h3>
+    <ol id="inst-steps"></ol>
+    <p>После этого фильм открывается со значка «Гардарика», как приложение, и смотрится без интернета.</p>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
 
 <div class="film" id="film" hidden>
   <div class="layer" id="fl0"></div><div class="layer" id="fl1"></div>
@@ -208,7 +246,7 @@ button{font:inherit;color:inherit}
   </div>
   <div class="f-end" id="f-end" hidden>
     <h3>Конец фильма</h3>
-    <div class="row"><button class="main" id="f-again">Смотреть ещё раз</button><button id="f-done">Закрыть</button></div>
+    <div class="row"><button class="main" id="f-again">Смотреть ещё раз</button><button id="f-share">Поделиться</button><button id="f-done">Закрыть</button></div>
   </div>
 </div>
 
@@ -729,7 +767,104 @@ document.addEventListener("keydown", e => {
   else if (e.key === "ArrowLeft") fPrev();
 });
 
+let toastT = 0;
+function toast(t){ const el = $("#toast"); el.textContent = t; el.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove("on"), 2600); }
+
+/* ---------- Без интернета: фильм целиком сохраняется на телефон (фото, видео, звук видео),
+   отдаёт его без сети sw.js. Сохраняем по одному файлу, в порядке фильма ---------- */
+const MEDIA_CACHE = "gard-media";
+const mediaURLs = () => {
+  const s = new Set();
+  PHOTOS.forEach(p => [p.src, p.thumb, p.poster, hasClip(p) ? clipURL(p) : null].forEach(u => { if (u) s.add(new URL(u, location.href).href); }));
+  return [...s];
+};
+function showOffline(done, total){
+  const el = $("#offline"); el.hidden = !total;
+  if (done >= total){ el.className = "offline ok"; el.textContent = "✓ Фильм сохранён на этом телефоне: смотрится без интернета"; return; }
+  el.className = "offline";
+  el.innerHTML = (navigator.onLine === false ? `Нет интернета: сохранено ${done} из ${total}, остальное сохранится, когда появится сеть`
+    : `Сохраняю фильм на телефон, чтобы смотреть без интернета: ${done} из ${total}`) + `<i style="--p:${Math.round(done / total * 100)}%"></i>`;
+}
+let saving = false;
+async function saveOffline(){
+  if (saving || !("caches" in window) || !("serviceWorker" in navigator) || !PHOTOS.length) return;
+  saving = true;
+  try {
+    await navigator.serviceWorker.ready;
+    try { if (navigator.storage && navigator.storage.persist) await navigator.storage.persist(); } catch(e){}
+    const c = await caches.open(MEDIA_CACHE), all = mediaURLs(), keys = await c.keys();
+    keys.forEach(r => { if (!all.includes(r.url)) c.delete(r); }); /* кадры, убранные из фильма */
+    const have = new Set(keys.map(r => r.url));
+    let done = all.filter(u => have.has(u)).length;
+    showOffline(done, all.length);
+    for (const u of all){
+      if (have.has(u)) continue;
+      try { const r = await fetch(u, {cache:"no-cache"}); if (r.ok){ await c.put(u, r); done++; } } catch(e){}
+      showOffline(done, all.length);
+    }
+  } catch(e){}
+  saving = false;
+}
+addEventListener("online", saveOffline);
+addEventListener("offline", () => { if (!$("#offline").classList.contains("ok")) saveOffline(); });
+
+/* ---------- Установка на экран «Домой» и «Поделиться» ---------- */
+const UA = navigator.userAgent;
+const isIOS = /iPad|iPhone|iPod/.test(UA) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const isAndroid = /Android/i.test(UA);
+const isStandalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const INSTALL_STEPS = {
+  ios: [
+    "Откройте фильм в <b>Safari</b>. Если ссылка открылась в Telegram или WhatsApp, нажмите «…» или значок компаса → «Открыть в Safari».",
+    "Нажмите <b>«Поделиться»</b>: квадрат со стрелкой вверх. В новых iOS он прячется под кнопкой <b>«…»</b> внизу справа.",
+    "Пролистайте список и выберите <b>«На экран „Домой“»</b>.",
+    "Оставьте включённым «Открыть как веб-приложение» и нажмите <b>«Добавить»</b>. Откройте фильм со значка и дождитесь надписи «Фильм сохранён»."
+  ],
+  android: [
+    "Откройте фильм в <b>Chrome</b>.",
+    "Нажмите меню <b>⋮</b> вверху справа.",
+    "Выберите <b>«Установить приложение»</b> или <b>«Добавить на главный экран»</b> → <b>«Установить»</b>."
+  ],
+  other: [
+    "Откройте фильм на телефоне: в Safari (iPhone) или Chrome (Android).",
+    "На компьютере в Chrome или Edge: значок установки в адресной строке → <b>«Установить»</b>."
+  ]
+};
+let installEvt = null;
+function renderInstall(){ $("#inst-btn").hidden = isStandalone(); }
+async function installFlow(){
+  if (installEvt){
+    const ev = installEvt; installEvt = null;
+    ev.prompt();
+    try { const c = await ev.userChoice; if (c && c.outcome === "accepted") toast("Фильм появится на экране «Домой»"); } catch(e){}
+    return;
+  }
+  $("#inst-steps").innerHTML = INSTALL_STEPS[isIOS ? "ios" : isAndroid ? "android" : "other"].map(t => `<li>${t}</li>`).join("");
+  $("#inst-sheet").hidden = false;
+}
+const closeSheet = () => { $("#inst-sheet").hidden = true; };
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; });
+addEventListener("appinstalled", () => { installEvt = null; renderInstall(); toast("Фильм установлен"); });
+$("#inst-btn").onclick = installFlow;
+$("#inst-x").onclick = closeSheet;
+$("#inst-sheet").addEventListener("click", e => { if (e.target.id === "inst-sheet") closeSheet(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("#inst-sheet").hidden) closeSheet(); });
+
+async function share(){
+  const url = location.origin + location.pathname.replace(/index\.html$/, "");
+  const text = "Фильм «Гардарика 2026» 🎬 Откройте ссылку и добавьте фильм на экран «Домой»: после этого он смотрится без интернета.";
+  if (navigator.share){ try { await navigator.share({title:"Гардарика 2026", text, url}); } catch(e){} return; }
+  try { await navigator.clipboard.writeText(text + "\n" + url); toast("Ссылка на фильм скопирована"); }
+  catch(e){ prompt("Ссылка на фильм:", url); }
+}
+$("#share-btn").onclick = share;
+$("#f-share").onclick = share;
+
 renderCover();
+renderInstall();
+if ("serviceWorker" in navigator && location.protocol !== "file:"){
+  navigator.serviceWorker.register("sw.js").then(saveOffline).catch(() => {});
+}
 </script>
 </body>
 </html>
