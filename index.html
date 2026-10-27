@@ -40,10 +40,8 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px soli
 .wrap{max-width:640px;margin:0 auto;padding-inline:16px;padding-block:0 160px}
 .num{font-variant-numeric:tabular-nums}
 
-/* шапка: компактная, прилеплена к верху экрана; при прокрутке вниз уезжает вверх вместе с меню, при прокрутке вверх возвращается (скрипт — в конце, «шапка при прокрутке») */
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ground);padding-block:8px 9px;margin-inline:-16px;padding-inline:16px;border-bottom:1px solid transparent;transition:border-color .2s}
-.top.snap{transition:border-color .2s,transform .28s cubic-bezier(.2,.8,.2,1)}
-.top.scrolled{border-bottom-color:var(--line)}
+/* шапка: компактная, вверху экрана; при листании уходит вверх вместе с меню и не возвращается, пока не долистаешь до верха (просьба пользователя 27.10) */
+.top{position:relative;z-index:5;background:var(--ground);padding-block:8px 9px;margin-inline:-16px;padding-inline:16px}
 /* полоска под часами телефона: уехавшая шапка и меню прячутся под неё */
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--ground);z-index:9}
 .brand{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
@@ -636,7 +634,7 @@ function chipInView(){   /* выбранное имя целиком в лент
   const l=el.offsetLeft-b.offsetLeft;
   if(l<b.scrollLeft) b.scrollLeft=l-4; else if(l+el.offsetWidth>b.scrollLeft+b.clientWidth) b.scrollLeft=l+el.offsetWidth-b.clientWidth+4;
 }
-function openAdd(focus){if($('add-row').hidden)$('p-new').value='';$('add-row').hidden=false;if(focus){placeTop(0,false);$('p-new').focus()}}
+function openAdd(focus){if($('add-row').hidden)$('p-new').value='';$('add-row').hidden=false;if(focus)$('p-new').focus()}
 $('chips').addEventListener('click',e=>{
   if(e.target.closest('#p-open')){openAdd(true);return}
   const c=e.target.closest('[data-p]'); if(c) setActive(c.dataset.p);
@@ -1458,7 +1456,7 @@ function go(v){
   current=v;
   document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.v===v));
   ['menu','order','team','arch'].forEach(k=>$('v-'+k).hidden=k!==v);
-  refresh(); window.scrollTo({top:0}); showTop();
+  refresh(); window.scrollTo({top:0});
   if(v==='order') getDownloads();
   if(ORDERS_API&&v!=='menu'&&v!=='arch'&&Date.now()-lastTry>10000) syncOrders();
   if(v==='arch') loadArchive(false);
@@ -1467,23 +1465,6 @@ function go(v){
 document.querySelector('.tabs').addEventListener('click',e=>{const t=e.target.closest('.tab');if(t)go(t.dataset.v)});
 $('cart').addEventListener('click',()=>go('order'));   /* нажимается вся плашка «ИТОГО», не только ОК */
 document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g)go(g.dataset.go)});
-/* шапка при прокрутке: листают вниз — уезжает вверх вместе с меню, листают вверх — возвращается;
-   отпустили на полпути — сама доезжает до конца; пока в шапке вводят имя — не прячется */
-let topY=0, lastY=Math.max(0,scrollY), snapT=0, touching=false;
-function placeTop(y,anim){topY=y;const t=$('top');t.classList.toggle('snap',!!anim);t.style.transform=y?'translate3d(0,'+(-y)+'px,0)':''}
-function showTop(){clearTimeout(snapT);if(topY)placeTop(0,true)}
-function snapTop(){const h=$('top').offsetHeight;if(!touching&&topY>0&&topY<h)placeTop(topY>h/2&&scrollY>h?h:0,true)}
-addEventListener('scroll',()=>{
-  const t=$('top'), h=t.offsetHeight, y=Math.min(Math.max(0,scrollY),document.documentElement.scrollHeight-innerHeight), d=y-lastY; lastY=y;
-  t.classList.toggle('scrolled',y>4);
-  const a=document.activeElement, typing=a&&a.matches('#top input')&&a.offsetParent!==null;
-  placeTop(y<=0||typing?0:Math.min(h,Math.max(0,topY+d)),false);
-  clearTimeout(snapT); snapT=setTimeout(snapTop,140);
-},{passive:true});
-addEventListener('touchstart',()=>{touching=true},{passive:true});
-['touchend','touchcancel'].forEach(ev=>addEventListener(ev,()=>{touching=false;clearTimeout(snapT);snapT=setTimeout(snapTop,140)},{passive:true}));
-$('top').addEventListener('focusin',()=>{if(topY)placeTop(0,false)});   /* фокус попал в уехавшую шапку — показать её */
-if(window.ResizeObserver) new ResizeObserver(()=>{if(topY){const h=$('top').offsetHeight;placeTop(scrollY>h?h:0,false)}}).observe($('top'));
 
 renderChips(); renderMenu();
 if(!roster.length) openAdd(false);
