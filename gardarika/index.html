@@ -85,26 +85,6 @@ button{font:inherit;color:inherit}
 .tile img{width:100%;height:100%;object-fit:cover;display:block}
 .tile .vid{position:absolute;right:6px;bottom:6px;display:flex;align-items:center;gap:3px;padding:2px 6px;border-radius:6px;background:rgba(0,0,0,.6);font:500 11px var(--mono);color:#fff}
 .tile .vid .ic{width:12px;height:12px}
-/* ВРЕМЕННО: удаление кадров, пока автор отбирает кадры (см. DEL в скрипте) */
-.h2-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:18px 0 12px}
-.h2-row .h2{margin:0}
-.del-btn{min-height:40px;padding:0 14px;font-size:13.5px}
-.del-hint{margin:-4px 0 12px;color:var(--mist);font-size:13.5px;line-height:1.45}
-.tile .num{position:absolute;left:5px;top:5px;min-width:24px;height:22px;padding:0 6px;border-radius:11px;background:rgba(0,0,0,.65);color:#fff;font:500 12px/22px var(--mono);text-align:center}
-.tile .gone-mark{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:rgba(20,6,5,.62);color:#ffd9d6;font:600 13px var(--body)}
-.tile.gone img{filter:grayscale(1) brightness(.55)}
-.tile.gone .gone-mark{display:flex}
-.tile.gone{outline:2px solid var(--red);outline-offset:-2px}
-.del-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:max(10px,calc(env(safe-area-inset-bottom,0px) - 12px));z-index:45;width:min(520px,calc(100% - 24px));display:flex;align-items:center;gap:8px;padding:7px 7px 7px 16px;border-radius:999px;background:rgba(30,26,20,.62);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);border:1px solid rgba(255,255,255,.18);box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 10px 30px rgba(0,0,0,.45)}
-#del-count{flex:1;min-width:0;font:500 13.5px var(--body);white-space:nowrap;display:flex;align-items:center;gap:6px}
-#del-count .ic{width:18px;height:18px;flex:none}
-@media (max-width:359px){.del-bar{padding-left:12px;gap:6px}#del-count .lw{display:none}.del-bar button{padding:0 11px;font-size:13px}}
-.del-bar button{min-height:44px;padding:0 14px;border-radius:999px;border:0;font:600 14px var(--body);cursor:pointer;white-space:nowrap}
-#del-send{background:var(--gold);color:#1a1205}
-#del-send:disabled{opacity:.45;cursor:default}
-#del-done{background:rgba(255,255,255,.12);color:var(--ink)}
-body.editing .wrap{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
-body.editing .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 .empty{border:1px dashed var(--line);border-radius:14px;padding:22px 18px;color:var(--mist);text-align:center}
 .empty b{color:var(--ink);display:block;margin-bottom:6px;font-weight:600}
 .note{margin-top:22px;padding:14px 16px;border-radius:14px;background:var(--deep);border:1px solid var(--line);color:var(--mist);font-size:14px}
@@ -433,7 +413,6 @@ body.editing .toast{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
     <button class="act" id="qr-share"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M5 13v8h14v-8"/></svg>Отправить друзьям</button>
   </div>
 </div>
-<div class="del-bar" id="del-bar" hidden><span id="del-count"></span><button id="del-send">Отправить список</button><button id="del-done">Готово</button></div>
 <div class="toast" id="toast" role="status"></div>
 
 <div class="film" id="film" hidden>
@@ -464,17 +443,12 @@ const plural = (n, a, b, c) => { const m = n % 10, h = n % 100; return m === 1 &
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const DATA = JSON.parse($("#album-data").textContent);
 const ALL = (DATA.photos || []).filter(p => p && p.src && p.film !== false).map(p => ({...p, isVideo:p.type === "video", img:p.poster || p.src}));
-/* ВРЕМЕННО, пока автор отбирает кадры: удалённые кнопкой «Удалить кадры» хранятся только на этом телефоне
-   (localStorage gard-del) и сразу не идут в фильм; список автор присылает в чат, кадры удаляются из album-data
-   окончательно, а когда фильм готов — эта кнопка убирается (её код: DEL, ветка editing в renderCover, #del-bar;
-   store оставить — им пользуется экран установки) */
+/* localStorage без ошибок (приватный режим и т. п.): экран установки помнит «Смотреть без установки» */
 const store = {
   get(k, d){ try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch(e){ return d; } },
   set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
 };
-const DEL = new Set(store.get("gard-del", []).filter(id => ALL.some(p => p.id === id)));
-let PHOTOS = ALL.filter(p => !DEL.has(p.id));
-let editing = false;
+const PHOTOS = ALL;
 const I_PLAY = `<svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>`;
 const I_PAUSE = `<svg class="ic fill" viewBox="0 0 24 24"><rect x="6" y="4.5" width="4" height="15" rx="1"/><rect x="14" y="4.5" width="4" height="15" rx="1"/></svg>`;
 
@@ -497,48 +471,12 @@ function renderCover(){
     ? [nP ? nP + " " + plural(nP, "фото", "фото", "фото") : "", nV ? nV + " " + plural(nV, "видео", "видео", "видео") : ""].filter(Boolean).join(" · ") + " · ≈ " + Math.max(1, Math.round(filmSeconds() / 60)) + " мин"
     : "Пока без кадров: можно посмотреть, как будет выглядеть фильм";
   const vid = p => p.isVideo ? `<span class="vid"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>${Math.round(p.dur || 0)} с</span>` : "";
-  const delBtn = `<button class="act del-btn" id="del-start"><svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Удалить кадры</button>`;
-  if (editing){
-    /* в правке видны все кадры с номерами по порядку фильма; нажатие убирает кадр или возвращает его */
-    $("#frames").innerHTML = `<h2 class="h2">Удаление кадров</h2>
-      <p class="del-hint">Нажмите на кадр, чтобы убрать его из фильма, ещё раз — вернуть. На этом телефоне фильм сразу идёт без них. Когда закончите, нажмите «Отправить список» и пришлите его в чат — удалю окончательно.</p>
-      <div class="grid">${ALL.map((p, i) => `<button class="tile${DEL.has(p.id) ? " gone" : ""}" data-id="${esc(p.id)}" aria-pressed="${DEL.has(p.id)}" aria-label="Кадр ${i + 1}${DEL.has(p.id) ? ", удалён" : ""}"><img src="${esc(p.thumb || p.img)}" alt="" loading="lazy"><span class="num">${i + 1}</span>${vid(p)}<span class="gone-mark"><svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Удалён</span></button>`).join("")}</div>`;
-  } else {
-    $("#frames").innerHTML = PHOTOS.length || DEL.size
-      ? `<div class="h2-row"><h2 class="h2">Кадры фильма</h2>${delBtn}</div>${DEL.size ? `<p class="del-hint">Убрано из фильма на этом телефоне: ${DEL.size}. Список можно отправить в чат из «Удалить кадры».</p>` : ""}<div class="grid">${PHOTOS.map((p, i) => `<button class="tile" data-i="${i}" aria-label="${esc(p.title || "Кадр " + (i + 1))}"><img src="${esc(p.thumb || p.img)}" alt="" loading="lazy">${vid(p)}</button>`).join("")}</div>`
-      : `<div class="empty"><b>Здесь появятся кадры</b>Пришлите фото и видео в чат — они станут фильмом «Гардарика 2026».</div>`;
-  }
-  $("#del-bar").hidden = !editing;
-  $("#del-count").innerHTML = `<svg class="ic" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg><span class="lw">Удалено:</span> ${DEL.size}`;
-  $("#del-send").disabled = !DEL.size;
+  $("#frames").innerHTML = PHOTOS.length
+    ? `<h2 class="h2">Кадры фильма</h2><div class="grid">${PHOTOS.map((p, i) => `<button class="tile" data-i="${i}" aria-label="${esc(p.title || "Кадр " + (i + 1))}"><img src="${esc(p.thumb || p.img)}" alt="" loading="lazy">${vid(p)}</button>`).join("")}</div>`
+    : `<div class="empty"><b>Здесь появятся кадры</b>Пришлите фото и видео в чат — они станут фильмом «Гардарика 2026».</div>`;
 }
-function setEditing(on){
-  editing = on;
-  document.body.classList.toggle("editing", on);
-  renderCover();
-}
-function toggleDel(id){
-  if (DEL.has(id)) DEL.delete(id); else DEL.add(id);
-  store.set("gard-del", [...DEL]);
-  PHOTOS = ALL.filter(p => !DEL.has(p.id));
-  renderCover();
-}
-async function sendDel(){
-  const list = ALL.map((p, i) => DEL.has(p.id) ? `№${i + 1} (${p.id})` : null).filter(Boolean);
-  if (!list.length) return;
-  const text = `Гардарика 2026 — удалить из фильма кадры (${list.length}): ${list.join(", ")}`;
-  if (navigator.share){ try { await navigator.share({text}); return; } catch(e){ if (e && e.name === "AbortError") return; } }
-  try { await navigator.clipboard.writeText(text); toast("Список скопирован — вставьте его в чат"); }
-  catch(e){ prompt("Скопируйте список и пришлите в чат:", text); }
-}
-$("#frames").onclick = e => {
-  if (e.target.closest("#del-start")){ setEditing(true); return; }
-  const t = e.target.closest(".tile"); if (!t) return;
-  if (editing) toggleDel(t.dataset.id); else openFilm(+t.dataset.i + 1);
-};
+$("#frames").onclick = e => { const t = e.target.closest(".tile"); if (t) openFilm(+t.dataset.i + 1); };
 $("#play").onclick = () => openFilm(0);
-$("#del-send").onclick = sendDel;
-$("#del-done").onclick = () => setEditing(false);
 
 /* ---------- Музыка: «Гардарика» — свой бит в гангстерском стиле (до минор, 90 ударов в минуту) ----------
    Вступление — фортепиано и струнные без барабанов, на 5-м такте «падает» бит: бочка, малый с хлопком,
