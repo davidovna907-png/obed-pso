@@ -53,7 +53,9 @@ button{font:inherit;color:inherit}
 .play-btn{margin-top:22px;justify-self:start;display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 24px 0 18px;border:0;border-radius:999px;background:var(--gold);color:#1a1205;font:600 17px var(--body);cursor:pointer;box-shadow:0 10px 30px rgba(217,169,69,.25)}
 /* обложка в нео-нуаре (есть кадр intro): ночной кадр втроём на весь экран, дождь, дымка, неон;
    название сверху — неоновое, кнопки снизу */
-.hero.noir{min-height:max(560px,min(100svh,940px));grid-template-rows:auto 1fr auto;align-content:stretch;padding:calc(30px + env(safe-area-inset-top,0px)) 16px 26px}
+/* обложка — ровно на весь экран: у установленного приложения на iPhone 100svh не включает полоску с часами,
+   поэтому её добавляем (в Safari она 0) — иначе снизу выглядывает «Кадры фильма» (замечание пользователя 27.10) */
+.hero.noir{min-height:max(560px,calc(100vh + env(safe-area-inset-top,0px)));min-height:max(560px,calc(100svh + env(safe-area-inset-top,0px)));grid-template-rows:auto 1fr auto;align-content:stretch;padding:calc(30px + env(safe-area-inset-top,0px)) 16px calc(26px + env(safe-area-inset-bottom,0px))}
 .hero.noir .hero-bg{background:#000}
 .hero.noir .hero-bg img{filter:none;object-position:50% 40%}
 .hero.noir .hero-bg::after{background:linear-gradient(180deg,rgba(0,0,0,.55) 0,rgba(0,0,0,0) 26%,rgba(0,0,0,0) 52%,rgba(5,5,9,.82) 78%,var(--night) 100%)}
