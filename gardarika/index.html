@@ -57,8 +57,23 @@ button{font:inherit;color:inherit}
 .hero.noir .hero-bg{background:#000}
 .hero.noir .hero-bg img{filter:none;object-position:50% 40%}
 .hero.noir .hero-bg::after{background:linear-gradient(180deg,rgba(0,0,0,.55) 0,rgba(0,0,0,0) 26%,rgba(0,0,0,0) 52%,rgba(5,5,9,.82) 78%,var(--night) 100%)}
-.hero.noir .nt-light,.hero.noir .nt-haze,.hero.noir .nt-rain{z-index:-1}
-.hero.noir .nt-rain{opacity:.35}
+.hero.noir .nt-light,.hero.noir .nt-haze,.hero.noir .nt-rain,.hero.noir .lt{z-index:-1}
+/* спецэффекты обложки (просьба пользователя 27.10: «на фото тоже молнии и дождь»): ливень в два слоя,
+   молния в небе справа и вспышки, озаряющие кадр; не чаще 3 вспышек в секунду, при «Уменьшении движения» — без молний */
+.hero.noir .nt-rain{opacity:.75}
+.nt-rain.near{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='170' height='320'><g stroke='%23e6f2ff' stroke-linecap='round' stroke-width='1.6'><line x1='24' y1='10' x2='16' y2='86' stroke-opacity='.55'/><line x1='118' y1='150' x2='111' y2='214' stroke-opacity='.45'/><line x1='70' y1='236' x2='64' y2='300' stroke-opacity='.4'/></g></svg>");background-size:170px 320px;animation:ntRainNear .38s linear infinite}
+@keyframes ntRainNear{from{background-position:0 0}to{background-position:-30px 320px}}
+.hero.noir .nt-rain.near{opacity:.6}
+.lt{position:absolute;inset:0;pointer-events:none}
+.lt-flash{position:absolute;inset:0;mix-blend-mode:screen;opacity:0;background:radial-gradient(120% 70% at 78% 8%,rgba(215,230,255,.85),rgba(140,170,255,.35) 40%,rgba(120,150,255,.08) 70%,transparent 85%);animation:ltFlash 9.5s 2.2s infinite}
+.lt-bolt{position:absolute;right:7%;top:1%;width:min(32vw,160px);height:auto;opacity:0;overflow:visible;filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 10px #9fc4ff) drop-shadow(0 0 26px rgba(255,90,170,.6));animation:ltBolt 9.5s 2.2s infinite}
+.lt-bolt path{fill:none;stroke:#f4f8ff;stroke-linejoin:round;stroke-linecap:round}
+.lt-bolt .m{stroke-width:2.4}
+.lt-bolt .f{stroke-width:1.2;opacity:.8}
+.lt-bolt .s{stroke-width:.8;opacity:.6}
+@keyframes ltFlash{0%,59%{opacity:0}60%{opacity:.55}61.2%{opacity:.08}62.4%{opacity:.75}65%{opacity:0}86%{opacity:0}87%{opacity:.28}88.5%{opacity:0}100%{opacity:0}}
+@keyframes ltBolt{0%,59.9%{opacity:0}60%{opacity:1}61.2%{opacity:.15}62.4%{opacity:1}64%{opacity:.6}65%,100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.lt{display:none}.nt-rain.near{animation:none}}
 .hero-top{text-align:center;justify-self:stretch}
 .hero.noir .eyebrow{color:#c9f6ff;letter-spacing:.5em;margin-right:-.5em;text-shadow:0 0 8px rgba(25,227,255,.85),0 0 20px rgba(25,227,255,.4)}
 .hero.noir .title{margin-top:14px;font-size:clamp(50px,15vw,140px);letter-spacing:.06em;margin-right:-.06em;color:#ffe6ef;text-shadow:0 0 3px #fff,0 0 10px #ff2d6f,0 0 24px #ff2d6f,0 0 52px rgba(255,45,111,.75),0 0 96px rgba(255,45,111,.45);animation:heroIgnite 1.6s .3s both,heroBuzz 4.3s 2.2s infinite}
@@ -479,7 +494,8 @@ function renderCover(){
   if (I && I.src){
     /* обложка в нео-нуаре: ночной кадр втроём, неон, дымка, дождь */
     $("#hero").classList.add("noir");
-    if (!$("#hero-bg").firstChild) $("#hero-bg").outerHTML = `<div class="hero-bg" id="hero-bg"><img src="${esc(I.src)}" alt=""></div><div class="nt-light nt-l"><i></i></div><div class="nt-light nt-r"><i></i></div><div class="nt-haze"><i></i><i></i></div><div class="nt-rain"></div>`;
+    if (!$("#hero-bg").firstChild) $("#hero-bg").outerHTML = `<div class="hero-bg" id="hero-bg"><img src="${esc(I.src)}" alt=""></div><div class="nt-light nt-l"><i></i></div><div class="nt-light nt-r"><i></i></div><div class="nt-haze"><i></i><i></i></div><div class="nt-rain"></div><div class="nt-rain near"></div>
+      <div class="lt"><div class="lt-flash"></div><svg class="lt-bolt" viewBox="0 0 100 240" aria-hidden="true"><path class="m" d="M64.0 0.0 65.0 3.9 63.6 7.7 66.0 11.0 66.0 15.1 63.3 18.0 61.0 21.3 60.4 25.2 60.1 29.2 59.9 33.2 61.4 36.8 58.9 40.0 58.2 43.9 57.6 47.7 56.7 51.4 57.2 55.4 59.4 58.7 60.3 62.5 59.7 66.3 57.6 69.7 57.3 73.6 58.4 77.4 58.1 81.4 55.6 84.6 55.3 88.6 53.0 91.6 50.2 94.2 48.2 97.4 45.8 100.4 43.2 103.3 40.6 106.2 40.5 110.2 38.2 113.6 37.1 117.6 34.1 120.4 34.1 124.4 34.2 128.4 35.0 132.2 36.8 135.7 38.6 139.3 38.1 143.3 37.6 147.2 36.6 151.0 37.8 154.8 38.3 158.7 40.8 162.0 44.3 164.1 44.2 168.3 46.5 171.8 45.5 175.7 42.7 178.5 42.8 182.4 43.1 186.3 43.3 190.1 41.6 193.6 39.2 196.6 38.2 200.3 36.2 203.7 36.4 207.7 35.2 211.3 35.1 215.1 36.5 218.8 38.3 222.2 39.4 226.2 38.0 230.0"/><path class="f" d="M56.7 51.4 56.5 54.7 58.6 57.3 58.2 60.3 58.9 63.4 57.0 66.0 54.4 68.0 54.2 71.2 53.9 74.4 50.8 75.3 47.6 75.6 45.9 78.6 42.5 79.3 41.7 82.7 38.7 84.4 37.9 87.5 37.6 90.7"/><path class="f" d="M48.2 97.4 48.7 101.3 48.8 105.2 50.1 108.9 50.3 112.8 51.7 116.5 52.8 120.3 56.5 122.2 58.3 126.0 61.9 128.0 64.2 131.4 66.1 135.2 65.6 139.3 68.2 142.3 71.3 144.9 73.3 148.7 72.4 152.8"/><path class="f" d="M38.1 143.3 38.6 146.7 38.4 150.2 39.7 153.7 38.7 157.2 34.8 158.1 32.6 161.3 31.6 164.8 30.3 168.3 28.0 171.0 25.0 172.9 23.9 176.3 21.0 178.5 20.3 181.9 20.2 185.4 18.6 188.7 19.8 192.3"/><path class="f" d="M42.7 178.5 43.8 182.0 43.4 185.7 46.1 188.4 46.6 192.2 47.2 196.0 46.4 199.7 48.8 202.7 50.8 205.8 54.0 208.0 56.1 211.3 56.4 215.1 56.8 218.8 60.7 219.9 62.7 223.4 62.9 227.3 65.5 230.3"/><path class="s" d="M53.9 74.4 54.1 77.2 55.6 79.5 58.5 80.2 59.6 83.0 60.3 85.8 61.7 88.2 60.3 90.6 59.9 93.4"/><path class="s" d="M58.3 126.0 56.1 129.0 53.8 131.8 55.3 135.4 54.5 139.2 56.3 142.4 59.3 144.7 60.3 148.3 59.5 151.9"/></svg></div>`;
   } else {
     const hero = PHOTOS.find(p => p.hero) || PHOTOS.find(p => !p.isVideo);
     if (hero) $("#hero-bg").innerHTML = `<img src="${esc(hero.src)}" alt="">`;
