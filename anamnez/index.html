@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Профсоюзный анамнез</title>
+<meta name="description" content="Видеоролик «Профсоюзный анамнез: история одного активиста» — конкурс «Наш Профсоюз: история в кадре, награда — в путешествии».">
+<meta name="theme-color" content="#05090d">
+<meta property="og:type" content="video.other">
+<meta property="og:title" content="Профсоюзный анамнез: история одного активиста">
+<meta property="og:description" content="Работа, увлечения и Профсоюз — в одной медицинской карте. Конкурс видеороликов Челябинской областной организации Профсоюза работников здравоохранения РФ.">
+<meta property="og:image" content="https://davidovna907-png.github.io/obed-pso/anamnez/poster.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Golos+Text:wght@400;600&family=IBM+Plex+Mono:wght@400&family=Unbounded:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#05090d;--teal:#2ff3c8;--amber:#ffb347;--brick:#ff5a4e;--pink:#ff4fa3;--ink:#e9f4f2;--muted:#9fbfba}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Golos Text",system-ui,sans-serif;-webkit-text-size-adjust:100%}
+  body{min-height:100vh;background:
+    radial-gradient(700px 500px at 10% 0%,rgba(47,243,200,.12),transparent 70%),
+    radial-gradient(800px 600px at 100% 100%,rgba(255,79,163,.11),transparent 70%),var(--bg)}
+  .wrap{max-width:1100px;margin:0 auto;padding:max(20px,env(safe-area-inset-top)) 16px max(28px,env(safe-area-inset-bottom))}
+  .eyebrow{font:400 13px/1.4 "IBM Plex Mono",monospace;letter-spacing:.18em;text-transform:uppercase;color:#d9fff6;text-shadow:0 0 8px var(--teal),0 0 22px rgba(47,243,200,.6)}
+  h1{margin:10px 0 0;font:700 clamp(34px,8vw,76px)/1.02 Unbounded,sans-serif;
+    background:linear-gradient(100deg,#fff1cf 0%,var(--amber) 35%,var(--brick) 75%,var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 16px rgba(255,140,60,.45))}
+  .sub{margin:4px 0 20px;font:700 clamp(28px,6vw,48px)/1.1 Caveat,cursive;color:#ffe3f1;text-shadow:0 0 6px var(--pink),0 0 22px var(--pink)}
+  .player{position:relative;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#000;
+    box-shadow:0 0 0 2px rgba(47,243,200,.85),0 0 40px rgba(47,243,200,.35),0 24px 70px rgba(0,0,0,.7)}
+  .player video{position:absolute;inset:0;width:100%;height:100%;display:block;background:#000}
+  .play{position:absolute;inset:0;display:grid;place-items:center;border:0;padding:0;background:radial-gradient(ellipse at center,rgba(0,0,0,.05),rgba(0,0,0,.45));cursor:pointer}
+  .play span{width:clamp(72px,14vw,112px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;background:rgba(5,9,13,.55);
+    box-shadow:0 0 0 3px #ffd166,0 0 30px rgba(255,179,71,.8),0 0 70px rgba(255,79,163,.5);backdrop-filter:blur(2px)}
+  .play svg{width:42%;height:42%;margin-left:8%;fill:#fff3d6;filter:drop-shadow(0 0 8px #ffb347)}
+  .play[hidden]{display:none}
+  .card{margin-top:22px;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;padding:18px;border-radius:16px;
+    background:rgba(255,255,255,.035);border:1px solid rgba(47,243,200,.25)}
+  .logos{display:flex;gap:14px;align-items:center}
+  .logos img{height:64px;width:auto}
+  .logos img.round{width:64px;border-radius:50%;box-shadow:0 0 0 2px #fff}
+  .card p{margin:0 0 6px;font-size:15px;line-height:1.45;color:var(--muted)}
+  .card p b{color:var(--ink);font-weight:600}
+  .contest{font-size:16px;color:#ffe3a8}
+  @media (max-width:560px){.card{grid-template-columns:1fr}.logos img{height:56px}.logos img.round{width:56px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="eyebrow">Медицинская карта активиста · № 8</div>
+  <h1>Профсоюзный анамнез</h1>
+  <div class="sub">история одного активиста</div>
+  <div class="player">
+    <video id="v" controls playsinline preload="metadata" poster="poster.jpg" src="anamnez.mp4?v=1"></video>
+    <button class="play" id="play" aria-label="Смотреть ролик"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></span></button>
+  </div>
+  <section class="card">
+    <div class="logos"><img src="logo-profsoyuz.png" alt="Профсоюз работников здравоохранения РФ"><img class="round" src="emblem-gkb8.png" alt="ГКБ № 8 г. Челябинск"></div>
+    <div>
+      <p class="contest">Конкурс видеороликов «Наш Профсоюз: история в кадре, награда — в путешествии»</p>
+      <p><b>Автор:</b> Давыдова Наталья Владимировна, ГАУЗ ОЗП «ГКБ № 8 г. Челябинск»</p>
+      <p>Челябинская областная организация Профсоюза работников здравоохранения РФ</p>
+    </div>
+  </section>
+</main>
+<script>
+  const v = document.getElementById("v"), b = document.getElementById("play");
+  b.onclick = () => { v.play().catch(() => {}); };
+  v.addEventListener("play", () => { b.hidden = true; });
+  v.addEventListener("pause", () => { if (!v.seeking) b.hidden = false; });
+  v.addEventListener("ended", () => { b.hidden = false; });
+</script>
+</body>
+</html>
