@@ -22,7 +22,7 @@
     radial-gradient(800px 600px at 100% 100%,rgba(255,79,163,.11),transparent 70%),var(--bg)}
   .wrap{max-width:1100px;margin:0 auto;padding:max(20px,env(safe-area-inset-top)) 16px max(28px,env(safe-area-inset-bottom))}
   .eyebrow{font:400 13px/1.4 "IBM Plex Mono",monospace;letter-spacing:.18em;text-transform:uppercase;color:#d9fff6;text-shadow:0 0 8px var(--teal),0 0 22px rgba(47,243,200,.6)}
-  h1{margin:10px 0 0;font:700 clamp(34px,8vw,76px)/1.02 Unbounded,sans-serif;
+  h1{margin:10px 0 0;font:700 clamp(27px,8.4vw,76px)/1.02 Unbounded,sans-serif;
     background:linear-gradient(100deg,#fff1cf 0%,var(--amber) 35%,var(--brick) 75%,var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent;
     filter:drop-shadow(0 0 16px rgba(255,140,60,.45))}
   .sub{margin:4px 0 20px;font:700 clamp(28px,6vw,48px)/1.1 Caveat,cursive;color:#ffe3f1;text-shadow:0 0 6px var(--pink),0 0 22px var(--pink)}
@@ -34,6 +34,11 @@
     box-shadow:0 0 0 3px #ffd166,0 0 30px rgba(255,179,71,.8),0 0 70px rgba(255,79,163,.5);backdrop-filter:blur(2px)}
   .play svg{width:42%;height:42%;margin-left:8%;fill:#fff3d6;filter:drop-shadow(0 0 8px #ffb347)}
   .play[hidden]{display:none}
+  .dl{margin-top:16px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px 12px;min-height:52px;padding:12px 18px;border-radius:14px;
+    color:#1b1206;text-decoration:none;background:linear-gradient(100deg,#fff1cf,var(--amber) 50%,#ff8f5a);box-shadow:0 0 24px rgba(255,179,71,.4)}
+  .dl svg{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .dl b{font:600 18px/1.2 "Golos Text",system-ui,sans-serif}
+  .dl span{font:400 13px/1.2 "IBM Plex Mono",monospace;opacity:.75}
   .card{margin-top:22px;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;padding:18px;border-radius:16px;
     background:rgba(255,255,255,.035);border:1px solid rgba(47,243,200,.25)}
   .logos{display:flex;gap:14px;align-items:center}
@@ -54,6 +59,10 @@
     <video id="v" controls playsinline preload="metadata" poster="poster.jpg" src="anamnez.mp4?v=5"></video>
     <button class="play" id="play" aria-label="Смотреть ролик"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></span></button>
   </div>
+  <a class="dl" href="anamnez.mp4?v=5" download="Davydova_Profsoyuzny_anamnez.mp4">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0-5-5m5 5 5-5M5 20h14"/></svg>
+    <b>Скачать ролик</b><span>MP4 · 1920×1080 · 2:59 · 45 МБ</span>
+  </a>
   <section class="card">
     <div class="logos"><img src="logo-profsoyuz.png" alt="Профсоюз работников здравоохранения РФ"><img class="round" src="emblem-gkb8.png" alt="ГКБ № 8 г. Челябинск"></div>
     <div>
