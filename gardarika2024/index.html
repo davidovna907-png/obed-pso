@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Гардарика 2024 · Гардарикские ведомости</title>
-<meta name="description" content="Газета-приложение «Гардарикские ведомости · 2024»: репортажи из трёх эпох и кинохроника с тапёром">
+<meta name="description" content="Газета-приложение «Гардарикские ведомости · 2024»: репортажи сквозь века и кинохроника с тапёром">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -24,7 +24,7 @@
 :root{
   color-scheme:light;
   --paper:#ece3cd; --paper-2:#e2d6b9; --edge:#c9b68d; --ink:#1d1913; --ink-2:#3f372c; --mute:#6f6352; --rule:#2a241c;
-  --red:#a8261c; --blue:#24477d; --sepia:#6e4524; --cream:#f5ecd8; --gold:#e3c26e;
+  --red:#a8261c; --blue:#24477d; --sepia:#6e4524; --green:#284a3a; --cream:#f5ecd8; --gold:#e3c26e;
   --night:#120e0a;
   --serif:"PT Serif",Georgia,"Times New Roman",serif;
   --old:"Old Standard TT","PT Serif",Georgia,serif;
@@ -87,6 +87,8 @@ button{font:inherit;color:inherit}
 .pr-vid{position:absolute;right:6px;bottom:6px;padding:2px 6px;background:rgba(0,0,0,.65);color:#fff;font:400 11px var(--mono)}
 .figs{display:grid;grid-template-columns:1fr 1fr;gap:12px 10px;margin:14px 0}
 .figs .big{grid-column:1/-1}
+/* снимки парами — одной высоты (кадр 3:4; обложка видео 9:16 и горизонтальный снимок обрезаются по краям) */
+.figs .pr:not(.big) .pr-in img{aspect-ratio:3/4;object-fit:cover}
 
 .pg{position:relative;padding:18px 16px 22px;border-top:4px double var(--rule)}
 .pg-era{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding-bottom:6px;margin-bottom:12px;border-bottom:1px solid var(--rule);font:400 11px/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
@@ -132,6 +134,22 @@ button{font:inherit;color:inherit}
 .pt .pr figcaption{text-align:center;font:italic 400 15px/1.35 var(--old)}
 .pt .box{text-align:center;border:1px solid var(--sepia);outline:1px solid var(--sepia);outline-offset:3px;margin:20px 4px 4px;font:400 16.5px/1.45 var(--old)}
 .pt .box b{display:block;font:700 14px/1.2 var(--old);letter-spacing:.3em;margin-right:-.3em;text-transform:uppercase;color:var(--red);margin-bottom:4px}
+
+/* полоса «светская хроника» — век XIX: иллюстрированный журнал — виньетки, курсив, снимки — карточки фотоателье
+   (паспарту с золотой рамкой, оттиск ателье под снимком, парные портреты — в овале) */
+.sl{background:linear-gradient(rgba(40,74,58,.035),rgba(40,74,58,.085))}
+.sl-orn{display:flex;justify-content:center;color:var(--green);margin:0 0 6px}
+.sl-orn svg{width:200px;height:26px}
+.sl-orn.end{margin:18px 0 0}
+.sl .pg-h{text-align:center;font:italic 700 clamp(26px,7.6vw,46px)/1.12 var(--old);color:var(--green)}
+.sl p{font:400 17.5px/1.5 var(--old)}
+.sl .pr-in{padding:9px 9px 0;background:#f4ecd6;border:1px solid #b99a5c;box-shadow:inset 0 0 0 3px #f4ecd6,inset 0 0 0 4px #cdb173,0 3px 10px rgba(60,40,10,.14)}
+.sl .pr-in::after{content:"Фотографія «Гардарика»";position:static;display:block;background:none;padding:5px 0 6px;text-align:center;font:italic 400 10.5px/1.2 var(--old);letter-spacing:.12em;color:#8b6d35}
+.sl .pr-in img{filter:grayscale(1) sepia(.78) contrast(1.04) brightness(1.03) saturate(1.1)}
+.sl .pr.oval .pr-in img{border-radius:50%;box-shadow:0 0 0 2px #cdb173}
+.sl .pr figcaption{text-align:center;font:italic 400 15px/1.35 var(--old)}
+.sl .box{text-align:center;border:3px double var(--green);margin:20px 4px 4px;font:400 16.5px/1.45 var(--old)}
+.sl .box b{display:block;font:italic 700 17px/1.2 var(--old);color:var(--green);margin-bottom:4px}
 
 /* полоса IV — двадцатые годы: газета 1920-х, красный и чёрный */
 .sv-band{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 -16px 14px;padding:9px 16px;background:var(--red);color:var(--cream);font:700 clamp(18px,5.4vw,28px)/1 var(--sov);letter-spacing:.07em;text-transform:uppercase;transform:skewY(-2deg)}
@@ -327,7 +345,7 @@ body.tab-cine .tab[aria-selected="true"] .ic{color:var(--gold)}
   .pg .cols p{break-inside:avoid-column}
   .figs{grid-template-columns:repeat(3,1fr)}
   .figs .big{grid-column:span 2;grid-row:span 2}
-  .ads-grid{grid-template-columns:repeat(4,1fr)}
+  .ads-grid{grid-template-columns:repeat(3,1fr)}
   .tg .figs .big{grid-column:1/-1}
 }
 @media (min-width:960px){
@@ -344,12 +362,12 @@ body.tab-cine .tab[aria-selected="true"] .ic{color:var(--gold)}
  "title": "Гардарика",
  "year": "2024",
  "paper": "Гардарикские ведомости",
- "issue": ["№ 1", "Зимний выпуск · 2024", "Цена — улыбка"],
+ "issue": ["№ 1", "7 декабря 2024", "Цена — улыбка"],
  "author": "ND",
  "cast": [],
- "front": {"kicker": "Сенсация номера", "head": "Путешествие во времени удалось!", "sub": "Наши корреспондентки побывали в трёх эпохах: у викингов, у пушкарей XVIII века и в кабинете комиссара двадцатых годов. Репортажи — на полосах этого выпуска.", "photo": "n002", "weather": "Мороз и солнце, небо ясное, снег под ногами — погода для путешествий во времени самая подходящая."},
- "sections": [{"id": "put", "style": "telegram", "era": "Наши дни", "rubric": "Срочно в номер", "film": "В путь!", "head": "Экспедиция выехала", "from": "в пути", "tg": "Выехали тчк солнце в окно зпт настроение отличное тчк курс на Гардарику тчк ждите репортаж тчк"}, {"id": "runes", "style": "runes", "era": "Эпоха викингов", "rubric": "Репортаж", "film": "Рунный камень", "head": "Рунный камень встретил гостей", "text": ["Первым на пути путешественниц встал камень с рунами: синий зверь, узлы-плетёнки и надпись «Парк Гардарика». По кругу руны сообщают, что камень поставлен в 2016 году в честь открытия парка."], "box": {"h": "Знаете ли вы?", "t": "Гардарикой в скандинавских сагах называли Русь — «страну городов»."}}, {"id": "guns", "style": "petrine", "era": "Вѣкъ осьмнадцатый", "rubric": "Военныя извѣстія", "film": "Пушкари", "head": "О пушкарскомъ ученіи", "date": "Писано въ Гардарикѣ, зимою 2024 года", "text": ["У бревенчатой башни канониръ въ треуголкѣ показывалъ дамамъ пушкарское дѣло: какъ банникомъ стволъ прочищать да какъ орудіе къ выстрѣлу готовить. Ученицы оказались весьма прилежны, а иныя — и смѣшливы, о чемъ свидѣтельствуютъ снимки нашего корреспондента."], "box": {"h": "Указъ", "t": "Всѣмъ гостямъ Гардарики быть веселыми и пушекъ не бояться."}}, {"id": "office", "style": "soviet", "era": "Двадцатые годы", "rubric": "Хроника", "film": "Кабинет комиссара", "head": "Комиссары заступили на пост", "band": "Даёшь Гардарику!", "text": ["В бревенчатом кабинете всё по уставу: портрет Ильича, счёты, чёрный телефон, чернильный прибор и красное знамя «Пролетарии всех стран, соединяйтесь!». За столом — товарищи в кожанках, на вооружении — маузер.", "Проверка показала: дисциплина образцовая, настроение боевое."], "box": {"h": "Телефонограмма", "t": "Всем постам. В Гардарике порядок. Срочно в номер!"}}],
- "ads": [{"h": "Требуются канониры", "t": "Опыт не обязателен: научат на месте, банник выдаётся."}, {"h": "Машина времени", "t": "Ходит по расписанию: туда — на автобусе, обратно — с улыбкой."}, {"h": "Меняю", "t": "Маузер на счёты. Звонить по чёрному телефону."}, {"h": "Найден", "t": "Рунный камень. Ждёт гостей с 2016 года."}],
+ "front": {"kicker": "Сенсация номера", "head": "Путешествие во времени удалось!", "sub": "Наши корреспондентки прошли сквозь века: побывали у викингов, постреляли с пушкарями XVIII века, отдохнули у терема и заглянули в кабинет комиссара двадцатых годов. Репортажи — на полосах этого выпуска.", "photo": "n002", "weather": "Мороз и солнце, небо ясное, снег под ногами — погода для путешествий во времени самая подходящая."},
+ "sections": [{"id": "put", "style": "telegram", "era": "Наши дни", "rubric": "Срочно в номер", "film": "В путь!", "head": "Экспедиция выехала", "from": "в пути", "tg": "Выехали тчк солнце в окно зпт настроение отличное тчк курс на Гардарику тчк ждите репортаж тчк"}, {"id": "runes", "style": "runes", "era": "Эпоха викингов", "rubric": "Репортаж", "film": "Рунный камень", "head": "Рунный камень встретил гостей", "text": ["Первым на пути путешественниц встал камень с рунами: синий зверь, узлы-плетёнки и надпись «Парк Гардарика». По кругу руны сообщают, что камень поставлен в 2016 году в честь открытия парка."], "box": {"h": "Знаете ли вы?", "t": "Гардарикой в скандинавских сагах называли Русь — «страну городов»."}}, {"id": "guns", "style": "petrine", "era": "Вѣкъ осьмнадцатый", "rubric": "Военныя извѣстія", "film": "Пушкари", "head": "О пушкарскомъ ученіи", "date": "Писано въ Гардарикѣ, зимою 2024 года", "text": ["У бревенчатой башни канониръ въ треуголкѣ показывалъ дамамъ пушкарское дѣло: какъ банникомъ стволъ прочищать, какъ пальникъ держать да какъ орудіе къ выстрѣлу готовить. Ученицы оказались весьма прилежны, а иныя — и смѣшливы, о чемъ свидѣтельствуютъ снимки нашего корреспондента."], "box": {"h": "Указъ", "t": "Всѣмъ гостямъ Гардарики быть веселыми и пушекъ не бояться."}}, {"id": "fort", "style": "petrine", "era": "Вѣкъ осьмнадцатый", "rubric": "Происшествія", "film": "Пальба из фузеи", "head": "Пальба изъ фузеи", "date": "Изъ крѣпости сообщаютъ, декабря 7 дня 2024 года", "text": ["За бревенчатой стѣной, у бойницы, канониръ училъ дамъ стрѣлять изъ фузеи. Команда «Огонь!» — и вспышка, громъ и дымъ, а слѣдомъ — звонкій смѣхъ: обѣ стрѣлявшія дамы остались весьма довольны.", "Посѣтили и острогъ: узникъ за рѣшеткой встрѣтилъ гостей улыбкой."], "box": {"h": "Происшествіе", "t": "Въ крѣпости слышны выстрѣлы. Жителей просятъ не безпокоиться: это учатся дамы."}}, {"id": "terem", "style": "salon", "era": "Вѣкъ девятнадцатый", "rubric": "Свѣтская хроника", "film": "Светская хроника", "head": "Дамы изволили отдыхать у терема", "text": ["Въ солнечный морозный день дамы изволили отдыхать на огромной скамьѣ у рѣзного терема. Солнце свѣтило ярко, морозъ румянилъ щеки, настроеніе было превосходное.", "Канониръ изъ прошлаго вѣка, смѣнивъ треуголку на мѣховую шапку, почтилъ общество своимъ присутствіемъ и любезно согласился сняться на память.", "Юные кладоискатели тѣмъ временемъ разбирали сокровища: самоцвѣты, бусы и старинныя монеты."], "box": {"h": "Модный вѣстникъ", "t": "Въ этомъ сезонѣ въ Гардарикѣ носятъ бѣлое и черное, шапочки съ помпономъ и пуховыя варежки."}}, {"id": "office", "style": "soviet", "era": "Двадцатые годы", "rubric": "Хроника", "film": "Кабинет комиссара", "head": "Комиссары заступили на пост", "band": "Даёшь Гардарику!", "text": ["В бревенчатом кабинете всё по уставу: портрет Ильича, счёты, чёрный телефон, чернильный прибор и красное знамя «Пролетарии всех стран, соединяйтесь!». За столом — товарищи в кожанках, на вооружении — маузер.", "Проверка показала: дисциплина образцовая, настроение боевое."], "box": {"h": "Телефонограмма", "t": "Всем постам. В Гардарике порядок. Срочно в номер!"}}],
+ "ads": [{"h": "Требуются канониры", "t": "Опыт не обязателен: научат на месте, банник выдаётся."}, {"h": "Машина времени", "t": "Ходит по расписанию: туда — на автобусе, обратно — с улыбкой."}, {"h": "Меняю", "t": "Маузер на счёты. Звонить по чёрному телефону."}, {"h": "Найден", "t": "Рунный камень. Ждёт гостей с 2016 года."}, {"h": "Продаётся фузея", "t": "Стреляет громко, дамам нравится."}, {"h": "Сдаётся терем", "t": "С резными наличниками. Скамья для отдыха — в подарок."}],
  "photos": [
  {"id": "n001", "src": "photos/n001.jpg", "thumb": "photos/t/n001.jpg", "w": 1500, "h": 2000, "sec": "put", "cap": "Корреспондентки в пути. Солнце — в окно!"},
  {"id": "n002", "src": "photos/n002.jpg", "thumb": "photos/t/n002.jpg", "w": 1500, "h": 2000, "sec": "runes", "cap": "Встреча у рунного камня"},
@@ -365,8 +383,21 @@ body.tab-cine .tab[aria-selected="true"] .ic{color:var(--gold)}
  {"id": "n012", "src": "photos/n012.jpg", "thumb": "photos/t/n012.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Канониръ держитъ рѣчь"},
  {"id": "n013", "src": "photos/n013.jpg", "thumb": "photos/t/n013.jpg", "w": 1500, "h": 2000, "bw": true, "sec": "guns", "cap": "Двѣ ученицы съ банниками"},
  {"id": "n014", "src": "photos/n014.jpg", "thumb": "photos/t/n014.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Стволъ прочищаютъ банникомъ"},
+ {"id": "n017", "src": "photos/n017.jpg", "thumb": "photos/t/n017.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Банникъ въ дѣлѣ!"},
+ {"id": "n018", "type": "video", "src": "photos/n018.mp4", "poster": "photos/n018.jpg", "thumb": "photos/t/n018.jpg", "w": 720, "h": 1280, "dur": 3.2, "sound": true, "sec": "guns", "cap": "Работа кипитъ!", "date": "2024-12-07", "time": "11:18:11"},
  {"id": "n015", "src": "photos/n015.jpg", "thumb": "photos/t/n015.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Ученіе идетъ весело"},
- {"id": "n016", "src": "photos/n016.jpg", "thumb": "photos/t/n016.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Канониръ провѣряетъ орудіе"}
+ {"id": "n016", "src": "photos/n016.jpg", "thumb": "photos/t/n016.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Канониръ провѣряетъ орудіе"},
+ {"id": "n019", "src": "photos/n019.jpg", "thumb": "photos/t/n019.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Пальникъ наготовѣ!"},
+ {"id": "n020", "type": "video", "src": "photos/n020.mp4", "poster": "photos/n020.jpg", "thumb": "photos/t/n020.jpg", "w": 720, "h": 1280, "dur": 5.4, "sound": true, "sec": "fort", "cap": "Выстрѣлъ — и звонкій смѣхъ!", "date": "2024-12-07", "time": "11:48:24"},
+ {"id": "n021", "type": "video", "src": "photos/n021.mp4", "poster": "photos/n021.jpg", "thumb": "photos/t/n021.jpg", "w": 720, "h": 1280, "dur": 6.7, "sound": true, "sec": "fort", "cap": "Второй выстрѣлъ — и полный восторгъ!", "date": "2024-12-07", "time": "11:51:39"},
+ {"id": "n022", "src": "photos/n022.jpg", "thumb": "photos/t/n022.jpg", "w": 1500, "h": 2000, "sec": "fort", "cap": "Узникъ острога принимаетъ гостей"},
+ {"id": "n023", "src": "photos/n023.jpg", "thumb": "photos/t/n023.jpg", "w": 1500, "h": 2000, "sec": "terem", "cap": "Канониръ въ мѣховой шапкѣ и его спутницы"},
+ {"id": "n024", "src": "photos/n024.jpg", "thumb": "photos/t/n024.jpg", "w": 1500, "h": 2000, "sec": "terem", "cap": "Дама въ бѣломъ у рѣзного терема", "oval": true},
+ {"id": "n025", "src": "photos/n025.jpg", "thumb": "photos/t/n025.jpg", "w": 1500, "h": 2000, "sec": "terem", "cap": "Дама въ синей шапочкѣ грѣется на солнцѣ", "oval": true},
+ {"id": "n026", "src": "photos/n026.jpg", "thumb": "photos/t/n026.jpg", "w": 1500, "h": 2000, "sec": "terem", "cap": "Портретъ на память", "oval": true},
+ {"id": "n027", "src": "photos/n027.jpg", "thumb": "photos/t/n027.jpg", "w": 1500, "h": 2000, "sec": "terem", "cap": "И еще одинъ — для альбома", "oval": true, "film": false},
+ {"id": "n028", "src": "photos/n028.jpg", "thumb": "photos/t/n028.jpg", "w": 1500, "h": 2000, "sec": "terem", "cap": "Юные кладоискатели за работой"},
+ {"id": "n029", "src": "photos/n029.jpg", "thumb": "photos/t/n029.jpg", "w": 2000, "h": 1483, "sec": "terem", "cap": "Самоцвѣты, бусы и старинныя монеты"}
  ]
 }
 </script>
@@ -403,7 +434,7 @@ body.tab-cine .tab[aria-selected="true"] .ic{color:var(--gold)}
       <div class="cine-k">Сегодня и ежедневно</div>
       <h2 class="cine-h">Кинохроника</h2>
       <div class="cine-t" id="cine-t">Гардарика · 2024</div>
-      <p class="cine-s">Немое кино: путешествие из наших дней к викингам, пушкарям и комиссарам. За роялем — тапёр.</p>
+      <p class="cine-s">Немое кино: путешествие сквозь века — от викингов до комиссаров. За роялем — тапёр.</p>
     </div>
     <div class="reel" id="reel" aria-hidden="true"></div>
     <div class="cine-bottom">
@@ -502,11 +533,12 @@ const I_PAUSE = `<svg class="ic fill" viewBox="0 0 24 24"><rect x="6" y="4.5" wi
 const STAR = `<svg class="star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.4l-6.1 3.5 1.5-6.8L2.2 9.5l6.9-.7z"/></svg>`;
 const ORN = `<svg viewBox="0 0 150 22" aria-hidden="true"><path d="M2 11h48M100 11h48" stroke="currentColor" stroke-width="1.2"/><path d="M50 11c6-8 14-8 18 0-4 8-12 8-18 0zM100 11c-6-8-14-8-18 0 4 8 12 8 18 0z" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="75" cy="11" r="4.2" fill="currentColor"/><path d="M75 2v4M75 16v4" stroke="currentColor" stroke-width="1.2"/></svg>`;
 const RUNES = "ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ";
+const FLOURISH = `<svg viewBox="0 0 200 26" aria-hidden="true"><path d="M4 13h62M134 13h62" stroke="currentColor" stroke-width="1"/><path d="M66 13c6-9 18-9 20-1 1 5-5 7-8 4M134 13c-6-9-18-9-20-1-1 5 5 7 8 4M66 13c6 9 18 9 20 1M134 13c-6 9-18 9-20 1" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M100 6l5 7-5 7-5-7z" fill="currentColor"/><circle cx="89" cy="13" r="1.6" fill="currentColor"/><circle cx="111" cy="13" r="1.6" fill="currentColor"/></svg>`;
 
 /* ---------- Газета ---------- */
 function prHTML(p, cls){
   const i = PHOTOS.indexOf(p), big = cls === "big" || cls === "front";
-  return `<figure class="pr ${cls || ""}" data-i="${i}" tabindex="0" role="button" aria-label="${esc((p.cap || "Снимок") + " — открыть в цвете")}">`
+  return `<figure class="pr ${cls || ""}${p.oval ? " oval" : ""}" data-i="${i}" tabindex="0" role="button" aria-label="${esc((p.cap || "Снимок") + " — открыть в цвете")}">`
     + `<div class="pr-in"><img src="${esc(big ? p.img : (p.thumb || p.img))}" alt=""${big ? "" : ` loading="lazy"`} decoding="async"${p.w && p.h ? ` width="${p.w}" height="${p.h}"` : ""}>`
     + (p.isVideo ? `<span class="pr-vid">▶ ${Math.round(p.dur || 0)} с</span>` : "") + `</div>`
     + (p.cap ? `<figcaption>${esc(p.cap)}</figcaption>` : "") + `</figure>`;
@@ -533,6 +565,9 @@ function secHTML(s, k){
   } else if (s.style === "petrine"){
     cls = "pt";
     body = `<div class="pt-orn">${ORN}</div>` + h + (s.date ? `<div class="pt-date">${esc(s.date)}</div>` : "") + paras(s.text, true) + figsHTML(list) + box;
+  } else if (s.style === "salon"){
+    cls = "sl";
+    body = `<div class="sl-orn">${FLOURISH}</div>` + h + paras(s.text) + figsHTML(list) + box + `<div class="sl-orn end">${FLOURISH}</div>`;
   } else if (s.style === "soviet"){
     cls = "sv";
     body = (s.band ? `<div class="sv-band">${STAR}<b>${esc(s.band)}</b>${STAR}</div>` : "") + h + paras(s.text) + figsHTML(list) + box;
@@ -1083,8 +1118,9 @@ function renderCine(){
   const bg = still.find(p => p.bw) || still[0];
   if (bg) $("#cine-bg").innerHTML = `<img src="${esc(bg.thumb || bg.img)}" alt="">`;
   /* кадры на плёнке — по одному из каждой полосы, сколько есть */
-  const pick = [];
+  let pick = [];
   SECS.forEach(s => { const p = still.find(x => x.sec === s.id && !pick.includes(x)); if (p) pick.push(p); });
+  if (pick.length > 4){ const rest = pick.length > 4 ? pick.slice(1) : pick; pick = [0, 1, 2, 3].map(k => rest[Math.round(k * (rest.length - 1) / 3)]); }
   still.forEach(p => { if (pick.length < 4 && !pick.includes(p)) pick.push(p); });
   $("#reel").innerHTML = pick.slice(0, 4).map(p => `<img src="${esc(p.thumb || p.img)}" alt="" loading="lazy">`).join("");
   $("#reel").hidden = !pick.length;
@@ -1240,7 +1276,7 @@ $("#inst-btn2").onclick = openGate;
 $("#gate-skip").onclick = closeGate;
 document.addEventListener("keydown", e => { if (e.key === "Escape"){ if (!$("#gate").hidden) closeGate(); if (!$("#qr-sheet").hidden) $("#qr-sheet").hidden = true; } });
 
-const SHARE_TEXT = "📰 «Гардарикские ведомости · 2024» — газета-приложение о путешествии в Гардарику: репортажи из трёх эпох и кинохроника с тапёром. Наведите камеру телефона на QR-код или откройте ссылку и нажмите «Установить приложение»: газета появится на экране телефона со своим значком и будет открываться без интернета.";
+const SHARE_TEXT = "📰 «Гардарикские ведомости · 2024» — газета-приложение о путешествии в Гардарику: репортажи сквозь века и кинохроника с тапёром. Наведите камеру телефона на QR-код или откройте ссылку и нажмите «Установить приложение»: газета появится на экране телефона со своим значком и будет открываться без интернета.";
 /* друзьям газета уходит картинкой-приглашением с QR-кодом (icons/invite.jpg) вместе с текстом и ссылкой */
 async function shareApp(){
   try {

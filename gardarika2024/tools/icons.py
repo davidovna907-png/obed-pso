@@ -84,7 +84,7 @@ im = paper(W, H, 11); d = ImageDraw.Draw(im)
 d.rectangle((0, 0, W, 70), fill=INK)
 mono = font("PTMono.ttf", 26)
 d.text((40, 20), "№ 1", font=mono, fill=CREAM)
-ctext(d, W / 2, 20, "ЗИМНИЙ ВЫПУСК · 2024", mono, CREAM)
+ctext(d, W / 2, 20, "7 ДЕКАБРЯ 2024", mono, CREAM)
 t = "ЦЕНА — УЛЫБКА"; d.text((W - 40 - d.textlength(t, font=mono), 20), t, font=mono, fill=CREAM)
 ctext(d, W / 2, 104, "✦  ГАЗЕТА ПУТЕШЕСТВИЙ ВО ВРЕМЕНИ  ✦".replace("✦", "*"), font("PTMono.ttf", 24), (111, 99, 82))
 mast = font("OldStandard-Bold.ttf", 132)
@@ -107,7 +107,7 @@ crop = Image.blend(crop, Image.new("RGB", crop.size, (112, 84, 52)), .12)
 crop = ImageOps.autocontrast(crop, cutoff=1).resize((W - 80, int((W - 80) * crop.height / crop.width)), Image.LANCZOS)
 im.paste(crop, (40, 800)); d.rectangle((40, 800, 40 + crop.width - 1, 800 + crop.height - 1), outline=INK, width=3)
 y = 800 + crop.height + 14
-d.text((40, y), "Встреча у рунного камня. Репортажи из трёх эпох — внутри номера", font=font("PTSerif-Italic.ttf", 28), fill=(63, 55, 44))
+d.text((40, y), "Встреча у рунного камня. Репортажи сквозь века — внутри номера", font=font("PTSerif-Italic.ttf", 28), fill=(63, 55, 44))
 # QR-код и подпись
 qs = 330
 q = qr_img.resize((qs, qs), Image.NEAREST)
