@@ -1,0 +1,1300 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Гардарика 2024 · Гардарикские ведомости</title>
+<meta name="description" content="Газета-приложение «Гардарикские ведомости · 2024»: репортажи из трёх эпох и кинохроника с тапёром">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Гардарика 24">
+<meta name="theme-color" content="#1d1913">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Oswald:wght@500;700&family=Ruslan+Display&family=PT+Mono&family=Noto+Sans+Runic&display=swap">
+<style>
+/* Макет: газета «Гардарикские ведомости» — пожелтевшая бумага, газетные колонки; каждая полоса свёрстана
+   в духе своей эпохи (телеграмма наших дней, руны викингов, петровские «Ведомости» с ятями, газета 1920-х).
+   Снимки в газете — «печать» (чёрно-белые, сепия), по нажатию проявляются в цвете.
+   Вторая страница — «Кинохроника»: немое кино с тапёром (зерно, царапины, титры, отсчёт плёнки). */
+:root{
+  color-scheme:light;
+  --paper:#ece3cd; --paper-2:#e2d6b9; --edge:#c9b68d; --ink:#1d1913; --ink-2:#3f372c; --mute:#6f6352; --rule:#2a241c;
+  --red:#a8261c; --blue:#24477d; --sepia:#6e4524; --cream:#f5ecd8; --gold:#e3c26e;
+  --night:#120e0a;
+  --serif:"PT Serif",Georgia,"Times New Roman",serif;
+  --old:"Old Standard TT","PT Serif",Georgia,serif;
+  --slav:"Ruslan Display","Old Standard TT",Georgia,serif;
+  --sov:"Oswald","Arial Narrow",Impact,sans-serif;
+  --mono:"PT Mono",ui-monospace,Menlo,Consolas,monospace;
+  --rune:"Noto Sans Runic","Segoe UI Historic",sans-serif;
+  --noise:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .36  0 0 0 0 .27  0 0 0 0 .15  0 0 0 .11 0'/></filter><rect width='220' height='220' filter='url(%23n)'/></svg>");
+}
+*{box-sizing:border-box}
+html,body{overscroll-behavior-y:none}
+html{background:var(--paper)}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 var(--serif);-webkit-tap-highlight-color:transparent;overflow-x:hidden;-webkit-text-size-adjust:100%}
+/* полоска под часами — цвета верхней чёрной линейки газеты (на неё и выходит шапка) */
+body::before{content:"";position:fixed;top:0;left:0;right:0;height:env(safe-area-inset-top,0px);background:var(--ink);z-index:40}
+body.noscroll{overflow:hidden}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit}
+.ic{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ic.fill{fill:currentColor;stroke:none}
+
+/* ---------- Газета ---------- */
+.sheet{position:relative;background-color:var(--paper);background-image:var(--noise),radial-gradient(120% 60% at 50% 0%,rgba(255,250,235,.55),transparent 60%),radial-gradient(90% 70% at 50% 100%,rgba(150,115,60,.12),transparent 70%);padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+.mast{position:relative}
+.mast-bar{display:flex;justify-content:space-between;gap:10px;padding:calc(7px + env(safe-area-inset-top,0px)) 16px 7px;background:var(--ink);color:var(--cream);font:400 11px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.mast-bar span:nth-child(2){text-align:center}
+@media (max-width:370px){.mast-bar{font-size:10px;letter-spacing:.02em;gap:6px;padding-left:12px;padding-right:12px}}
+.mast-in{padding:16px 16px 10px;text-align:center;border-bottom:4px double var(--rule)}
+.mast-orn{font:400 11px/1.2 var(--mono);letter-spacing:.24em;margin-right:-.24em;text-transform:uppercase;color:var(--mute);white-space:nowrap}
+@media (max-width:370px){.mast-orn{letter-spacing:.1em;margin-right:-.1em}}
+.mast-name{margin:8px 0 6px;font:700 clamp(36px,11.6vw,92px)/.94 var(--old);letter-spacing:-.005em}
+.mast-sub{display:flex;align-items:center;justify-content:center;gap:10px;font:italic 400 14.5px/1.3 var(--old);color:var(--ink-2)}
+.mast-sub::before,.mast-sub::after{content:"";flex:1;max-width:70px;height:1px;background:var(--rule)}
+
+.front{padding:14px 16px 18px}
+.kicker{display:inline-block;padding:5px 8px 4px;background:var(--red);color:var(--cream);font:700 11.5px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase}
+.lead-h{margin:10px 0 8px;font:700 clamp(31px,9.4vw,64px)/1.02 var(--old);letter-spacing:-.01em}
+.lead-sub{margin:0 0 14px;font:italic 400 17px/1.45 var(--serif);color:var(--ink-2)}
+.hint{margin:6px 0 0;font:400 12.5px/1.4 var(--mono);color:var(--mute)}
+.front-cols{display:grid;gap:12px;margin-top:16px}
+.index{border-top:2px solid var(--rule);border-bottom:2px solid var(--rule);padding:8px 0}
+.index h4,.weather h4{margin:0 0 6px;font:700 12px/1.2 var(--mono);letter-spacing:.2em;text-transform:uppercase}
+.index ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.index button{display:grid;grid-template-columns:34px 1fr;align-items:baseline;width:100%;min-height:44px;padding:6px 0;border:0;border-bottom:1px dotted var(--edge);background:none;text-align:left;cursor:pointer}
+.index li:last-child button{border-bottom:0}
+.index button span{font:700 15px/1 var(--old);color:var(--red)}
+.index button b{font:700 18px/1.2 var(--old)}
+.index button i{grid-column:2;font:italic 400 13.5px/1.3 var(--serif);color:var(--mute)}
+.weather{padding:10px 12px;border:1px solid var(--rule);font:400 14.5px/1.45 var(--serif)}
+.cine-link{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:52px;margin-top:12px;border:0;border-radius:4px;background:var(--ink);color:var(--cream);font:700 16px/1 var(--sov);letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.cine-link .ic{width:22px;height:22px}
+
+/* снимок «в печати»: чёрно-белый, растр точками; по нажатию — в цвете */
+.pr{margin:0;cursor:zoom-in;outline:none}
+.pr-in{position:relative;overflow:hidden;background:#cdbf9f;border:1px solid var(--rule)}
+.pr-in img{display:block;width:100%;height:auto;filter:grayscale(1) sepia(.2) contrast(1.1) brightness(1.02)}
+.pr-in::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(rgba(236,227,205,.2) 30%,transparent 36%) 0 0/3px 3px}
+.pr:focus-visible .pr-in{outline:3px solid var(--red);outline-offset:2px}
+.pr figcaption{margin-top:5px;font:italic 400 14px/1.35 var(--serif);color:var(--ink-2)}
+.pr-vid{position:absolute;right:6px;bottom:6px;padding:2px 6px;background:rgba(0,0,0,.65);color:#fff;font:400 11px var(--mono)}
+.figs{display:grid;grid-template-columns:1fr 1fr;gap:12px 10px;margin:14px 0}
+.figs .big{grid-column:1/-1}
+
+.pg{position:relative;padding:18px 16px 22px;border-top:4px double var(--rule)}
+.pg-era{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding-bottom:6px;margin-bottom:12px;border-bottom:1px solid var(--rule);font:400 11px/1.3 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.pg-era b{font:700 12.5px/1.2 var(--mono);color:var(--ink);text-align:center}
+.pg-era span:last-child{text-align:right}
+.pg-h{margin:0 0 10px;font:700 clamp(27px,8vw,48px)/1.04 var(--old)}
+.pg p{margin:0 0 10px;text-align:justify;-webkit-hyphens:auto;hyphens:auto}
+.box{margin-top:14px;padding:12px 14px;font:400 15px/1.5 var(--serif)}
+.box b{font-weight:700}
+
+/* полоса I — телеграмма наших дней */
+.tg-form{position:relative;margin:4px 0 14px;padding:12px 14px 14px;background:#f4efe4;border:1px solid #b9ad94;box-shadow:0 2px 0 #d7cdb6,0 8px 18px rgba(60,45,20,.12);transform:rotate(-.7deg)}
+.tg-top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-bottom:7px;margin-bottom:8px;border-bottom:2px solid var(--blue);color:var(--blue)}
+.tg-top b{font:700 15px/1 var(--mono);letter-spacing:.32em;text-transform:uppercase}
+.tg-stamp{padding:5px 7px;border:2px solid var(--red);border-radius:6px;color:var(--red);font:700 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;transform:rotate(-9deg);opacity:.85}
+.tg-row{display:flex;gap:8px;font:400 12.5px/1.45 var(--mono);color:var(--mute)}
+.tg-row b{color:var(--ink);font-weight:400}
+.tg-text{margin:10px 0 0;font:400 14.5px/2.05 var(--mono);letter-spacing:.03em;text-transform:uppercase;text-align:left}
+.tg-text span{padding:2px 5px;background:#fffdf7;box-shadow:0 0 0 1px rgba(0,0,0,.06);-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.tg .figs .big{max-width:420px;justify-self:center;transform:rotate(1.2deg)}
+.tg .pr-in img{filter:saturate(.85) sepia(.12) contrast(1.04)}
+.tg .box{border-left:4px solid var(--blue);background:rgba(36,71,125,.06)}
+
+/* полоса II — эпоха викингов: руны, синий зверь */
+.rn .pg-h{font:400 clamp(27px,8vw,48px)/1.12 var(--slav);color:var(--blue);letter-spacing:.01em}
+.rn-band{margin:0 0 12px;overflow:hidden;white-space:nowrap;text-align:center;font:400 17px/1.4 var(--rune);letter-spacing:.42em;color:var(--blue);opacity:.7}
+.rn-band.end{margin:14px 0 0}
+.rn .pr-in img{filter:saturate(.8) sepia(.18) contrast(1.05)}
+.rn .box{border:2px solid var(--blue);border-radius:34px 4px 34px 4px;color:var(--ink)}
+.rn .box b{color:var(--blue)}
+
+/* полоса III — век XVIII: петровские «Ведомости», яти, буквица, гравюра */
+.pt{background:linear-gradient(rgba(110,69,36,.05),rgba(110,69,36,.09))}
+.pt-orn{display:flex;justify-content:center;color:var(--sepia);margin:-2px 0 8px}
+.pt-orn svg{width:150px;height:22px}
+.pt .pg-h{text-align:center;font:700 clamp(25px,7.4vw,44px)/1.1 var(--old);letter-spacing:.05em;text-transform:uppercase}
+.pt-date{margin:-4px 0 14px;text-align:center;font:italic 400 15px/1.3 var(--old);color:var(--mute)}
+.pt p{font:400 17.5px/1.5 var(--old)}
+.dc::first-letter{float:left;margin:7px 8px 0 0;padding:2px 6px 0;border:1px solid var(--sepia);font:700 54px/.82 var(--old);color:var(--red)}
+.pt .pr-in{padding:5px;border:3px double var(--sepia);background:var(--paper)}
+.pt .pr-in::after{inset:5px}
+.pt .pr-in img{filter:grayscale(1) sepia(.62) contrast(1.06) brightness(.98)}
+.pt .pr figcaption{text-align:center;font:italic 400 15px/1.35 var(--old)}
+.pt .box{text-align:center;border:1px solid var(--sepia);outline:1px solid var(--sepia);outline-offset:3px;margin:20px 4px 4px;font:400 16.5px/1.45 var(--old)}
+.pt .box b{display:block;font:700 14px/1.2 var(--old);letter-spacing:.3em;margin-right:-.3em;text-transform:uppercase;color:var(--red);margin-bottom:4px}
+
+/* полоса IV — двадцатые годы: газета 1920-х, красный и чёрный */
+.sv-band{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 -16px 14px;padding:9px 16px;background:var(--red);color:var(--cream);font:700 clamp(18px,5.4vw,28px)/1 var(--sov);letter-spacing:.07em;text-transform:uppercase;transform:skewY(-2deg)}
+.sv-band .star{width:22px;height:22px;fill:var(--cream);flex:none}
+.sv .pg-h{font:700 clamp(31px,9.6vw,60px)/.98 var(--sov);letter-spacing:.005em;text-transform:uppercase}
+.sv p:first-of-type::first-line{font-weight:700}
+.sv .pr-in{border:4px solid var(--ink)}
+.sv .pr-in img{filter:grayscale(1) contrast(1.3) brightness(1.02)}
+.sv .pr figcaption{font:500 13.5px/1.3 var(--sov);letter-spacing:.04em;text-transform:uppercase;font-style:normal;color:var(--ink)}
+.sv .pr figcaption::before{content:"";display:inline-block;width:10px;height:10px;margin-right:6px;background:var(--red);vertical-align:0}
+.sv .box{background:var(--ink);color:var(--cream);font:400 14px/1.55 var(--mono)}
+.sv .box b{display:block;color:#ff7a6c;font:700 13px/1.2 var(--mono);letter-spacing:.2em;text-transform:uppercase;margin-bottom:4px}
+
+.ads{padding:16px;border-top:4px double var(--rule)}
+.ads-h{margin:0 0 10px;text-align:center;font:700 12px/1.2 var(--mono);letter-spacing:.3em;margin-right:-.3em;text-transform:uppercase}
+.ads-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ad{padding:8px 10px 9px;border:1px solid var(--rule);font:400 14px/1.35 var(--serif)}
+.ad b{display:block;margin-bottom:3px;font:700 13px/1.15 var(--sov);letter-spacing:.05em;text-transform:uppercase}
+.ad:nth-child(3n+1){border-style:double;border-width:3px}
+.ed{margin:4px 16px 0;padding:16px 14px;border:2px solid var(--rule);text-align:center}
+.ed-h{margin:0 0 6px;font:700 22px/1.15 var(--old)}
+.ed p{margin:0 0 6px;font:400 14.5px/1.45 var(--serif);color:var(--ink-2)}
+.ed .acts{justify-content:center}
+.ed-cast{font:italic 400 15px/1.45 var(--old)}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.act{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--rule);background:transparent;color:var(--ink);font:500 14.5px var(--serif);cursor:pointer}
+.act .ic{width:18px;height:18px}
+.offline{margin-top:12px;font:400 12.5px/1.45 var(--mono);color:var(--mute);max-width:46ch;margin-left:auto;margin-right:auto}
+.offline i{display:block;height:3px;margin-top:6px;border-radius:3px;background:linear-gradient(90deg,var(--red) var(--p),rgba(0,0,0,.12) var(--p))}
+.offline.ok{color:var(--ink-2)}
+.colophon{margin:14px 16px 0;text-align:center;font:400 11.5px/1.5 var(--mono);color:var(--mute);letter-spacing:.06em}
+
+/* ---------- Страница «Кинохроника»: афиша кинотеатра ---------- */
+.cine{position:fixed;inset:0;z-index:1;overflow:hidden;background:var(--night);color:#f1e6cc;display:none}
+body.tab-cine .cine{display:block}
+body.tab-cine .sheet{display:none}
+body.tab-cine{background:var(--night)}
+.cine-bg{position:absolute;inset:0}
+.cine-bg img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) sepia(.7) brightness(.36) contrast(1.12)}
+.cine-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(18,14,10,.6),rgba(18,14,10,.15) 32%,rgba(18,14,10,.55) 62%,var(--night) 92%)}
+.cine-in{position:absolute;inset:0;z-index:1;overflow-y:auto;overscroll-behavior:contain;display:grid;grid-template-rows:auto 1fr auto;gap:18px;padding:calc(26px + env(safe-area-inset-top,0px)) 16px calc(94px + env(safe-area-inset-bottom,0px))}
+.cine-top{text-align:center}
+.cine-k{font:400 11.5px/1.4 var(--mono);letter-spacing:.3em;margin-right:-.3em;text-transform:uppercase;color:#d8c59a}
+.cine-h{margin:10px 0 0;font:700 clamp(44px,13.5vw,110px)/.95 var(--old);letter-spacing:.02em;color:#f6ecd4;text-shadow:0 2px 0 #000}
+.cine-t{margin-top:10px;font:500 clamp(17px,4.8vw,28px)/1.2 var(--sov);letter-spacing:.34em;margin-right:-.34em;text-transform:uppercase;color:var(--gold)}
+.cine-s{margin:10px auto 0;max-width:30ch;font:italic 400 16px/1.4 var(--old);color:#dccfb2}
+.reel{align-self:center;justify-self:center;width:min(100%,520px);display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:16px 8px;background:#0b0907;border-radius:4px;box-shadow:0 12px 30px rgba(0,0,0,.5);
+  background-image:repeating-linear-gradient(90deg,transparent 0 8px,#cdbf9f 8px 15px,transparent 15px 22px),repeating-linear-gradient(90deg,transparent 0 8px,#cdbf9f 8px 15px,transparent 15px 22px);background-size:100% 6px,100% 6px;background-position:0 4px,0 calc(100% - 4px);background-repeat:no-repeat;transform:rotate(-2deg)}
+.reel img{display:block;width:100%;aspect-ratio:3/4;object-fit:cover;filter:grayscale(1) sepia(.6) contrast(1.1) brightness(.92);border-radius:2px}
+.cine-bottom{display:grid;justify-items:center;text-align:center}
+.play-btn{display:inline-flex;align-items:center;gap:10px;min-height:54px;padding:0 26px 0 20px;border:0;border-radius:999px;background:var(--gold);color:#1d1406;font:700 17px var(--sov);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;box-shadow:0 10px 30px rgba(227,194,110,.25)}
+.play-btn .ic{width:24px;height:24px}
+.meta{margin-top:12px;font:400 12.5px var(--mono);color:#cbbd9c}
+.cine .acts{justify-content:center}
+.cine .act{border-color:rgba(255,240,210,.25);background:rgba(255,240,210,.07);color:#f1e6cc;font-family:var(--serif)}
+.cine .offline{color:#bfb194}
+.cine .offline.ok{color:var(--gold)}
+.cine .offline i{background:linear-gradient(90deg,var(--gold) var(--p),rgba(255,255,255,.15) var(--p))}
+
+/* ---------- Нижняя панель: стеклянная капсула (правило «Вид приложений») ---------- */
+.tabs{position:fixed;left:50%;bottom:max(10px,calc(env(safe-area-inset-bottom,0px) - 12px));transform:translateX(-50%);z-index:45;display:flex;gap:4px;padding:5px;border-radius:999px;
+  background:rgba(250,245,232,.5);backdrop-filter:blur(20px) saturate(1.7);-webkit-backdrop-filter:blur(20px) saturate(1.7);border:1px solid rgba(255,255,255,.7);box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 10px 28px rgba(45,32,14,.28)}
+.tabs::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.45),rgba(255,255,255,0) 50%)}
+.tab{position:relative;display:grid;justify-items:center;align-content:center;gap:2px;min-width:104px;min-height:50px;padding:5px 16px;border:0;border-radius:999px;background:none;color:#4a4033;font:600 12px/1.1 var(--serif);cursor:pointer}
+.tab .ic{width:23px;height:23px}
+.tab[aria-selected="true"]{background:rgba(29,25,19,.88);color:var(--cream);box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+body.tab-cine .tabs{background:rgba(24,19,14,.46);border-color:rgba(255,240,210,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 10px 30px rgba(0,0,0,.5)}
+body.tab-cine .tabs::before{background:linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,0) 48%)}
+body.tab-cine .tab{color:#d7cbb0}
+body.tab-cine .tab[aria-selected="true"]{background:rgba(255,240,210,.16);color:#fff}
+body.tab-cine .tab[aria-selected="true"] .ic{color:var(--gold)}
+
+/* ---------- Снимок в цвете (по нажатию) ---------- */
+.lb{position:fixed;inset:0;z-index:55;display:grid;grid-template-rows:auto 1fr auto;background:#0d0b09;color:#f3ead6;touch-action:pan-y}
+.lb-top{display:flex;align-items:center;gap:10px;padding:calc(8px + env(safe-area-inset-top,0px)) 10px 6px}
+.lb-n{flex:1;text-align:center;font:400 12.5px var(--mono);color:#bfb194;letter-spacing:.1em}
+.lb-btn{width:46px;height:46px;border:0;border-radius:50%;background:rgba(255,255,255,.1);display:grid;place-items:center;cursor:pointer;color:#fff}
+.lb-img{position:relative;overflow:hidden}
+.lb-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:filter 1.4s ease,opacity .3s}
+/* проявление: снимок из газеты «проявляется» в цвете */
+.lb-img img.dev{filter:grayscale(1) sepia(.35) brightness(.9)}
+.lb-prev,.lb-next{position:absolute;top:50%;transform:translateY(-50%);z-index:2}
+.lb-prev{left:8px}.lb-next{right:8px}
+.lb-cap{min-height:56px;padding:10px 18px calc(16px + env(safe-area-inset-bottom,0px));text-align:center;font:italic 400 16.5px/1.4 var(--serif);color:#efe4c8}
+@media (hover:none){.lb-prev,.lb-next{display:none}}
+
+/* ---------- Кинохроника ---------- */
+.film{position:fixed;inset:0;z-index:50;background:#000;overflow:hidden;color:#fff;user-select:none;-webkit-user-select:none;touch-action:none}
+.layer{position:absolute;inset:0;opacity:0;transition:opacity .8s ease}
+.layer.on{opacity:1}
+.weave{position:absolute;inset:0;animation:weave .24s steps(2) infinite}
+@keyframes weave{0%{transform:translate(0,0)}50%{transform:translate(.7px,-.9px)}}
+.layer .bg{position:absolute;inset:-6%;width:112%;height:112%;object-fit:cover;filter:blur(24px) grayscale(1) sepia(.7) brightness(.32)}
+.layer .ph{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;will-change:transform;filter:grayscale(1) sepia(.5) contrast(1.13) brightness(.97)}
+.layer .ph.cover{object-fit:cover}
+.layer video.ph{opacity:0;transition:opacity .35s ease}
+.layer video.ph.go{opacity:1}
+.fx{position:absolute;inset:0;pointer-events:none;z-index:4}
+.fx-grain{opacity:.2;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 .96  0 0 0 0 .86  0 0 0 1.1 -.35'/></filter><rect width='180' height='180' filter='url(%23n)'/></svg>");animation:grain .42s steps(4) infinite}
+@keyframes grain{0%{background-position:0 0}25%{background-position:-41px 23px}50%{background-position:17px -47px}75%{background-position:-23px -11px}}
+.fx-scr{background:linear-gradient(90deg,transparent 0 22%,rgba(255,248,230,.33) 22% 22.18%,transparent 22.18% 67%,rgba(10,8,5,.5) 67% 67.12%,transparent 67.12%);animation:scr 1.9s steps(1) infinite}
+@keyframes scr{0%{transform:translateX(0);opacity:1}18%{transform:translateX(13%)}37%{transform:translateX(-9%);opacity:.6}55%{opacity:0}63%{transform:translateX(21%);opacity:1}81%{transform:translateX(4%)}}
+.fx-dust{background-image:radial-gradient(circle at 23% 31%,rgba(255,250,236,.75) 0 1.3px,transparent 1.8px),radial-gradient(circle at 71% 64%,rgba(0,0,0,.65) 0 1.6px,transparent 2.2px),radial-gradient(circle at 46% 82%,rgba(255,250,236,.55) 0 1px,transparent 1.5px),radial-gradient(circle at 84% 18%,rgba(0,0,0,.5) 0 2.4px,transparent 3px);background-size:100% 100%;animation:dust .66s steps(3) infinite}
+@keyframes dust{0%{transform:translate(0,0)}33%{transform:translate(-31%,17%) scale(1.2)}66%{transform:translate(19%,-26%) scale(.9)}}
+.fx-flick{background:#fff6e0;opacity:0;animation:flick .2s steps(2) infinite}
+@keyframes flick{0%{opacity:.015}50%{opacity:.07}}
+.vign{background:radial-gradient(ellipse at center,transparent 48%,rgba(0,0,0,.72) 100%);border-radius:0}
+@media (prefers-reduced-motion:reduce){.weave,.fx-grain,.fx-scr,.fx-dust,.fx-flick{animation:none}.fx-scr,.fx-dust{display:none}}
+/* подпись к снимку — как титр немого кино */
+.cap{position:absolute;left:50%;bottom:calc(9vh + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:5;width:min(560px,calc(100% - 32px));padding:9px 14px;text-align:center;background:rgba(8,6,4,.82);border:1px solid rgba(232,218,184,.6);outline:1px solid rgba(232,218,184,.35);outline-offset:3px;font:italic 400 clamp(16px,4.4vw,24px)/1.3 var(--old);color:#efe4c8;opacity:0;transition:opacity .8s .7s,bottom .4s}
+.layer.on .cap{opacity:1}
+.film:not(.calm) .cap{bottom:calc(104px + env(safe-area-inset-bottom,0px))}
+/* титры немого кино: рамка с орнаментом, кремовые буквы */
+.it{position:absolute;inset:0;display:grid;place-items:center;padding:24px;background:radial-gradient(ellipse at 50% 45%,#1b1611,#050403 75%)}
+.it-box{position:relative;width:min(560px,100%);padding:30px 20px 28px;text-align:center;color:#efe4c8;border:2px solid #d4c39b;outline:1px solid rgba(212,195,155,.7);outline-offset:7px}
+.it-box::before,.it-box::after{content:"✥";position:absolute;left:50%;transform:translateX(-50%);padding:0 10px;background:#141009;color:#d4c39b;font:400 18px/1 var(--old)}
+.it-box::before{top:-11px}.it-box::after{bottom:-11px}
+.it-k{font:400 12.5px/1.3 var(--old);letter-spacing:.38em;margin-right:-.38em;text-transform:uppercase;color:#c9b88f}
+.it-h{margin:12px 0 10px;font:700 clamp(32px,9.6vw,64px)/1.04 var(--old)}
+.it-y{font:500 clamp(16px,4.6vw,26px)/1.2 var(--sov);letter-spacing:.36em;margin-right:-.36em;text-transform:uppercase;color:var(--gold)}
+.it-s{margin-top:10px;font:italic 400 clamp(15px,4.2vw,21px)/1.35 var(--old);color:#d8c9a5}
+.it-cr{margin-top:16px;display:grid;gap:8px;font:400 14px/1.35 var(--old);color:#dccfae}
+.it-cr span{display:block;font:400 11px/1.3 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:#a9997a}
+.it-cr b{display:block;font:700 17px/1.25 var(--old);color:#f2e8cf}
+.it-cr i{display:block;font:italic 400 14px/1.3 var(--old);color:#cdbf9f}
+.it-box .it-k,.it-box .it-h,.it-box .it-y,.it-box .it-s,.it-box .it-cr{opacity:0;animation:itIn .9s .25s forwards}
+.it-box .it-h{animation-delay:.45s}.it-box .it-y{animation-delay:.9s}.it-box .it-s{animation-delay:1.2s}.it-box .it-cr{animation-delay:1.5s}
+@keyframes itIn{from{opacity:0;filter:blur(3px)}to{opacity:1;filter:none}}
+/* отсчёт плёнки перед хроникой: 4 — 3 — 2 и «писк» на двойке */
+.ld{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(ellipse at center,#d9d3c4 40%,#8f8a7e 100%);color:#16130f;overflow:hidden}
+.ld-ring{position:absolute;width:min(72vw,62vh);aspect-ratio:1;border-radius:50%;border:3px solid #1b1814}
+.ld-ring.r2{width:min(60vw,52vh);border-width:2px}
+.ld-cross::before,.ld-cross::after{content:"";position:absolute;left:50%;top:50%;background:#1b1814;transform:translate(-50%,-50%)}
+.ld-cross::before{width:100vw;height:2px}.ld-cross::after{width:2px;height:100vh}
+.ld-hand{position:absolute;left:50%;top:50%;width:min(36vw,31vh);height:3px;margin-top:-1.5px;background:#1b1814;transform-origin:0 50%}
+.ld-n{position:absolute;font:700 min(46vw,40vh)/1 var(--old);opacity:0}
+.ld-black{position:absolute;inset:0;background:#000;opacity:0}
+/* управление */
+.f-ui{position:absolute;inset:0;z-index:10;pointer-events:none;transition:opacity .45s}
+.f-ui > *{pointer-events:auto}
+.film.calm .f-ui{opacity:0}
+.film.calm .f-ui > *{pointer-events:none}
+.f-top{position:absolute;top:0;left:0;right:0;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 30px;display:flex;align-items:center;gap:12px;background:linear-gradient(rgba(0,0,0,.6),transparent)}
+.f-prog{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.22);overflow:hidden}
+.f-prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .6s}
+.f-bot{position:absolute;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;gap:10px;padding:8px;border-radius:999px;background:rgba(24,19,14,.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,240,210,.16)}
+.f-btn{width:48px;height:48px;border-radius:50%;border:0;background:rgba(255,255,255,.1);display:grid;place-items:center;cursor:pointer;color:#fff}
+.f-btn.main{background:var(--gold);color:#1d1406}
+.f-btn.off{opacity:.5}
+.f-end{position:absolute;inset:0;z-index:12;display:grid;place-content:center;justify-items:center;gap:14px;background:rgba(0,0,0,.74);text-align:center;padding:24px}
+.f-end h3{margin:0;font:700 clamp(36px,10vw,64px)/1 var(--old)}
+.f-end .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.f-end button{min-height:48px;padding:0 22px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-family:var(--serif)}
+.f-end button.main{background:var(--gold);color:#1d1406;border:0;font-weight:700}
+
+/* ---------- Установка приложения, QR-код, сообщения ---------- */
+.sheet-ov{position:fixed;inset:0;z-index:60;background:rgba(20,15,8,.55);display:grid;align-items:end;justify-items:center;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.sheet-box{position:relative;width:100%;max-width:520px;background:var(--paper);background-image:var(--noise);border:2px solid var(--rule);border-radius:6px;padding:20px 18px 18px;color:var(--ink)}
+.sheet-box h3{margin:0 48px 12px 0;font:700 22px/1.2 var(--old)}
+.sheet-box p{margin:12px 0 0;color:var(--ink-2);font-size:14.5px}
+.sheet-x{position:absolute;top:10px;right:10px;width:44px;height:44px;border:0;border-radius:50%;background:rgba(0,0,0,.07);cursor:pointer;display:grid;place-items:center}
+.qr-box{text-align:center;display:grid;justify-items:center;gap:12px}
+.qr-box h3{justify-self:start}
+.qr-img{width:min(260px,72vw);background:#fff;border:1px solid var(--rule);padding:10px}
+.qr-box p{margin:0;text-align:left}
+.gate{position:fixed;inset:0;z-index:65;overflow-y:auto;overscroll-behavior:contain;background:var(--paper);background-image:var(--noise);display:grid;justify-items:center;align-items:center;padding:calc(24px + env(safe-area-inset-top,0px)) 16px calc(24px + env(safe-area-inset-bottom,0px))}
+.gate-box{width:100%;max-width:440px;display:grid;justify-items:center;text-align:center;gap:10px}
+.gate-icon{width:96px;height:96px;border-radius:22px;box-shadow:0 10px 28px rgba(45,32,14,.3),0 0 0 1px rgba(0,0,0,.12)}
+.gate-h{margin:8px 0 0;font:700 clamp(32px,9.6vw,44px)/1 var(--old)}
+.gate-sub{margin:0;font:400 12px var(--mono);letter-spacing:.22em;text-transform:uppercase;color:var(--red)}
+.gate-lead{margin:6px 0 4px;color:var(--ink-2);font-size:15.5px;line-height:1.5}
+#gate-body{width:100%;display:grid;gap:12px;justify-items:center}
+.gate-main{display:flex;align-items:center;justify-content:center;width:100%;min-height:54px;border:0;border-radius:999px;background:var(--ink);color:var(--cream);font:700 17px var(--serif);text-decoration:none;cursor:pointer}
+.gate-steps{width:100%;margin:0;padding:14px 16px 14px 38px;text-align:left;display:grid;gap:12px;border:1px solid var(--rule);background:rgba(255,252,242,.55);font-size:15.5px;line-height:1.45}
+.gate-steps li::marker{color:var(--red);font-weight:700}
+.gate-steps span{display:block;color:var(--mute);font-size:13.5px;margin-top:2px}
+.ic-in{display:inline-block;width:20px;height:20px;vertical-align:-4px;margin:0 2px;stroke:var(--red);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ic-in circle{fill:var(--red);stroke:none}
+.gate-note{margin:0;width:100%;color:var(--mute);font-size:13.5px;line-height:1.5;text-align:left}
+.gate-warn{margin:0;width:100%;padding:12px 14px;background:rgba(168,38,28,.1);border:1px solid rgba(168,38,28,.45);color:#5e140e;font-size:14.5px;line-height:1.45;text-align:left}
+.gate-done{width:100%;padding:14px;border:1px solid var(--rule);background:rgba(255,252,242,.6);font-weight:700}
+.gate-link,.gate-skip{min-height:44px;padding:0 18px;border:0;background:none;color:var(--ink);font:500 15px var(--serif);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.gate-skip{margin-top:6px;color:var(--mute)}
+.gate-inline{color:var(--red)}
+.gate-qr{width:min(240px,70vw);background:#fff;border:1px solid var(--rule);padding:10px}
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;z-index:70;padding:10px 16px;border-radius:999px;background:var(--ink);color:var(--cream);font-size:14px;transition:.3s;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* широкий экран: газета — лист на тёмном столе, текст в две колонки */
+@media (min-width:760px){
+  .front-cols{grid-template-columns:1.3fr 1fr}
+  .pg .cols{column-count:2;column-gap:28px;column-rule:1px solid rgba(42,36,28,.35)}
+  .pg .cols p{break-inside:avoid-column}
+  .figs{grid-template-columns:repeat(3,1fr)}
+  .figs .big{grid-column:span 2;grid-row:span 2}
+  .ads-grid{grid-template-columns:repeat(4,1fr)}
+  .tg .figs .big{grid-column:1/-1}
+}
+@media (min-width:960px){
+  html,body{background:#2b2119}
+  body:not(.tab-cine){background:radial-gradient(ellipse at 50% 0%,#3a2c20,#1d1610 70%)}
+  .sheet{max-width:920px;margin:0 auto;box-shadow:0 30px 80px rgba(0,0,0,.55)}
+}
+</style>
+</head>
+<body class="tab-paper">
+<!-- Данные газеты: снимки дописывает tools/add.py, тексты полос — здесь же (см. CLAUDE.md, раздел «Газета «Гардарика 2024»») -->
+<script type="application/json" id="album-data">
+{
+ "title": "Гардарика",
+ "year": "2024",
+ "paper": "Гардарикские ведомости",
+ "issue": ["№ 1", "Зимний выпуск · 2024", "Цена — улыбка"],
+ "author": "ND",
+ "cast": [],
+ "front": {"kicker": "Сенсация номера", "head": "Путешествие во времени удалось!", "sub": "Наши корреспондентки побывали в трёх эпохах: у викингов, у пушкарей XVIII века и в кабинете комиссара двадцатых годов. Репортажи — на полосах этого выпуска.", "photo": "n002", "weather": "Мороз и солнце, небо ясное, снег под ногами — погода для путешествий во времени самая подходящая."},
+ "sections": [{"id": "put", "style": "telegram", "era": "Наши дни", "rubric": "Срочно в номер", "film": "В путь!", "head": "Экспедиция выехала", "from": "в пути", "tg": "Выехали тчк солнце в окно зпт настроение отличное тчк курс на Гардарику тчк ждите репортаж тчк"}, {"id": "runes", "style": "runes", "era": "Эпоха викингов", "rubric": "Репортаж", "film": "Рунный камень", "head": "Рунный камень встретил гостей", "text": ["Первым на пути путешественниц встал камень с рунами: синий зверь, узлы-плетёнки и надпись «Парк Гардарика». По кругу руны сообщают, что камень поставлен в 2016 году в честь открытия парка."], "box": {"h": "Знаете ли вы?", "t": "Гардарикой в скандинавских сагах называли Русь — «страну городов»."}}, {"id": "guns", "style": "petrine", "era": "Вѣкъ осьмнадцатый", "rubric": "Военныя извѣстія", "film": "Пушкари", "head": "О пушкарскомъ ученіи", "date": "Писано въ Гардарикѣ, зимою 2024 года", "text": ["У бревенчатой башни канониръ въ треуголкѣ показывалъ дамамъ пушкарское дѣло: какъ банникомъ стволъ прочищать да какъ орудіе къ выстрѣлу готовить. Ученицы оказались весьма прилежны, а иныя — и смѣшливы, о чемъ свидѣтельствуютъ снимки нашего корреспондента."], "box": {"h": "Указъ", "t": "Всѣмъ гостямъ Гардарики быть веселыми и пушекъ не бояться."}}, {"id": "office", "style": "soviet", "era": "Двадцатые годы", "rubric": "Хроника", "film": "Кабинет комиссара", "head": "Комиссары заступили на пост", "band": "Даёшь Гардарику!", "text": ["В бревенчатом кабинете всё по уставу: портрет Ильича, счёты, чёрный телефон, чернильный прибор и красное знамя «Пролетарии всех стран, соединяйтесь!». За столом — товарищи в кожанках, на вооружении — маузер.", "Проверка показала: дисциплина образцовая, настроение боевое."], "box": {"h": "Телефонограмма", "t": "Всем постам. В Гардарике порядок. Срочно в номер!"}}],
+ "ads": [{"h": "Требуются канониры", "t": "Опыт не обязателен: научат на месте, банник выдаётся."}, {"h": "Машина времени", "t": "Ходит по расписанию: туда — на автобусе, обратно — с улыбкой."}, {"h": "Меняю", "t": "Маузер на счёты. Звонить по чёрному телефону."}, {"h": "Найден", "t": "Рунный камень. Ждёт гостей с 2016 года."}],
+ "photos": [
+ {"id": "n001", "src": "photos/n001.jpg", "thumb": "photos/t/n001.jpg", "w": 1500, "h": 2000, "sec": "put", "cap": "Корреспондентки в пути. Солнце — в окно!"},
+ {"id": "n002", "src": "photos/n002.jpg", "thumb": "photos/t/n002.jpg", "w": 1500, "h": 2000, "sec": "runes", "cap": "Встреча у рунного камня"},
+ {"id": "n003", "src": "photos/n003.jpg", "thumb": "photos/t/n003.jpg", "w": 1500, "h": 2000, "sec": "runes", "cap": "Синий зверь, руны и надпись «Парк Гардарика»"},
+ {"id": "n004", "src": "photos/n004.jpg", "thumb": "photos/t/n004.jpg", "w": 1500, "h": 2000, "sec": "office", "cap": "Товарищ в кожанке при исполнении"},
+ {"id": "n005", "src": "photos/n005.jpg", "thumb": "photos/t/n005.jpg", "w": 1500, "h": 2000, "sec": "office", "cap": "Дымок из ствола — сдуть! Классика жанра"},
+ {"id": "n006", "src": "photos/n006.jpg", "thumb": "photos/t/n006.jpg", "w": 1531, "h": 2000, "bw": true, "sec": "office", "cap": "Снимок для доски почёта"},
+ {"id": "n007", "src": "photos/n007.jpg", "thumb": "photos/t/n007.jpg", "w": 1500, "h": 2000, "sec": "office", "cap": "Маузер — к осмотру!"},
+ {"id": "n008", "src": "photos/n008.jpg", "thumb": "photos/t/n008.jpg", "w": 1500, "h": 2000, "sec": "office", "cap": "Стой! Кто идёт?"},
+ {"id": "n009", "src": "photos/n009.jpg", "thumb": "photos/t/n009.jpg", "w": 1475, "h": 2000, "bw": true, "sec": "office", "cap": "Тот же миг — для личного дела"},
+ {"id": "n010", "src": "photos/n010.jpg", "thumb": "photos/t/n010.jpg", "w": 1500, "h": 2000, "sec": "office", "cap": "Алло, Гардарика? Соединяю с редакцией!"},
+ {"id": "n011", "src": "photos/n011.jpg", "thumb": "photos/t/n011.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Пушкарская команда у башни"},
+ {"id": "n012", "src": "photos/n012.jpg", "thumb": "photos/t/n012.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Канониръ держитъ рѣчь"},
+ {"id": "n013", "src": "photos/n013.jpg", "thumb": "photos/t/n013.jpg", "w": 1500, "h": 2000, "bw": true, "sec": "guns", "cap": "Двѣ ученицы съ банниками"},
+ {"id": "n014", "src": "photos/n014.jpg", "thumb": "photos/t/n014.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Стволъ прочищаютъ банникомъ"},
+ {"id": "n015", "src": "photos/n015.jpg", "thumb": "photos/t/n015.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Ученіе идетъ весело"},
+ {"id": "n016", "src": "photos/n016.jpg", "thumb": "photos/t/n016.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Канониръ провѣряетъ орудіе"}
+ ]
+}
+</script>
+
+<div class="sheet" id="paper">
+  <header class="mast">
+    <div class="mast-bar" id="mast-bar"></div>
+    <div class="mast-in">
+      <div class="mast-orn">✦ газета путешествий во времени ✦</div>
+      <h1 class="mast-name" id="mast-name">Гардарикские<br>ведомости</h1>
+      <div class="mast-sub">издаётся в Гардарике</div>
+    </div>
+  </header>
+  <section class="front" id="front"></section>
+  <div id="pages"></div>
+  <section class="ads" id="ads"></section>
+  <section class="ed" id="ed">
+    <h2 class="ed-h">Редакция</h2>
+    <p id="ed-staff"></p>
+    <p><b>Подписка.</b> Установите газету на телефон — она будет открываться со своего значка, как приложение, вместе с кинохроникой и без интернета.</p>
+    <div class="acts">
+      <button class="act" id="inst-btn2"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>Подписаться — установить</button>
+      <button class="act" id="share-btn2"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M5 13v8h14v-8"/></svg>Отправить друзьям QR-код</button>
+    </div>
+    <div class="offline" id="offline2" hidden></div>
+  </section>
+  <div class="colophon" id="colophon"></div>
+</div>
+
+<section class="cine" id="cine" aria-label="Кинохроника">
+  <div class="cine-bg" id="cine-bg"></div>
+  <div class="cine-in">
+    <div class="cine-top">
+      <div class="cine-k">Сегодня и ежедневно</div>
+      <h2 class="cine-h">Кинохроника</h2>
+      <div class="cine-t" id="cine-t">Гардарика · 2024</div>
+      <p class="cine-s">Немое кино: путешествие из наших дней к викингам, пушкарям и комиссарам. За роялем — тапёр.</p>
+    </div>
+    <div class="reel" id="reel" aria-hidden="true"></div>
+    <div class="cine-bottom">
+      <button class="play-btn" id="play"><svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>Смотреть кинохронику</button>
+      <div class="meta" id="meta"></div>
+      <div class="acts">
+        <button class="act" id="inst-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v12m0 0l-5-5m5 5l5-5M5 21h14"/></svg>Установить приложение</button>
+        <button class="act" id="share-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M5 13v8h14v-8"/></svg>Отправить друзьям QR-код</button>
+        <button class="act" id="qr-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2M14 18h2v2M18 18h2v2"/></svg>Показать QR-код</button>
+      </div>
+      <div class="offline" id="offline" hidden></div>
+    </div>
+  </div>
+</section>
+
+<nav class="tabs" role="tablist" aria-label="Страницы">
+  <button class="tab" role="tab" data-tab="paper" aria-selected="true"><svg class="ic" viewBox="0 0 24 24"><path d="M5 4.5h11.5v15H6.5A1.5 1.5 0 0 1 5 18z"/><path d="M16.5 8.5H19v9.5a1.5 1.5 0 0 1-3 0"/><path d="M8 8h5.5M8 11.5h5.5M8 15h3.5"/></svg>Газета</button>
+  <button class="tab" role="tab" data-tab="cine" aria-selected="false"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="7.6" r="1.7"/><circle cx="12" cy="16.4" r="1.7"/><circle cx="7.6" cy="12" r="1.7"/><circle cx="16.4" cy="12" r="1.7"/></svg>Кинохроника</button>
+</nav>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Снимок в цвете">
+  <div class="lb-top">
+    <button class="lb-btn" id="lb-x" aria-label="Закрыть"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="lb-n" id="lb-n"></div>
+    <span style="width:46px"></span>
+  </div>
+  <div class="lb-img" id="lb-img">
+    <button class="lb-btn lb-prev" id="lb-prev" aria-label="Предыдущий снимок"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="lb-btn lb-next" id="lb-next" aria-label="Следующий снимок"><svg class="ic" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  </div>
+  <div class="lb-cap" id="lb-cap"></div>
+</div>
+
+<!-- Экран установки: его видит каждый, кто открыл газету по ссылке в браузере (не из установленного приложения) -->
+<div class="gate" id="gate" hidden role="dialog" aria-modal="true" aria-labelledby="gate-h">
+  <div class="gate-box">
+    <img class="gate-icon" src="icons/icon-192.png" alt="" width="96" height="96">
+    <h2 class="gate-h" id="gate-h">Гардарикские ведомости</h2>
+    <p class="gate-sub">Газета-приложение · 2024</p>
+    <p class="gate-lead">Установите её на телефон: газета и кинохроника будут открываться со своего значка, как обычное приложение, и без интернета.</p>
+    <div id="gate-body"></div>
+    <button class="gate-skip" id="gate-skip">Читать без установки</button>
+  </div>
+</div>
+<div class="sheet-ov" id="qr-sheet" hidden>
+  <div class="sheet-box qr-box" role="dialog" aria-labelledby="qr-h">
+    <button class="sheet-x" id="qr-x" aria-label="Закрыть"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <h3 id="qr-h">Газета по QR-коду</h3>
+    <img class="qr-img" src="icons/qr.svg" alt="QR-код приложения «Гардарика 2024»">
+    <p>Покажите код героиням репортажа: пусть наведут на него камеру телефона — газета откроется в Safari или Chrome, там кнопка «Установить приложение».</p>
+    <button class="act" id="qr-share"><svg class="ic" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M5 13v8h14v-8"/></svg>Отправить друзьям</button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<div class="film" id="film" hidden>
+  <div class="layer" id="fl0"></div><div class="layer" id="fl1"></div>
+  <div class="f-ui">
+    <div class="f-top">
+      <button class="f-btn" id="f-close" aria-label="Закрыть"><svg class="ic" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <div class="f-prog"><i id="f-bar"></i></div>
+      <button class="f-btn" id="f-mute" aria-label="Музыка"><svg class="ic" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg></button>
+    </div>
+    <div class="f-bot">
+      <button class="f-btn" id="f-prev" aria-label="Назад"><svg class="ic" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button class="f-btn main" id="f-play" aria-label="Пауза"></button>
+      <button class="f-btn" id="f-next" aria-label="Дальше"><svg class="ic" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+  </div>
+  <div class="f-end" id="f-end" hidden>
+    <h3>Конец</h3>
+    <div class="row"><button class="main" id="f-again">Смотреть ещё раз</button><button id="f-share">Отправить друзьям QR-код</button><button id="f-done">Закрыть</button></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const plural = (n, a, b, c) => { const m = n % 10, h = n % 100; return m === 1 && h !== 11 ? a : m >= 2 && m <= 4 && (h < 12 || h > 14) ? b : c; };
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const DATA = JSON.parse($("#album-data").textContent);
+/* localStorage без ошибок (приватный режим и т. п.): экран установки помнит «Читать без установки» */
+const store = {
+  get(k, d){ try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch(e){ return d; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+};
+const SECS = (DATA.sections || []).filter(s => s && s.id);
+const ALL = (DATA.photos || []).filter(p => p && p.src).map(p => ({...p, isVideo:p.type === "video", img:p.poster || p.src}));
+/* порядок газеты и хроники — по полосам; снимок без полосы — в конце */
+const PHOTOS = SECS.flatMap(s => ALL.filter(p => p.sec === s.id)).concat(ALL.filter(p => !SECS.some(s => s.id === p.sec)));
+const ROMAN = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+const ORD = ["первая", "вторая", "третья", "четвёртая", "пятая", "шестая", "седьмая", "восьмая", "девятая", "десятая"];
+const I_PLAY = `<svg class="ic fill" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>`;
+const I_PAUSE = `<svg class="ic fill" viewBox="0 0 24 24"><rect x="6" y="4.5" width="4" height="15" rx="1"/><rect x="14" y="4.5" width="4" height="15" rx="1"/></svg>`;
+const STAR = `<svg class="star" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.4l-6.1 3.5 1.5-6.8L2.2 9.5l6.9-.7z"/></svg>`;
+const ORN = `<svg viewBox="0 0 150 22" aria-hidden="true"><path d="M2 11h48M100 11h48" stroke="currentColor" stroke-width="1.2"/><path d="M50 11c6-8 14-8 18 0-4 8-12 8-18 0zM100 11c-6-8-14-8-18 0 4 8 12 8 18 0z" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="75" cy="11" r="4.2" fill="currentColor"/><path d="M75 2v4M75 16v4" stroke="currentColor" stroke-width="1.2"/></svg>`;
+const RUNES = "ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟ";
+
+/* ---------- Газета ---------- */
+function prHTML(p, cls){
+  const i = PHOTOS.indexOf(p), big = cls === "big" || cls === "front";
+  return `<figure class="pr ${cls || ""}" data-i="${i}" tabindex="0" role="button" aria-label="${esc((p.cap || "Снимок") + " — открыть в цвете")}">`
+    + `<div class="pr-in"><img src="${esc(big ? p.img : (p.thumb || p.img))}" alt=""${big ? "" : ` loading="lazy"`} decoding="async"${p.w && p.h ? ` width="${p.w}" height="${p.h}"` : ""}>`
+    + (p.isVideo ? `<span class="pr-vid">▶ ${Math.round(p.dur || 0)} с</span>` : "") + `</div>`
+    + (p.cap ? `<figcaption>${esc(p.cap)}</figcaption>` : "") + `</figure>`;
+}
+/* первый снимок полосы — крупно на всю ширину, остальные — парами; если последнему не хватило пары, он тоже на всю ширину */
+const figsHTML = list => list.length ? `<div class="figs">${list.map((p, j) => prHTML(p, j === 0 || (j === list.length - 1 && j % 2 === 1) ? "big" : "")).join("")}</div>` : "";
+const paras = (arr, dc) => (arr || []).length ? `<div class="cols">${arr.map((t, j) => `<p${dc && j === 0 ? ' class="dc"' : ""}>${esc(t)}</p>`).join("")}</div>` : "";
+function secHTML(s, k){
+  /* снимок первой полосы внутри газеты не повторяем (в просмотре и хронике он на своём месте) */
+  const front = (DATA.front || {}).photo, list = PHOTOS.filter(p => p.sec === s.id && p.id !== front);
+  const era = `<div class="pg-era"><span>Полоса ${ROMAN[k + 1] || k + 1}</span><b>${esc(s.era)}</b><span>${esc(s.rubric || "")}</span></div>`;
+  const h = `<h3 class="pg-h">${esc(s.head)}</h3>`;
+  const box = s.box ? `<aside class="box"><b>${esc(s.box.h)}</b> ${esc(s.box.t)}</aside>` : "";
+  let body, cls = "";
+  if (s.style === "telegram"){
+    cls = "tg";
+    const lines = String(s.tg || "").replace(/\s*(тчк|зпт)\s*/gi, " $1\n").split("\n").map(x => x.trim()).filter(Boolean);
+    body = h + `<div class="tg-form"><div class="tg-top"><b>Телеграмма</b><span class="tg-stamp">Молния</span></div>`
+      + `<div class="tg-row"><span>Откуда:</span><b>${esc(s.from || "")}</b></div><div class="tg-row"><span>Кому:</span><b>редакции «${esc(DATA.paper)}»</b></div>`
+      + `<p class="tg-text">${lines.map(l => `<span>${esc(l)}</span>`).join(" ")}</p></div>` + paras(s.text) + figsHTML(list) + box;
+  } else if (s.style === "runes"){
+    cls = "rn";
+    body = `<div class="rn-band" aria-hidden="true">${RUNES}</div>` + h + paras(s.text) + figsHTML(list) + box + `<div class="rn-band end" aria-hidden="true">${RUNES}</div>`;
+  } else if (s.style === "petrine"){
+    cls = "pt";
+    body = `<div class="pt-orn">${ORN}</div>` + h + (s.date ? `<div class="pt-date">${esc(s.date)}</div>` : "") + paras(s.text, true) + figsHTML(list) + box;
+  } else if (s.style === "soviet"){
+    cls = "sv";
+    body = (s.band ? `<div class="sv-band">${STAR}<b>${esc(s.band)}</b>${STAR}</div>` : "") + h + paras(s.text) + figsHTML(list) + box;
+  } else body = h + paras(s.text) + figsHTML(list) + box;
+  return `<section class="pg ${cls}" id="sec-${esc(s.id)}">${era}${body}</section>`;
+}
+function renderPaper(){
+  const F = DATA.front || {}, issue = DATA.issue || [];
+  $("#mast-bar").innerHTML = issue.map(x => `<span>${esc(x)}</span>`).join("");
+  const name = String(DATA.paper || "").split(" ");
+  $("#mast-name").innerHTML = name.map(esc).join("<br>");
+  const fp = PHOTOS.find(p => p.id === F.photo) || PHOTOS.find(p => !p.isVideo);
+  const idx = SECS.map((s, k) => `<li><button data-go="sec-${esc(s.id)}"><span>${ROMAN[k + 1]}</span><b>${esc(s.film || s.head)}</b><i>${esc(s.era)}</i></button></li>`).join("");
+  $("#front").innerHTML = `${F.kicker ? `<span class="kicker">${esc(F.kicker)}</span>` : ""}<h2 class="lead-h">${esc(F.head || DATA.paper)}</h2>`
+    + (F.sub ? `<p class="lead-sub">${esc(F.sub)}</p>` : "")
+    + (fp ? prHTML(fp, "front") + `<p class="hint">Нажмите на снимок — он проявится в цвете</p>` : "")
+    + `<div class="front-cols"><nav class="index" aria-label="В номере"><h4>В номере</h4><ol>${idx}</ol></nav>`
+    + `<div>${F.weather ? `<aside class="weather"><h4>Погода в Гардарике</h4>${esc(F.weather)}</aside>` : ""}`
+    + (FILM_N() ? `<button class="cine-link" data-cine="1"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="7.6" r="1.7"/><circle cx="12" cy="16.4" r="1.7"/><circle cx="7.6" cy="12" r="1.7"/><circle cx="16.4" cy="12" r="1.7"/></svg>Смотреть кинохронику</button>` : "")
+    + `</div></div>`;
+  $("#pages").innerHTML = SECS.map(secHTML).join("");
+  const ads = DATA.ads || [];
+  $("#ads").innerHTML = ads.length ? `<h3 class="ads-h">Объявления</h3><div class="ads-grid">${ads.map(a => `<div class="ad"><b>${esc(a.h)}</b>${esc(a.t)}</div>`).join("")}</div>` : "";
+  $("#ads").hidden = !ads.length;
+  const cast = (DATA.cast || []).filter(Boolean);
+  $("#ed-staff").innerHTML = `Главный редактор — <b>${esc(DATA.author || "ND")}</b>.` + (cast.length ? `<br><span class="ed-cast">Корреспондентки: ${cast.map(esc).join(", ")}</span>` : "");
+  $("#colophon").textContent = `${DATA.paper} · ${DATA.year} · снимков в номере: ${PHOTOS.length}`;
+}
+$("#paper").addEventListener("click", e => {
+  const go = e.target.closest("[data-go]");
+  if (go){ const el = document.getElementById(go.dataset.go); if (el) el.scrollIntoView({behavior:reduce ? "auto" : "smooth", block:"start"}); return; }
+  if (e.target.closest("[data-cine]")){ openFilm(0); return; }
+  const f = e.target.closest(".pr"); if (f) openLB(+f.dataset.i);
+});
+$("#paper").addEventListener("keydown", e => { const f = e.target.closest && e.target.closest(".pr"); if (f && (e.key === "Enter" || e.key === " ")){ e.preventDefault(); openLB(+f.dataset.i); } });
+
+/* ---------- Снимок в цвете: листается пальцем ---------- */
+const lb = {i:0};
+function renderLB(){
+  const p = PHOTOS[lb.i]; if (!p) return;
+  const box = $("#lb-img");
+  box.querySelectorAll("img,video").forEach(x => x.remove());
+  if (p.isVideo){
+    const v = document.createElement("video"); v.src = p.src; v.poster = p.img; v.controls = true; v.playsInline = true;
+    v.style.cssText = "position:absolute;inset:0;width:100%;height:100%;object-fit:contain"; box.prepend(v);
+  } else {
+    const im = new Image(); im.alt = p.cap || ""; im.src = p.src;
+    if (!p.bw && !reduce){ im.className = "dev"; const go = () => setTimeout(() => im.classList.remove("dev"), 120); if (im.complete) go(); else im.onload = go; }
+    box.prepend(im);
+  }
+  $("#lb-cap").textContent = p.cap || "";
+  $("#lb-n").textContent = `${lb.i + 1} / ${PHOTOS.length}`;
+  const nx = PHOTOS[lb.i + 1]; if (nx && !nx.isVideo){ const im = new Image(); im.src = nx.src; }
+}
+function openLB(i){
+  if (!PHOTOS[i]) return;
+  lb.i = i; renderLB();
+  $("#lb").hidden = false; document.body.classList.add("noscroll");
+  try { history.pushState(Object.assign({}, history.state, {lb:true}), ""); } catch(e){}
+}
+function hideLB(){ if ($("#lb").hidden) return; $("#lb").hidden = true; $("#lb-img").querySelectorAll("img,video").forEach(x => x.remove()); document.body.classList.remove("noscroll"); }
+function closeLB(){ if (history.state && history.state.lb) history.back(); else hideLB(); }
+const lbStep = d => { const j = lb.i + d; if (j >= 0 && j < PHOTOS.length){ lb.i = j; renderLB(); } };
+$("#lb-x").onclick = closeLB;
+$("#lb-prev").onclick = () => lbStep(-1);
+$("#lb-next").onclick = () => lbStep(1);
+(function(){
+  const el = $("#lb-img"); let x0 = null, y0 = 0;
+  el.addEventListener("pointerdown", e => { if (e.target.closest("button,video")) return; x0 = e.clientX; y0 = e.clientY; });
+  el.addEventListener("pointerup", e => {
+    if (x0 == null) return;
+    const dx = e.clientX - x0, dy = e.clientY - y0; x0 = null;
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) lbStep(dx < 0 ? 1 : -1);
+    else if (dy > 90) closeLB();
+  });
+})();
+
+/* ---------- Музыка: «Гардарикский регтайм» — тапёр за пианино, как в немом кино (сочинён для этой хроники) ----------
+   До мажор, 112 четвертей в минуту. Левая рука — «бас — аккорд — бас — аккорд», правая — синкопы регтайма.
+   Часть A (16 тактов, до мажор) и часть B (16 тактов, фа мажор); во втором проходе мелодия звучит октавами.
+   Перед хроникой — отсчёт плёнки: стрекот проектора и «писк» на двойке (Music.play(LEAD)). */
+const RCH = {C:[55,60,64], C7:[55,58,64], F:[57,60,65], F7:[57,63,65], G7:[55,59,65], Fd:[54,57,60,63], CG:[55,60,64], FC:[57,60,65], A7:[55,61,64], D7:[54,57,60], Bb:[53,58,62], Bbm:[53,58,61]};
+const RBASS = {C:[36,43], C7:[36,43], F:[41,36], F7:[41,36], G7:[43,38], Fd:[42,45], CG:[43,36], FC:[36,41], A7:[45,40], D7:[38,45], Bb:[46,41], Bbm:[46,41]};
+const RPROG = ["C","C","G7","G7","C","C7","F","Fd","CG","A7","D7","G7","C","A7",["D7","G7"],"C",
+               "F","F","C7","C7","C7","C7","F","F","F","F7","Bb","Bbm","FC","D7",["G7","C7"],"F"];
+const RMEL = [
+  /* часть A */
+  [[76,.5],[79,.5],[0,.5],[81,1],[79,.5],[76,.5],[72,.5]], [[74,.5],[76,1],[72,.5],[0,1],[67,1]],
+  [[71,.5],[74,.5],[0,.5],[77,1],[74,.5],[71,.5],[67,.5]], [[72,.5],[74,1],[71,.5],[0,1],[67,1]],
+  [[76,.5],[79,.5],[0,.5],[84,1],[83,.5],[81,.5],[79,.5]], [[82,.5],[79,1],[76,.5],[70,1],[0,1]],
+  [[77,.5],[81,.5],[0,.5],[84,1],[81,.5],[77,.5],[72,.5]], [[78,.5],[81,1],[75,.5],[72,1],[0,1]],
+  [[79,1.5],[76,.5],[79,1],[76,1]], [[73,.5],[76,.5],[79,1],[76,.5],[73,.5],[69,1]],
+  [[74,.5],[78,.5],[81,1],[78,.5],[74,.5],[72,1]], [[71,.5],[74,.5],[77,1],[79,.5],[77,.5],[74,1]],
+  [[76,.5],[79,.5],[0,.5],[81,1],[79,.5],[76,.5],[72,.5]], [[73,.5],[76,1],[79,.5],[0,1],[81,1]],
+  [[78,.5],[74,.5],[72,1],[71,.5],[74,.5],[77,1]], [[76,1],[72,1],[0,2]],
+  /* часть B */
+  [[72,.5],[77,.5],[0,.5],[81,.5],[0,.5],[81,.5],[79,.5],[77,.5]], [[76,.5],[77,1],[81,.5],[84,1],[0,1]],
+  [[76,.5],[79,.5],[0,.5],[82,.5],[0,.5],[82,.5],[81,.5],[79,.5]], [[78,.5],[79,1],[76,.5],[72,1],[0,1]],
+  [[70,.5],[72,.5],[76,.5],[79,.5],[82,1],[79,.5],[76,.5]], [[77,.5],[76,.5],[74,.5],[72,.5],[70,1],[67,1]],
+  [[72,.5],[77,.5],[0,.5],[81,.5],[0,.5],[81,.5],[79,.5],[77,.5]], [[81,1],[77,1],[72,1],[0,1]],
+  [[77,.5],[81,.5],[84,1],[81,.5],[77,.5],[72,1]], [[75,.5],[77,.5],[81,1],[84,.5],[87,.5],[84,1]],
+  [[86,1.5],[82,.5],[77,1],[74,1]], [[85,1.5],[82,.5],[77,1],[73,1]],
+  [[81,.5],[79,.5],[77,1],[72,.5],[74,.5],[76,1]], [[78,.5],[81,.5],[84,1],[81,.5],[78,.5],[74,1]],
+  [[79,.5],[77,.5],[74,.5],[71,.5],[79,.5],[76,.5],[72,.5],[70,.5]], [[77,1],[72,1],[65,1],[0,1]]
+];
+function ragEvents(){
+  const ev = [];
+  RPROG.forEach((c, b) => {
+    const t0 = b * 4, two = Array.isArray(c), c1 = two ? c[0] : c, c2 = two ? c[1] : c;
+    ev.push({t:t0, k:"bar"});
+    ev.push({t:t0, k:"bass", m:RBASS[c1][0]}, {t:t0 + 2, k:"bass", m:two ? RBASS[c2][0] : RBASS[c1][1]});
+    ev.push({t:t0 + 1, k:"chord", m:RCH[c1]}, {t:t0 + 3, k:"chord", m:RCH[c2]});
+    let t = t0; RMEL[b].forEach(([m, d]) => { if (m) ev.push({t, k:"mel", m, d}); t += d; });
+  });
+  return ev.sort((a, b) => a.t - b.t);
+}
+const TUNE = {name:"«Гардарикский регтайм»", bpm:112, beats:4, bars:RPROG.length, events:ragEvents, wet:.12};
+const BAR = () => 60 / TUNE.bpm * TUNE.beats;
+const LEAD = () => 2 * BAR();   /* отсчёт плёнки до первой ноты */
+const LOUD = .74, DUCK = .09;   /* громкость музыки ~ −23 LUFS, как у мелодий других приложений; на видео со своим звуком — тихо */
+
+/* видео (если появятся) загружаются заранее по очереди, ближайшее первым */
+const vidReady = {}, vidLoad = {};
+let vidChain = Promise.resolve();
+function preVideo(url){
+  if (!vidLoad[url]){
+    const job = vidChain.catch(() => {}).then(() => vidReady[url] || fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.blob(); })
+      .then(b => (vidReady[url] = URL.createObjectURL(b))));
+    vidChain = job;
+    vidLoad[url] = job.catch(e => { delete vidLoad[url]; throw e; });
+  }
+  return vidLoad[url];
+}
+function dropVideos(){ Object.keys(vidReady).forEach(u => { try { URL.revokeObjectURL(vidReady[u]); } catch(e){} delete vidReady[u]; delete vidLoad[u]; }); }
+const hasClip = p => !!(p && p.isVideo && p.sound);
+const clipURL = p => p.src.replace(/\.mp4(\?|$)/, ".mp3$1");
+
+const Music = {
+  ctx:null, master:null, bus:null, fxBus:null, on:false, onBar:null, timer:0,
+  beat:.5, ev:null, idx:0, loop:0, phraseStart:0, _noise:null, duckOn:false, fx:[],
+  init(){
+    if (this.ctx) return this.ctx;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch(e){}
+    try {
+      const c = this.ctx = new AC();
+      this.master = c.createGain(); this.master.gain.value = .0001;
+      const comp = c.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 3;
+      this.master.connect(comp); comp.connect(c.destination);
+      this.bus = c.createGain();
+      const dry = c.createGain(); dry.gain.value = .9; this.bus.connect(dry); dry.connect(this.master);
+      const rev = c.createConvolver(), wet = c.createGain(); rev.buffer = this.impulse(1.6); wet.gain.value = TUNE.wet;
+      this.bus.connect(rev); rev.connect(wet); wet.connect(this.master);
+      this.fxBus = c.createGain(); this.fxBus.gain.value = 1; this.fxBus.connect(this.master);
+    } catch(e){ this.ctx = null; }
+    return this.ctx;
+  },
+  impulse(sec){
+    const c = this.ctx, n = Math.floor(c.sampleRate * sec), b = c.createBuffer(2, n, c.sampleRate);
+    for (let ch = 0; ch < 2; ch++){ const d = b.getChannelData(ch); for (let i = 0; i < n; i++) d[i] = (Math.random()*2 - 1) * Math.pow(1 - i/n, 3.4); }
+    return b;
+  },
+  level(v, sec){
+    const c = this.ctx; if (!c) return;
+    const t = c.currentTime;
+    this.master.gain.cancelScheduledValues(t);
+    this.master.gain.setValueAtTime(Math.max(this.master.gain.value, .0001), t);
+    this.master.gain.exponentialRampToValueAtTime(Math.max(v, .0001), t + sec);
+  },
+  /* вызывать только из нажатия пальцем: иначе телефон не даст включить звук; lead — секунды отсчёта плёнки */
+  play(lead){
+    const c = this.init();
+    clearInterval(this.timer);
+    if (!c){ this.on = false; return; }
+    if (c.resume) c.resume();
+    this.on = true; this.duckOn = false;
+    this.level(LOUD, lead ? .3 : 1.4);
+    this.beat = 60 / TUNE.bpm; this.ev = TUNE.evs || (TUNE.evs = TUNE.events());
+    const t0 = c.currentTime + .15;
+    this.idx = 0; this.loop = 0; this.phraseStart = t0 + (lead || 0);
+    if (lead) this.leader(t0, lead);
+    this.timer = setInterval(() => this.schedule(), 60); this.schedule();
+    updateMute();
+  },
+  stop(fade){
+    fade = fade || 1.2;
+    if (!this.on) return;
+    this.on = false; this.onBar = null; clearInterval(this.timer); this.duckOn = false;
+    this.level(.0001, fade);
+    updateMute();
+  },
+  duck(on){
+    if (this.duckOn === on) return;
+    this.duckOn = on;
+    if (this.on) this.level(on ? DUCK : LOUD, on ? .8 : 1.2);
+  },
+  /* звук видео (на iPhone видео без нажатия пальцем играет только без звука) — отдельным файлом через этот движок */
+  clips:{}, clip:null, clipTok:0,
+  loadClip(url){
+    const c = this.init(); if (!c) return Promise.reject(new Error("no audio"));
+    if (!this.clips[url]) this.clips[url] = fetch(url).then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
+      .then(b => new Promise((res, rej) => { const pr = c.decodeAudioData(b, res, rej); if (pr && pr.then) pr.then(res, rej); }))
+      .catch(e => { delete this.clips[url]; throw e; });
+    return this.clips[url];
+  },
+  playClip(url, offset){
+    this.stopClip();
+    const tok = this.clipTok;
+    return this.loadClip(url).then(buf => {
+      const c = this.ctx;
+      if (tok !== this.clipTok || !c) return false;
+      const src = c.createBufferSource(), g = c.createGain();
+      src.buffer = buf; src.connect(g); g.connect(c.destination);
+      src.start(c.currentTime + .02, Math.min(Math.max(0, offset || 0), Math.max(0, buf.duration - .05)));
+      this.clip = {src, g};
+      return true;
+    });
+  },
+  stopClip(){
+    this.clipTok++;
+    const k = this.clip; this.clip = null;
+    if (k && this.ctx){ try { const t = this.ctx.currentTime; k.g.gain.setTargetAtTime(.0001, t, .25); k.src.stop(t + 1.3); } catch(e){} }
+  },
+  pause(){ if (this.ctx && this.ctx.suspend) this.ctx.suspend(); },
+  resume(){ if (this.ctx && this.ctx.resume) this.ctx.resume(); },
+  schedule(){
+    const c = this.ctx; if (!c || !this.on) return;
+    const until = c.currentTime + .3;
+    for (;;){
+      const e = this.ev[this.idx], time = this.phraseStart + e.t * this.beat;
+      if (time > until) break;
+      if (time >= c.currentTime - .05) this.fire(e, time);
+      if (++this.idx >= this.ev.length){ this.idx = 0; this.loop++; this.phraseStart += TUNE.bars * TUNE.beats * this.beat; }
+    }
+  },
+  fire(e, t){
+    if (e.k === "bar"){ setTimeout(() => { if (this.on && this.onBar) this.onBar(); }, Math.max(0, (t - this.ctx.currentTime) * 1000)); return; }
+    const b = this.beat;
+    if (e.k === "bass"){ this.voice(t, e.m, .9 * b, .17); return; }
+    if (e.k === "chord"){ e.m.forEach(m => this.voice(t, m, .42 * b, .062)); return; }
+    if (e.k === "mel"){
+      const d = Math.max(.2, e.d * b * .92);
+      this.voice(t, e.m, d, .12);
+      if (this.loop % 2 === 1) this.voice(t, e.m + 12, d, .05);   /* второй проход — октавами, звонче */
+    }
+  },
+  /* пианино тапёра: две чуть расстроенные струны (как у старого кабинетного инструмента), удар молоточка, демпфер */
+  voice(t, m, dur, vel){
+    const c = this.ctx, f = 440 * Math.pow(2, (m - 69) / 12);
+    const g = c.createGain(), lp = c.createBiquadFilter();
+    lp.type = "lowpass";
+    lp.frequency.setValueAtTime(Math.min(9000, f * 9), t);
+    lp.frequency.exponentialRampToValueAtTime(Math.max(450, f * 2.2), t + dur + .25);
+    g.gain.setValueAtTime(.0001, t);
+    g.gain.exponentialRampToValueAtTime(vel, t + .004);
+    g.gain.exponentialRampToValueAtTime(vel * .38, t + Math.min(.22, dur));
+    g.gain.setTargetAtTime(.0001, t + dur, m < 50 ? .14 : .08);
+    lp.connect(g); g.connect(this.bus);
+    const end = t + dur + .7;
+    [[1, "triangle", 1, 0], [1, "triangle", .55, 8], [2, "sine", .32, -3], [3, "sine", .12, 4], [4, "sine", .05, 0]].forEach(([mul, type, amp, cents]) => {
+      const o = c.createOscillator(), a = c.createGain();
+      o.type = type; o.frequency.value = f * mul; o.detune.value = cents; a.gain.value = amp;
+      o.connect(a); a.connect(lp); o.start(t); o.stop(end);
+    });
+    const n = c.createBufferSource(), hf = c.createBiquadFilter(), hg = c.createGain();
+    n.buffer = this.noise(); hf.type = "bandpass"; hf.frequency.value = Math.min(4000, f * 6); hf.Q.value = 1.2;
+    hg.gain.setValueAtTime(vel * .25, t); hg.gain.exponentialRampToValueAtTime(.0001, t + .03);
+    n.connect(hf); hf.connect(hg); hg.connect(this.bus); n.start(t, Math.random() * .5); n.stop(t + .04);
+  },
+  noise(){
+    if (!this._noise){ const c = this.ctx, b = c.createBuffer(1, c.sampleRate, c.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random()*2 - 1; this._noise = b; }
+    return this._noise;
+  },
+  /* стрекот кинопроектора: щелчки 18 раз в секунду и шорох плёнки */
+  projector(t, dur, vol){
+    const c = this.ctx, sr = c.sampleRate, n = Math.floor(sr / 18), b = c.createBuffer(1, n, sr), d = b.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = (Math.random()*2 - 1) * (Math.exp(-i / (sr * .005)) * .9 + .06);
+    const s = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+    s.buffer = b; s.loop = true; f.type = "bandpass"; f.frequency.value = 2300; f.Q.value = .7;
+    const v = vol || .14;
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(v, t + .25);
+    g.gain.setValueAtTime(v, t + Math.max(.3, dur - .5)); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+    s.connect(f); f.connect(g); g.connect(this.fxBus); s.start(t); s.stop(t + dur + .05);
+    this.fx.push(s);
+  },
+  beep(t){
+    const c = this.ctx, o = c.createOscillator(), g = c.createGain();
+    o.type = "sine"; o.frequency.value = 1000;
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.2, t + .004); g.gain.setValueAtTime(.2, t + .04); g.gain.exponentialRampToValueAtTime(.0001, t + .05);
+    o.connect(g); g.connect(this.fxBus); o.start(t); o.stop(t + .06);
+    this.fx.push(o);
+  },
+  leader(t, dur){ this.projector(t, dur + .3, .4); this.beep(t + dur / 2); },
+  sfx(kind, delay){
+    const c = this.ctx; if (!c || !this.on) return;
+    const t = c.currentTime + Math.max(0, delay || 0);
+    if (kind === "proj") this.projector(t, 9, .25);
+  },
+  stopSfx(){ this.fx.forEach(n => { try { n.stop(); } catch(e){} }); this.fx = []; }
+};
+window.__filmMusic = Music; /* для проверки звука при доработках */
+
+/* ---------- Кинохроника ---------- */
+const FILM = () => PHOTOS.filter(p => p.film !== false);
+const FILM_N = () => FILM().length;
+const film = {frames:[], i:0, left:0, playing:false, cur:0, anims:[], tok:0, calmT:0, wake:null, fromVideo:false};
+const KB = [
+  [{transform:"scale(1.02) translate(0,0)"}, {transform:"scale(1.12) translate(-1.5%,-1%)"}],
+  [{transform:"scale(1.13) translate(1%,1%)"}, {transform:"scale(1.03) translate(0,0)"}],
+  [{transform:"scale(1.09) translate(-2.2%,0)"}, {transform:"scale(1.09) translate(2.2%,0)"}],
+  [{transform:"scale(1.09) translate(0,2%)"}, {transform:"scale(1.09) translate(0,-2%)"}]
+];
+function buildFrames(){
+  const fr = [{t:"leader"}, {t:"title"}], list = FILM();
+  let k = 0;
+  SECS.forEach(s => {
+    const ph = list.filter(p => p.sec === s.id);
+    if (!ph.length) return;
+    fr.push({t:"inter", s, k:k++});
+    ph.forEach(p => fr.push({t:p.isVideo ? "video" : "photo", p}));
+  });
+  list.filter(p => !SECS.some(s => s.id === p.sec)).forEach(p => fr.push({t:p.isVideo ? "video" : "photo", p}));
+  fr.push({t:"end"});
+  return fr;
+}
+/* видео сменяется само, чуть раньше своего конца; его такты — только запасной выход, если видео не пошло */
+const barsOf = f => f.t === "video" ? Math.ceil((f.p.dur || 6) / BAR()) + 2 : ({leader:1, title:3, inter:2, photo:2, end:7}[f.t]);
+function barLeft(){
+  const c = Music.ctx; if (!Music.on || !c || !Music.beat) return 1;
+  const bar = Music.beat * TUNE.beats, x = ((c.currentTime - Music.phraseStart) / bar) % 1;
+  return x < 0 ? 1 : 1 - x;
+}
+function filmSeconds(){ return LEAD() + buildFrames().slice(1).reduce((s, f) => s + (f.t === "video" ? (f.p.dur || 6) : barsOf(f) * BAR()), 0); }
+const FX = `<div class="fx fx-grain"></div><div class="fx fx-dust"></div><div class="fx fx-scr"></div><div class="fx fx-flick"></div><div class="fx vign"></div>`;
+function creditsHTML(){
+  const cast = (DATA.cast || []).filter(Boolean), list = FILM(), nP = list.filter(p => !p.isVideo).length, nV = list.length - nP;
+  return `<div class="it-cr">`
+    + `<div><span>Режиссёр и главный редактор</span><b>${esc(DATA.author || "ND")}</b></div>`
+    + (cast.length ? `<div><span>В ролях</span><b>${cast.map(esc).join(" · ")}</b></div>` : "")
+    + `<div><span>Тапёр</span><b>${esc(TUNE.name)}</b><i>сочинён для этой хроники</i></div>`
+    + `<div><span>В хронике</span><b>${[nP ? nP + " " + plural(nP, "снимок", "снимка", "снимков") : "", nV ? nV + " видео" : ""].filter(Boolean).join(" и ")}</b></div></div>`;
+}
+function frameHTML(f){
+  if (f.t === "leader") return `<div class="ld"><div class="ld-ring"></div><div class="ld-ring r2"></div><div class="ld-cross"></div><div class="ld-hand"></div>${[4, 3, 2].map(n => `<b class="ld-n" data-n="${n}">${n}</b>`).join("")}<div class="ld-black"></div></div>${FX}`;
+  if (f.t === "title") return `<div class="it"><div class="it-box"><div class="it-k">«${esc(DATA.paper)}» представляют</div><div class="it-h">Кинохроника</div><div class="it-y">${esc(DATA.title)} · ${esc(DATA.year)}</div><div class="it-s">Немое кино. За роялем — тапёр.</div></div></div>${FX}`;
+  if (f.t === "inter") return `<div class="it"><div class="it-box"><div class="it-k">Часть ${ORD[f.k] || f.k + 1}</div><div class="it-h">${esc(f.s.film || f.s.head)}</div><div class="it-s">${esc(f.s.era)}</div></div></div>${FX}`;
+  if (f.t === "photo" || f.t === "video"){
+    const p = f.p, sr = innerWidth / innerHeight, pr = p.w && p.h ? p.w / p.h : sr;
+    const cover = Math.abs(Math.log(pr / sr)) < .2;
+    const media = p.isVideo
+      ? `<video class="ph ${cover ? "cover" : ""}" src="${esc(vidReady[p.src] || p.src)}" poster="${esc(p.img)}" playsinline muted preload="auto"></video>`
+      : `<img class="ph kb ${cover ? "cover" : ""}" src="${esc(p.src)}" alt="${esc(p.cap || "")}">`;
+    return `<div class="weave"><img class="bg" src="${esc(p.img)}" alt="">${media}</div>${FX}${p.cap ? `<div class="cap">${esc(p.cap)}</div>` : ""}`;
+  }
+  return `<div class="it"><div class="it-box"><div class="it-h">Конец</div><div class="it-y">${esc(DATA.title)} · ${esc(DATA.year)}</div>${creditsHTML()}</div></div>${FX}`;
+}
+/* отсчёт плёнки: 4 — 3 — 2 (на двойке «писк»), затем чёрный кадр; время — по длине отсчёта в музыке */
+function leaderPlay(layer){
+  const L = (Music.on ? LEAD() : BAR()) * 1000, q = s => $(s, layer);
+  const A = (el, kf, start, dur, opt) => { if (el) film.anims.push(el.animate(kf, Object.assign({delay:start, duration:dur, fill:"both", easing:"linear"}, opt || {}))); };
+  [4, 3, 2].forEach((n, j) => A(q(`.ld-n[data-n="${n}"]`), [{opacity:1}, {opacity:1, offset:.88}, {opacity:0}], j * L / 4, L / 4, {fill:"forwards"}));
+  A(q(".ld-hand"), [{transform:"rotate(-90deg)"}, {transform:"rotate(270deg)"}], 0, L / 4, {iterations:3});
+  A(q(".ld-black"), [{opacity:0}, {opacity:1}], L * .75, 60, {fill:"forwards"});
+}
+function animateFrame(layer, f){
+  const dur = (barsOf(f) * BAR() + 1.6) * 1000;
+  const v = $("video", layer);
+  if (!(v && hasClip(f.p))) Music.duck(false);
+  if (f.t === "leader") leaderPlay(layer);
+  if (f.t === "end") Music.sfx("proj", barsOf(f) * BAR() - 9);
+  if (v){
+    v.muted = true;
+    const tok = film.tok, lead = Math.min(.9, (f.p.dur || 6) * .2);
+    const show = () => v.classList.add("go");
+    const advance = () => { if (film.tok !== tok || !film.playing) return; film.fromVideo = true; go(film.i + 1); };
+    v.addEventListener("playing", show, {once:true});
+    v.addEventListener("error", show, {once:true});
+    setTimeout(show, 2500);
+    v.addEventListener("timeupdate", () => { if (v.duration && v.currentTime >= v.duration - lead) advance(); });
+    v.addEventListener("ended", advance);
+    const pr = v.play(); if (pr && pr.catch) pr.catch(() => {});
+    if (hasClip(f.p)){
+      const here = () => film.frames[film.i] === f;
+      let started = false;
+      const start = () => {
+        if (started || !here()) return; started = true; clearTimeout(t);
+        Music.duck(true);
+        Music.playClip(clipURL(f.p), v.error ? 0 : v.currentTime).catch(() => {
+          if (!here()) return;
+          v.muted = false;
+          const p2 = v.play(); if (p2 && p2.catch) p2.catch(() => { v.muted = true; Music.duck(false); });
+        });
+      };
+      const t = setTimeout(start, 2500);
+      if (!v.paused && v.readyState > 2) start();
+      else { v.addEventListener("playing", start, {once:true}); v.addEventListener("error", start, {once:true}); }
+    }
+  }
+  if (!reduce) layer.querySelectorAll(".kb").forEach(kb => film.anims.push(kb.animate(KB[Math.floor(Math.random() * KB.length)], {duration:dur, easing:"linear", fill:"forwards"})));
+}
+function go(i){
+  if (i < 0) i = 0;
+  if (i >= film.frames.length){ endFilm(); return; }
+  film.i = i;
+  const f = film.frames[i];
+  film.left = barsOf(f);
+  if (film.fromVideo && f.t !== "video" && barLeft() < .5) film.left++;
+  film.fromVideo = false;
+  const prev = $("#fl" + film.cur), next = $("#fl" + (film.cur ^ 1));
+  const old = film.anims; film.anims = [];
+  setTimeout(() => old.forEach(a => { try { a.cancel(); } catch(e){} }), 1500);
+  const tok = String(++film.tok);
+  next.dataset.tok = tok;
+  next.innerHTML = frameHTML(f);
+  next.classList.remove("on"); void next.offsetWidth; next.classList.add("on");
+  prev.classList.remove("on");
+  prev.querySelectorAll("video").forEach(v => { v.muted = true; });
+  const prevTok = prev.dataset.tok;
+  setTimeout(() => { if (prev.dataset.tok === prevTok && !prev.classList.contains("on")) prev.innerHTML = ""; }, 1500);
+  film.cur ^= 1;
+  Music.stopClip(); if (f.t !== "leader") Music.stopSfx();
+  animateFrame(next, f);
+  if (!film.playing) film.anims.forEach(a => a.pause());
+  $("#f-bar").style.width = (film.frames.length > 1 ? i / (film.frames.length - 1) * 100 : 100) + "%";
+  const nx = film.frames[i + 1];
+  if (nx && nx.p){ const im = new Image(); im.src = nx.p.img; }
+  film.frames.slice(i + 1, i + 6).forEach(x => {
+    if (x.t !== "video") return;
+    preVideo(x.p.src).catch(() => {});
+    if (hasClip(x.p)) Music.loadClip(clipURL(x.p)).catch(() => {});
+  });
+}
+function tick(){
+  if (!film.playing || $("#film").hidden) return;
+  if (--film.left > 0) return;
+  const f = film.frames[film.i], v = f && f.t === "video" ? $("#fl" + film.cur + " video") : null;
+  if (v && !v.error && !v.ended && !v.paused){ film.left = 1; return; }
+  go(film.i + 1);
+}
+const Ticker = {
+  id:0,
+  start(){ this.stop(); if (Music.on) Music.onBar = tick; else this.id = setInterval(tick, BAR() * 1000); },
+  stop(){ clearInterval(this.id); this.id = 0; Music.onBar = null; }
+};
+async function lockWake(){ try { if (navigator.wakeLock) film.wake = await navigator.wakeLock.request("screen"); } catch(e){} }
+function setPlayIcon(){ $("#f-play").innerHTML = film.playing ? I_PAUSE : I_PLAY; $("#f-play").setAttribute("aria-label", film.playing ? "Пауза" : "Продолжить"); }
+function updateMute(){ $("#f-mute").classList.toggle("off", !Music.on); }
+function poke(){
+  $("#film").classList.remove("calm");
+  clearTimeout(film.calmT);
+  film.calmT = setTimeout(() => { if (film.playing) $("#film").classList.add("calm"); }, 2800);
+}
+function openFilm(from){
+  film.frames = buildFrames();
+  film.playing = true; film.anims = [];
+  $("#fl0").innerHTML = $("#fl1").innerHTML = "";
+  $("#fl0").classList.remove("on"); $("#fl1").classList.remove("on");
+  $("#f-end").hidden = true;
+  $("#film").hidden = false;
+  document.body.classList.add("noscroll");
+  try { const el = document.documentElement; if (el.requestFullscreen){ const pr = el.requestFullscreen({navigationUI:"hide"}); if (pr && pr.catch) pr.catch(() => {}); } } catch(e){}
+  lockWake();
+  const i = Math.min(from || 0, film.frames.length - 1);
+  Music.play(i === 0 ? LEAD() : 0); /* нажатие пальцем разрешает звук; с начала — с отсчётом плёнки */
+  Ticker.start();
+  setPlayIcon();
+  go(i);
+  poke();
+}
+function endFilm(){
+  film.playing = false;
+  Ticker.stop();
+  Music.stopClip();
+  Music.stop(4);
+  $("#f-end").hidden = false;
+  $("#film").classList.remove("calm");
+  setPlayIcon();
+}
+function closeFilm(){
+  film.playing = false;
+  Ticker.stop();
+  Music.stopClip(); Music.stopSfx();
+  setTimeout(dropVideos, 1600);
+  Music.stop(1.2);
+  film.anims.forEach(a => { try { a.cancel(); } catch(e){} }); film.anims = [];
+  $("#film").hidden = true;
+  $("#fl0").innerHTML = $("#fl1").innerHTML = "";
+  document.body.classList.remove("noscroll");
+  try { if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(() => {}); } catch(e){}
+  try { if (film.wake) film.wake.release(); } catch(e){}
+  film.wake = null;
+}
+function togglePlay(){
+  if (!$("#f-end").hidden) return;
+  film.playing = !film.playing;
+  const v = $("#fl" + film.cur + " video");
+  if (film.playing){ Music.resume(); film.anims.forEach(a => a.play()); if (v){ const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); } }
+  else { Music.pause(); film.anims.forEach(a => a.pause()); if (v) v.pause(); }
+  setPlayIcon(); poke();
+}
+const fNext = () => { if (film.i < film.frames.length - 1) go(film.i + 1); poke(); };
+const fPrev = () => { go(Math.max(1, film.i - 1)); poke(); };
+$("#f-close").onclick = closeFilm;
+$("#f-done").onclick = closeFilm;
+$("#f-again").onclick = () => openFilm(0);
+$("#f-play").onclick = togglePlay;
+$("#f-next").onclick = fNext;
+$("#f-prev").onclick = fPrev;
+$("#f-mute").onclick = () => {
+  if (Music.on) Music.stop(.8); else { Music.play(0); if (!film.playing) Music.pause(); }
+  Ticker.start(); poke();
+};
+(function(){
+  const el = $("#film"); let x0 = null, y0 = 0;
+  el.addEventListener("pointerdown", e => { if (e.target.closest("button")) return; x0 = e.clientX; y0 = e.clientY; });
+  el.addEventListener("pointermove", () => { if (!el.classList.contains("calm")) return; if (matchMedia("(hover:hover)").matches) poke(); });
+  el.addEventListener("pointerup", e => {
+    if (x0 == null || !$("#f-end").hidden) { x0 = null; return; }
+    const dx = e.clientX - x0, dy = e.clientY - y0; x0 = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)){ dx < 0 ? fNext() : fPrev(); return; }
+    const w = innerWidth;
+    if (e.clientX < w * .28) fPrev();
+    else if (e.clientX > w * .72) fNext();
+    else if (el.classList.contains("calm")) poke();
+    else { el.classList.add("calm"); clearTimeout(film.calmT); }
+  });
+})();
+document.addEventListener("visibilitychange", () => { if (!document.hidden && !$("#film").hidden) lockWake(); });
+document.addEventListener("keydown", e => {
+  if (!$("#film").hidden){
+    if (e.key === "Escape") closeFilm();
+    else if (e.key === " "){ e.preventDefault(); togglePlay(); }
+    else if (e.key === "ArrowRight") fNext();
+    else if (e.key === "ArrowLeft") fPrev();
+    return;
+  }
+  if (!$("#lb").hidden){
+    if (e.key === "Escape") closeLB();
+    else if (e.key === "ArrowRight") lbStep(1);
+    else if (e.key === "ArrowLeft") lbStep(-1);
+  }
+});
+
+/* ---------- Страница «Кинохроника»: афиша ---------- */
+function renderCine(){
+  const list = FILM(), still = list.filter(p => !p.isVideo);
+  const bg = still.find(p => p.bw) || still[0];
+  if (bg) $("#cine-bg").innerHTML = `<img src="${esc(bg.thumb || bg.img)}" alt="">`;
+  /* кадры на плёнке — по одному из каждой полосы, сколько есть */
+  const pick = [];
+  SECS.forEach(s => { const p = still.find(x => x.sec === s.id && !pick.includes(x)); if (p) pick.push(p); });
+  still.forEach(p => { if (pick.length < 4 && !pick.includes(p)) pick.push(p); });
+  $("#reel").innerHTML = pick.slice(0, 4).map(p => `<img src="${esc(p.thumb || p.img)}" alt="" loading="lazy">`).join("");
+  $("#reel").hidden = !pick.length;
+  $("#cine-t").textContent = `${DATA.title} · ${DATA.year}`;
+  const nP = list.filter(p => !p.isVideo).length, nV = list.length - nP;
+  $("#meta").textContent = list.length
+    ? [nP ? nP + " " + plural(nP, "снимок", "снимка", "снимков") : "", nV ? nV + " видео" : ""].filter(Boolean).join(" · ") + " · ≈ " + Math.max(1, Math.round(filmSeconds() / 60)) + " мин · с тапёром"
+    : "Снимков пока нет";
+  $("#play").disabled = !list.length;
+}
+$("#play").onclick = () => openFilm(0);
+
+let toastT = 0;
+function toast(t){ const el = $("#toast"); el.textContent = t; el.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove("on"), 2600); }
+
+/* ---------- Без интернета: газета целиком сохраняется на телефон (снимки, превью, видео),
+   отдаёт её без сети sw.js. Сохраняем по одному файлу, в порядке газеты ---------- */
+const MEDIA_CACHE = "g24-media";
+const mediaURLs = () => {
+  const s = new Set();
+  ALL.forEach(p => [p.src, p.thumb, p.poster, hasClip(p) ? clipURL(p) : null].forEach(u => { if (u) s.add(new URL(u, location.href).href); }));
+  return [...s];
+};
+function showOffline(done, total){
+  ["#offline", "#offline2"].forEach(id => {
+    const el = $(id); el.hidden = !total;
+    if (done >= total){ el.className = "offline ok"; el.textContent = "✓ Газета и кинохроника сохранены на этом телефоне: открываются без интернета"; return; }
+    el.className = "offline";
+    el.innerHTML = (navigator.onLine === false ? `Нет интернета: сохранено ${done} из ${total}, остальное сохранится, когда появится сеть`
+      : `Сохраняю газету на телефон, чтобы читать без интернета: ${done} из ${total}`) + `<i style="--p:${Math.round(done / total * 100)}%"></i>`;
+  });
+}
+let saving = false;
+async function saveOffline(){
+  if (saving || !("caches" in window) || !("serviceWorker" in navigator) || !ALL.length) return;
+  saving = true;
+  try {
+    await navigator.serviceWorker.ready;
+    try { if (navigator.storage && navigator.storage.persist) await navigator.storage.persist(); } catch(e){}
+    await saveFonts();
+    const c = await caches.open(MEDIA_CACHE), all = mediaURLs(), keys = await c.keys();
+    keys.forEach(r => { if (!all.includes(r.url)) c.delete(r); }); /* снимки, убранные из газеты */
+    const have = new Set(keys.map(r => r.url));
+    let done = all.filter(u => have.has(u)).length;
+    showOffline(done, all.length);
+    for (const u of all){
+      if (have.has(u)) continue;
+      try { const r = await fetch(u, {cache:"no-cache"}); if (r.ok){ await c.put(u, r); done++; } } catch(e){}
+      showOffline(done, all.length);
+    }
+  } catch(e){}
+  saving = false;
+}
+/* шрифты (Old Standard, руны и др.) — тоже в память: без них без интернета газета набрана бы запасными шрифтами,
+   а руны и яти не нарисовались бы. Страница сама скачивает CSS Google Fonts и файлы шрифтов в кэш g24-fonts */
+async function saveFonts(){
+  try {
+    const link = document.querySelector('link[rel="stylesheet"][href*="fonts.googleapis.com"]'); if (!link) return;
+    const c = await caches.open("g24-fonts");
+    if (await c.match(link.href)) return;
+    const css = await fetch(link.href); if (!css.ok) return;
+    const text = await css.clone().text();
+    const urls = [...new Set([...text.matchAll(/url\((https:\/\/fonts\.gstatic\.com[^)]+)\)/g)].map(m => m[1]))];
+    for (const u of urls){ try { const r = await fetch(u); if (r.ok) await c.put(u, r); } catch(e){} }
+    await c.put(link.href, css);
+  } catch(e){}
+}
+addEventListener("online", saveOffline);
+addEventListener("offline", () => { if (!$("#offline").classList.contains("ok")) saveOffline(); });
+
+/* ---------- Установка приложения и «Отправить друзьям QR-код» ----------
+   Газета ставится на телефон как веб-приложение (значок на экране, без адресной строки, работает без интернета).
+   Кто открыл ссылку в браузере, сразу видит экран установки с шагами под свой телефон; Android ставит в одно касание.
+   Если ссылка открылась внутри Telegram, WhatsApp и т. п. — экран предлагает открыть её в Safari / Chrome */
+const UA = navigator.userAgent;
+const APP_URL = location.origin + location.pathname.replace(/index\.html$/, "");
+const isIOS = /iPad|iPhone|iPod/.test(UA) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const isAndroid = /Android/i.test(UA);
+const isPhone = isIOS || isAndroid;
+const isStandalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const inApp = /FBAN|FBAV|Instagram|Line\/|Telegram|WhatsApp|VKClient|vkclient|OKApp|MicroMessenger|; wv\)/i.test(UA) || (isIOS && !/Safari\//.test(UA));
+const iosOther = isIOS && /CriOS|FxiOS|EdgiOS|OPiOS|YaBrowser/.test(UA);
+const samsung = /SamsungBrowser/.test(UA);
+const I_SHARE = `<svg class="ic-in" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M5 13v8h14v-8"/></svg>`;
+const I_ADD = `<svg class="ic-in" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg>`;
+const I_DOTS = `<svg class="ic-in" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18" cy="12" r="1.6"/></svg>`;
+const I_DOTSV = `<svg class="ic-in" viewBox="0 0 24 24"><circle cx="12" cy="6" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="18" r="1.6"/></svg>`;
+const AFTER = `<p class="gate-note">Потом откройте «Гардарику 24» со значка на экране — один раз при интернете (лучше по Wi-Fi): газета и кинохроника сохранятся в телефон и дальше будут открываться без сети.</p>`;
+const COPY = `<button class="gate-link" data-act="copy">Скопировать ссылку</button>`;
+let installEvt = null, installed = false;
+function gateHTML(){
+  if (installed) return `<div class="gate-done">✓ Готово! Значок «Гардарика 24» появится на экране телефона.</div>${AFTER}`;
+  if (!isPhone){
+    return `<img class="gate-qr" src="icons/qr.svg" alt="QR-код приложения"><p class="gate-note">Наведите на код камеру телефона — газета откроется там, нажмите «Установить приложение».</p>`
+      + (installEvt ? `<button class="gate-main" data-act="prompt">Установить на компьютер</button>` : "");
+  }
+  if (isAndroid){
+    if (installEvt) return `<button class="gate-main" data-act="prompt">Установить приложение</button>${AFTER}`;
+    if (inApp){
+      const intent = `intent://${APP_URL.replace(/^https?:\/\//, "")}#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=${encodeURIComponent(APP_URL)};end`;
+      return `<p class="gate-warn">Ссылка открылась внутри мессенджера — отсюда приложение не установить.</p>
+        <a class="gate-main" href="${esc(intent)}">Открыть в Chrome</a>
+        <p class="gate-note">Если не открылось: меню ${I_DOTSV} вверху справа → «Открыть в браузере» / «Открыть в Chrome».</p>${COPY}`;
+    }
+    if (samsung) return `<ol class="gate-steps"><li>Нажмите меню <b>≡</b> внизу справа.</li><li><b>«Добавить страницу на»</b> → <b>«Главный экран»</b>.</li><li>Нажмите <b>«Добавить»</b>.</li></ol>${AFTER}`;
+    return `<ol class="gate-steps"><li>Нажмите меню ${I_DOTSV} вверху справа.</li><li><b>«Установить приложение»</b> или <b>«Добавить на главный экран»</b>.</li><li>Нажмите <b>«Установить»</b>.</li></ol>
+      <p class="gate-note">Если меню другое (ссылка открыта в Telegram): ${I_DOTSV} → «Открыть в Chrome», дальше — по шагам.</p>${AFTER}`;
+  }
+  /* iPhone */
+  if (inApp){
+    return `<p class="gate-warn">Ссылка открылась внутри мессенджера — отсюда приложение не установить, нужен Safari.</p>
+      <a class="gate-main" href="x-safari-${esc(APP_URL)}">Открыть в Safari</a>
+      <p class="gate-note">Если не открылось: нажмите ${I_DOTS} или значок компаса → <b>«Открыть в Safari»</b>. Или скопируйте ссылку и вставьте её в Safari.</p>${COPY}`;
+  }
+  if (iosOther){
+    return `<ol class="gate-steps"><li>Нажмите ${I_SHARE} <b>«Поделиться»</b> в адресной строке.</li><li>Выберите ${I_ADD} <b>«На экран „Домой“»</b>.</li><li>Нажмите <b>«Добавить»</b>.</li></ol>
+      <p class="gate-note">Если такого пункта нет — откройте газету в Safari: <a class="gate-inline" href="x-safari-${esc(APP_URL)}">открыть в Safari</a>.</p>${AFTER}`;
+  }
+  return `<ol class="gate-steps">
+      <li>Нажмите ${I_SHARE} <b>«Поделиться»</b> внизу экрана. <span>В новых iOS он прячется под кнопкой ${I_DOTS} справа внизу.</span></li>
+      <li>Пролистайте и выберите ${I_ADD} <b>«На экран „Домой“»</b>.</li>
+      <li>Оставьте включённым «Открыть как веб-приложение» и нажмите <b>«Добавить»</b>.</li></ol>${AFTER}`;
+}
+function openGate(){
+  $("#gate-body").innerHTML = gateHTML();
+  $("#gate").hidden = false;
+  document.body.classList.add("noscroll");
+}
+function closeGate(){
+  $("#gate").hidden = true;
+  document.body.classList.remove("noscroll");
+  store.set("g24-gate-seen", true);
+}
+function renderInstall(){ const s = isStandalone(); $("#inst-btn").hidden = s; $("#inst-btn2").hidden = s; }
+async function copyLink(){
+  try { await navigator.clipboard.writeText(APP_URL); toast("Ссылка скопирована — вставьте её в Safari или Chrome"); }
+  catch(e){ prompt("Ссылка на приложение:", APP_URL); }
+}
+$("#gate").addEventListener("click", async e => {
+  const b = e.target.closest("[data-act]"); if (!b) return;
+  if (b.dataset.act === "copy") copyLink();
+  if (b.dataset.act === "prompt" && installEvt){
+    const ev = installEvt; installEvt = null;
+    ev.prompt();
+    try { const c = await ev.userChoice; if (c && c.outcome === "accepted") installed = true; } catch(e){}
+    $("#gate-body").innerHTML = gateHTML();
+  }
+});
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; if (!$("#gate").hidden) $("#gate-body").innerHTML = gateHTML(); });
+addEventListener("appinstalled", () => { installEvt = null; installed = true; renderInstall(); if (!$("#gate").hidden) $("#gate-body").innerHTML = gateHTML(); else toast("Приложение установлено"); });
+$("#inst-btn").onclick = openGate;
+$("#inst-btn2").onclick = openGate;
+$("#gate-skip").onclick = closeGate;
+document.addEventListener("keydown", e => { if (e.key === "Escape"){ if (!$("#gate").hidden) closeGate(); if (!$("#qr-sheet").hidden) $("#qr-sheet").hidden = true; } });
+
+const SHARE_TEXT = "📰 «Гардарикские ведомости · 2024» — газета-приложение о путешествии в Гардарику: репортажи из трёх эпох и кинохроника с тапёром. Наведите камеру телефона на QR-код или откройте ссылку и нажмите «Установить приложение»: газета появится на экране телефона со своим значком и будет открываться без интернета.";
+/* друзьям газета уходит картинкой-приглашением с QR-кодом (icons/invite.jpg) вместе с текстом и ссылкой */
+async function shareApp(){
+  try {
+    const blob = await (await fetch("icons/invite.jpg")).blob();
+    const file = new File([blob], "Гардарика-2024-QR.jpg", {type:"image/jpeg"});
+    if (navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file], title:"Гардарика 2024", text:SHARE_TEXT + "\n" + APP_URL}); return; }
+  } catch(e){ if (e && e.name === "AbortError") return; }
+  if (navigator.share){ try { await navigator.share({title:"Гардарика 2024", text:SHARE_TEXT, url:APP_URL}); } catch(e){} return; }
+  try { await navigator.clipboard.writeText(SHARE_TEXT + "\n" + APP_URL); toast("Приглашение скопировано — вставьте его в чат"); }
+  catch(e){ prompt("Ссылка на приложение:", APP_URL); }
+  const a = document.createElement("a"); a.href = "icons/invite.jpg"; a.download = "Гардарика-2024-QR.jpg"; document.body.appendChild(a); a.click(); a.remove();
+}
+$("#share-btn").onclick = shareApp;
+$("#share-btn2").onclick = shareApp;
+$("#f-share").onclick = shareApp;
+$("#qr-btn").onclick = () => { $("#qr-sheet").hidden = false; };
+$("#qr-x").onclick = () => { $("#qr-sheet").hidden = true; };
+$("#qr-sheet").addEventListener("click", e => { if (e.target.id === "qr-sheet") $("#qr-sheet").hidden = true; });
+$("#qr-share").onclick = shareApp;
+
+/* ---------- Страницы «Газета» и «Кинохроника» ---------- */
+let paperY = 0;
+function showTab(t){
+  const cine = t === "cine", was = document.body.classList.contains("tab-cine");
+  if (cine && !was) paperY = scrollY;
+  document.body.classList.toggle("tab-cine", cine);
+  document.body.classList.toggle("tab-paper", !cine);
+  document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", String(b.dataset.tab === t)));
+  if (!cine && was) scrollTo(0, paperY);
+}
+document.querySelector(".tabs").addEventListener("click", e => {
+  const b = e.target.closest(".tab"); if (!b) return;
+  const t = b.dataset.tab, now = document.body.classList.contains("tab-cine") ? "cine" : "paper";
+  if (t === now){ if (t === "paper") scrollTo({top:0, behavior:reduce ? "auto" : "smooth"}); return; }
+  if (t === "cine"){ try { history.pushState({tab:"cine"}, ""); } catch(err){} showTab("cine"); }
+  else if (history.state && history.state.tab === "cine") history.back();
+  else showTab("paper");
+});
+addEventListener("popstate", e => {
+  const st = e.state || {};
+  if (!st.lb) hideLB();
+  showTab(st.tab === "cine" ? "cine" : "paper");
+});
+if (history.state && history.state.lb){ try { history.replaceState(Object.assign({}, history.state, {lb:false}), ""); } catch(e){} }
+showTab(history.state && history.state.tab === "cine" ? "cine" : "paper");
+
+renderPaper();
+renderCine();
+renderInstall();
+/* открыли ссылку в браузере (не установленное приложение) — сразу экран установки */
+if (!isStandalone() && !store.get("g24-gate-seen", false)) openGate();
+if ("serviceWorker" in navigator && location.protocol !== "file:"){
+  navigator.serviceWorker.register("sw.js").then(saveOffline).catch(() => {});
+}
+</script>
+</body>
+</html>

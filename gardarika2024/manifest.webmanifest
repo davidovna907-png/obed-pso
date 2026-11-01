@@ -1,0 +1,27 @@
+{
+  "id": "./",
+  "name": "Гардарика 2024 · Гардарикские ведомости",
+  "short_name": "Гардарика 24",
+  "description": "Газета-приложение «Гардарикские ведомости · 2024»: репортажи из трёх эпох и кинохроника с тапёром, открывается без интернета",
+  "lang": "ru",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone"],
+  "orientation": "any",
+  "background_color": "#ece3cd",
+  "theme_color": "#1d1913",
+  "categories": ["photo", "news", "entertainment"],
+  "prefer_related_applications": false,
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ],
+  "screenshots": [
+    {"src": "icons/shot-paper.jpg", "sizes": "780x1688", "type": "image/jpeg", "form_factor": "narrow", "label": "Первая полоса газеты"},
+    {"src": "icons/shot-page.jpg", "sizes": "780x1688", "type": "image/jpeg", "form_factor": "narrow", "label": "Полоса XVIII века"},
+    {"src": "icons/shot-film.jpg", "sizes": "780x1688", "type": "image/jpeg", "form_factor": "narrow", "label": "Кинохроника"}
+  ]
+}
