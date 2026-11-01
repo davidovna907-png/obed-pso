@@ -74,6 +74,16 @@ button{font:inherit;color:inherit}
 .index button b{font:700 18px/1.2 var(--old)}
 .index button i{grid-column:2;font:italic 400 13.5px/1.3 var(--serif);color:var(--mute)}
 .weather{padding:10px 12px;border:1px solid var(--rule);font:400 14.5px/1.45 var(--serif)}
+/* «Имена сквозь века»: как звали бы корреспонденток в каждую эпоху (просьба пользователя 1.11) */
+.names{margin-top:16px;padding:12px 14px 10px;border:1px solid var(--rule);outline:1px solid var(--rule);outline-offset:3px;background:rgba(255,252,242,.35)}
+.names h4{margin:0;text-align:center;font:700 20px/1.2 var(--old)}
+.names-sub{margin:2px 0 10px;text-align:center;font:italic 400 13.5px/1.3 var(--serif);color:var(--mute)}
+.names dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:7px 12px;align-items:baseline}
+.names dt{font:400 11px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.names dd{margin:0;font:700 16px/1.3 var(--old)}
+.names dd.rune{font:400 18px/1.3 var(--rune);color:var(--blue);letter-spacing:.06em}
+.names-note{margin:10px 0 0;font:italic 400 13px/1.4 var(--serif);color:var(--ink-2);text-align:center}
+@media (max-width:370px){.names dl{grid-template-columns:1fr;gap:1px}.names dd{margin-bottom:7px}}
 .cine-link{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:52px;margin-top:12px;border:0;border-radius:4px;background:var(--ink);color:var(--cream);font:700 16px/1 var(--sov);letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
 .cine-link .ic{width:22px;height:22px}
 
@@ -117,6 +127,10 @@ button{font:inherit;color:inherit}
 .rn-band{margin:0 0 12px;overflow:hidden;white-space:nowrap;text-align:center;font:400 17px/1.4 var(--rune);letter-spacing:.42em;color:var(--blue);opacity:.7}
 .rn-band.end{margin:14px 0 0}
 .rn .pr-in img{filter:saturate(.8) sepia(.18) contrast(1.05)}
+/* имена рунами — табличка «из камня» */
+.rn-sign{margin:4px 0 14px;padding:12px 14px;text-align:center;border-radius:30px 30px 10px 10px;background:linear-gradient(#d3cec3,#bcb6aa);border:1px solid #8f897d;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 3px 8px rgba(40,30,15,.18)}
+.rn-sign b{display:block;font:400 clamp(20px,6.4vw,30px)/1.3 var(--rune);color:var(--blue);letter-spacing:.12em}
+.rn-sign span{display:block;margin-top:4px;font:italic 400 14px/1.35 var(--serif);color:var(--ink-2)}
 .rn .box{border:2px solid var(--blue);border-radius:34px 4px 34px 4px;color:var(--ink)}
 .rn .box b{color:var(--blue)}
 
@@ -364,40 +378,40 @@ body.tab-cine .tab[aria-selected="true"] .ic{color:var(--gold)}
  "paper": "Гардарикские ведомости",
  "issue": ["№ 1", "7 декабря 2024", "Цена — улыбка"],
  "author": "ND",
- "cast": [],
- "front": {"kicker": "Сенсация номера", "head": "Путешествие во времени удалось!", "sub": "Наши корреспондентки прошли сквозь века: побывали у викингов, постреляли с пушкарями XVIII века, отдохнули у терема и заглянули в кабинет комиссара двадцатых годов. Репортажи — на полосах этого выпуска.", "photo": "n002", "weather": "Мороз и солнце, небо ясное, снег под ногами — погода для путешествий во времени самая подходящая."},
- "sections": [{"id": "put", "style": "telegram", "era": "Наши дни", "rubric": "Срочно в номер", "film": "В путь!", "head": "Экспедиция выехала", "from": "в пути", "tg": "Выехали тчк солнце в окно зпт настроение отличное тчк курс на Гардарику тчк ждите репортаж тчк"}, {"id": "runes", "style": "runes", "era": "Эпоха викингов", "rubric": "Репортаж", "film": "Рунный камень", "head": "Рунный камень встретил гостей", "text": ["Первым на пути путешественниц встал камень с рунами: синий зверь, узлы-плетёнки и надпись «Парк Гардарика». По кругу руны сообщают, что камень поставлен в 2016 году в честь открытия парка."], "box": {"h": "Знаете ли вы?", "t": "Гардарикой в скандинавских сагах называли Русь — «страну городов»."}}, {"id": "guns", "style": "petrine", "era": "Вѣкъ осьмнадцатый", "rubric": "Военныя извѣстія", "film": "Пушкари", "head": "О пушкарскомъ ученіи", "date": "Писано въ Гардарикѣ, зимою 2024 года", "text": ["У бревенчатой башни канониръ въ треуголкѣ показывалъ дамамъ пушкарское дѣло: какъ банникомъ стволъ прочищать, какъ пальникъ держать да какъ орудіе къ выстрѣлу готовить. Ученицы оказались весьма прилежны, а иныя — и смѣшливы, о чемъ свидѣтельствуютъ снимки нашего корреспондента. А затѣмъ грянулъ залпъ изъ двухъ орудій: пушки, по словамъ канонира, работаютъ исправно."], "box": {"h": "Указъ", "t": "Всѣмъ гостямъ Гардарики быть веселыми и пушекъ не бояться."}}, {"id": "fort", "style": "petrine", "era": "Вѣкъ осьмнадцатый", "rubric": "Происшествія", "film": "Пальба из фузеи", "head": "Пальба изъ фузеи", "date": "Изъ крѣпости сообщаютъ, декабря 7 дня 2024 года", "text": ["За бревенчатой стѣной, у бойницы, канониръ училъ дамъ стрѣлять изъ фузеи. Команда «Огонь!» — и вспышка, громъ и дымъ, а слѣдомъ — звонкій смѣхъ: обѣ стрѣлявшія дамы остались весьма довольны.", "Послѣ полудня отрядъ залегъ въ засадѣ въ березовой рощѣ, а затѣмъ посѣтилъ острогъ: узникъ за рѣшеткой встрѣтилъ гостей улыбкой. Когда ему пригрозили страшнымъ словомъ «аускультируемъ», онъ взмолился: «Ваше благородіе, не надо меня аускультировать!» — и тутъ же спросилъ: «А что это такое?»"], "box": {"h": "Происшествіе", "t": "Въ крѣпости слышны выстрѣлы. Жителей просятъ не безпокоиться: это учатся дамы."}}, {"id": "terem", "style": "salon", "era": "Вѣкъ девятнадцатый", "rubric": "Свѣтская хроника", "film": "Светская хроника", "head": "Дамы изволили отдыхать у терема", "text": ["Въ солнечный морозный день дамы изволили отдыхать на огромной скамьѣ у рѣзного терема. Солнце свѣтило ярко, морозъ румянилъ щеки, настроеніе было превосходное.", "Канониръ изъ прошлаго вѣка, смѣнивъ треуголку на мѣховую шапку, почтилъ общество своимъ присутствіемъ и любезно согласился сняться на память.", "Юные кладоискатели тѣмъ временемъ разбирали сокровища: самоцвѣты, бусы и старинныя монеты."], "box": {"h": "Модный вѣстникъ", "t": "Въ этомъ сезонѣ въ Гардарикѣ носятъ бѣлое и черное, шапочки съ помпономъ и пуховыя варежки."}}, {"id": "office", "style": "soviet", "era": "Двадцатые годы", "rubric": "Хроника", "film": "Кабинет комиссара", "head": "Комиссары заступили на пост", "band": "Даёшь Гардарику!", "text": ["В бревенчатом кабинете всё по уставу: портрет Ильича, счёты, чёрный телефон, чернильный прибор и красное знамя «Пролетарии всех стран, соединяйтесь!». За столом — товарищи в кожанках, на вооружении — маузер.", "Проверка показала: дисциплина образцовая, настроение боевое."], "box": {"h": "Телефонограмма", "t": "Всем постам. В Гардарике порядок. Срочно в номер!"}}],
+ "cast": ["Наталья", "Мария"],
+ "front": {"kicker": "Сенсация номера", "head": "Путешествие во времени удалось!", "sub": "Наши корреспондентки Наталья и Мария прошли сквозь века: побывали у викингов, постреляли с пушкарями XVIII века, отдохнули у терема и заглянули в кабинет комиссара двадцатых годов. Репортажи — на полосах этого выпуска.", "photo": "n002", "weather": "Мороз и солнце, небо ясное, снег под ногами — погода для путешествий во времени самая подходящая.", "names": [["Эпоха викингов", "ᚾᛅᛏᛅᛚᛁᛅ · ᛘᛅᚱᛁᛅ", "rune"], ["Древняя Русь", "Наталья (Натальюшка) · Марья (Марьюшка)"], ["XVIII век", "Наталія · Марія"], ["XIX век, в свете", "Натали · Мари"], ["Двадцатые годы", "товарищ Наталья · товарищ Мария"], ["Наши дни", "Наталья · Мария"]], "namesNote": "Наталья — от латинского natalis: «родная», «рождественская». Мария — от древнееврейского Мириам."},
+ "sections": [{"id": "put", "style": "telegram", "era": "Наши дни", "rubric": "Срочно в номер", "film": "В путь!", "head": "Экспедиция выехала", "from": "в пути", "tg": "Выехали тчк солнце в окно зпт настроение отличное тчк курс на Гардарику тчк ждите репортаж тчк Наталья Мария"}, {"id": "runes", "style": "runes", "era": "Эпоха викингов", "rubric": "Репортаж", "film": "Рунный камень", "head": "Рунный камень встретил гостей", "text": ["Первым на пути путешественниц встал камень с рунами: синий зверь, узлы-плетёнки и надпись «Парк Гардарика». По кругу руны сообщают, что камень поставлен в 2016 году в честь открытия парка."], "box": {"h": "Знаете ли вы?", "t": "Гардарикой в скандинавских сагах называли Русь — «страну городов»."}, "sign": {"r": "ᚾᛅᛏᛅᛚᛁᛅ ᛬ ᛘᛅᚱᛁᛅ", "t": "Так вырезали бы викинги на камне имена наших корреспонденток — Наталья и Мария"}}, {"id": "guns", "style": "petrine", "era": "Вѣкъ осьмнадцатый", "rubric": "Военныя извѣстія", "film": "Пушкари", "head": "О пушкарскомъ ученіи", "date": "Писано въ Гардарикѣ, зимою 2024 года", "text": ["У бревенчатой башни канониръ въ треуголкѣ показывалъ Наталіи и Маріи пушкарское дѣло: какъ банникомъ стволъ прочищать, какъ пальникъ держать да какъ орудіе къ выстрѣлу готовить. Ученицы оказались весьма прилежны, а иныя — и смѣшливы, о чемъ свидѣтельствуютъ снимки нашего корреспондента. А затѣмъ грянулъ залпъ изъ двухъ орудій: пушки, по словамъ канонира, работаютъ исправно."], "box": {"h": "Указъ", "t": "Всѣмъ гостямъ Гардарики быть веселыми и пушекъ не бояться."}}, {"id": "fort", "style": "petrine", "era": "Вѣкъ осьмнадцатый", "rubric": "Происшествія", "film": "Пальба из фузеи", "head": "Пальба изъ фузеи", "date": "Изъ крѣпости сообщаютъ, декабря 7 дня 2024 года", "text": ["За бревенчатой стѣной, у бойницы, канониръ училъ Наталію и Марію стрѣлять изъ фузеи. Команда «Огонь!» — и вспышка, громъ и дымъ, а слѣдомъ — звонкій смѣхъ: обѣ стрѣлявшія дамы остались весьма довольны.", "Послѣ полудня отрядъ залегъ въ засадѣ въ березовой рощѣ, а затѣмъ посѣтилъ острогъ: узникъ за рѣшеткой встрѣтилъ гостей улыбкой. Когда ему пригрозили страшнымъ словомъ «аускультируемъ», онъ взмолился: «Ваше благородіе, не надо меня аускультировать!» — и тутъ же спросилъ: «А что это такое?»"], "box": {"h": "Происшествіе", "t": "Въ крѣпости слышны выстрѣлы. Жителей просятъ не безпокоиться: это учатся дамы."}}, {"id": "terem", "style": "salon", "era": "Вѣкъ девятнадцатый", "rubric": "Свѣтская хроника", "film": "Светская хроника", "head": "Натали и Мари изволили отдыхать у терема", "text": ["Наталія и Марія, коихъ въ свѣтѣ на французскій манеръ зовутъ Натали и Мари, въ солнечный морозный день изволили отдыхать на огромной скамьѣ у рѣзного терема. Солнце свѣтило ярко, морозъ румянилъ щеки, настроеніе было превосходное.", "Канониръ изъ прошлаго вѣка, смѣнивъ треуголку на мѣховую шапку, почтилъ общество своимъ присутствіемъ и любезно согласился сняться на память.", "Юные кладоискатели тѣмъ временемъ разбирали сокровища: самоцвѣты, бусы и старинныя монеты."], "box": {"h": "Модный вѣстникъ", "t": "Натали въ этомъ сезонѣ выбираетъ бѣлое, Мари — черное и шапочку съ помпономъ; пуховыя варежки — у обѣихъ."}}, {"id": "office", "style": "soviet", "era": "Двадцатые годы", "rubric": "Хроника", "film": "Кабинет комиссара", "head": "Комиссары заступили на пост", "band": "Даёшь Гардарику!", "text": ["В бревенчатом кабинете всё по уставу: портрет Ильича, счёты, чёрный телефон, чернильный прибор и красное знамя «Пролетарии всех стран, соединяйтесь!». За столом — по очереди товарищ Мария и товарищ Наталья в кожанках, на вооружении — маузер.", "Проверка показала: дисциплина образцовая, настроение боевое."], "box": {"h": "Телефонограмма", "t": "Всем постам. В Гардарике порядок. Срочно в номер!"}}],
  "ads": [{"h": "Требуются канониры", "t": "Опыт не обязателен: научат на месте, банник выдаётся."}, {"h": "Машина времени", "t": "Ходит по расписанию: туда — на автобусе, обратно — с улыбкой."}, {"h": "Меняю", "t": "Маузер на счёты. Звонить по чёрному телефону."}, {"h": "Найден", "t": "Рунный камень. Ждёт гостей с 2016 года."}, {"h": "Продаётся фузея", "t": "Стреляет громко, дамам нравится."}, {"h": "Сдаётся терем", "t": "С резными наличниками. Скамья для отдыха — в подарок."}, {"h": "Аускультирую", "t": "Быстро и не страшно. Спросить у ворот острога."}, {"h": "Засада", "t": "В берёзовой роще. Места есть, сидеть тихо."}],
  "photos": [
- {"id": "n001", "src": "photos/n001.jpg", "thumb": "photos/t/n001.jpg", "w": 1500, "h": 2000, "sec": "put", "cap": "Корреспондентки в пути. Солнце — в окно!"},
- {"id": "n002", "src": "photos/n002.jpg", "thumb": "photos/t/n002.jpg", "w": 1500, "h": 2000, "sec": "runes", "cap": "Встреча у рунного камня"},
+ {"id": "n001", "src": "photos/n001.jpg", "thumb": "photos/t/n001.jpg", "w": 1500, "h": 2000, "sec": "put", "cap": "Наталья и Мария в пути. Солнце — в окно!"},
+ {"id": "n002", "src": "photos/n002.jpg", "thumb": "photos/t/n002.jpg", "w": 1500, "h": 2000, "sec": "runes", "cap": "Мария и Наталья у рунного камня"},
  {"id": "n003", "src": "photos/n003.jpg", "thumb": "photos/t/n003.jpg", "w": 1500, "h": 2000, "sec": "runes", "cap": "Синий зверь, руны и надпись «Парк Гардарика»"},
- {"id": "n004", "src": "photos/n004.jpg", "thumb": "photos/t/n004.jpg", "w": 1500, "h": 2000, "sec": "office", "cap": "Товарищ в кожанке при исполнении"},
- {"id": "n005", "src": "photos/n005.jpg", "thumb": "photos/t/n005.jpg", "w": 1500, "h": 2000, "sec": "office", "cap": "Дымок из ствола — сдуть! Классика жанра"},
- {"id": "n006", "src": "photos/n006.jpg", "thumb": "photos/t/n006.jpg", "w": 1531, "h": 2000, "bw": true, "sec": "office", "cap": "Снимок для доски почёта"},
+ {"id": "n004", "src": "photos/n004.jpg", "thumb": "photos/t/n004.jpg", "w": 1500, "h": 2000, "sec": "office", "cap": "Товарищ Мария при исполнении"},
+ {"id": "n005", "src": "photos/n005.jpg", "thumb": "photos/t/n005.jpg", "w": 1500, "h": 2000, "sec": "office", "cap": "Товарищ Мария: дымок из ствола — сдуть!"},
+ {"id": "n006", "src": "photos/n006.jpg", "thumb": "photos/t/n006.jpg", "w": 1531, "h": 2000, "bw": true, "sec": "office", "cap": "Товарищ Мария — на доску почёта"},
  {"id": "n007", "src": "photos/n007.jpg", "thumb": "photos/t/n007.jpg", "w": 1500, "h": 2000, "sec": "office", "cap": "Маузер — к осмотру!"},
  {"id": "n008", "src": "photos/n008.jpg", "thumb": "photos/t/n008.jpg", "w": 1500, "h": 2000, "sec": "office", "cap": "Стой! Кто идёт?"},
  {"id": "n009", "src": "photos/n009.jpg", "thumb": "photos/t/n009.jpg", "w": 1475, "h": 2000, "bw": true, "sec": "office", "cap": "Тот же миг — для личного дела"},
- {"id": "n010", "src": "photos/n010.jpg", "thumb": "photos/t/n010.jpg", "w": 1500, "h": 2000, "sec": "office", "cap": "Алло, Гардарика? Соединяю с редакцией!"},
+ {"id": "n010", "src": "photos/n010.jpg", "thumb": "photos/t/n010.jpg", "w": 1500, "h": 2000, "sec": "office", "cap": "Товарищ Наталья: «Алло, Гардарика? Соединяю с редакцией!»"},
  {"id": "n011", "src": "photos/n011.jpg", "thumb": "photos/t/n011.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Пушкарская команда у башни"},
  {"id": "n012", "src": "photos/n012.jpg", "thumb": "photos/t/n012.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Канониръ держитъ рѣчь"},
- {"id": "n013", "src": "photos/n013.jpg", "thumb": "photos/t/n013.jpg", "w": 1500, "h": 2000, "bw": true, "sec": "guns", "cap": "Двѣ ученицы съ банниками"},
- {"id": "n014", "src": "photos/n014.jpg", "thumb": "photos/t/n014.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Стволъ прочищаютъ банникомъ"},
- {"id": "n017", "src": "photos/n017.jpg", "thumb": "photos/t/n017.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Банникъ въ дѣлѣ!"},
- {"id": "n018", "type": "video", "src": "photos/n018.mp4", "poster": "photos/n018.jpg", "thumb": "photos/t/n018.jpg", "w": 720, "h": 1280, "dur": 3.2, "sound": true, "sec": "guns", "cap": "Работа кипитъ!", "date": "2024-12-07", "time": "11:18:11"},
+ {"id": "n013", "src": "photos/n013.jpg", "thumb": "photos/t/n013.jpg", "w": 1500, "h": 2000, "bw": true, "sec": "guns", "cap": "Наталія и Марія съ банниками"},
+ {"id": "n014", "src": "photos/n014.jpg", "thumb": "photos/t/n014.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Марія прочищаетъ стволъ банникомъ"},
+ {"id": "n017", "src": "photos/n017.jpg", "thumb": "photos/t/n017.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Наталія: банникъ въ дѣлѣ!"},
+ {"id": "n018", "type": "video", "src": "photos/n018.mp4", "poster": "photos/n018.jpg", "thumb": "photos/t/n018.jpg", "w": 720, "h": 1280, "dur": 3.2, "sound": true, "sec": "guns", "cap": "Наталія за работой", "date": "2024-12-07", "time": "11:18:11"},
  {"id": "n030", "type": "video", "src": "photos/n030.mp4", "poster": "photos/n030.jpg", "thumb": "photos/t/n030.jpg", "w": 720, "h": 1280, "dur": 8.5, "sound": true, "sec": "guns", "cap": "Залпъ изъ двухъ орудій!", "date": "2024-12-07", "time": "11:20:27"},
- {"id": "n015", "src": "photos/n015.jpg", "thumb": "photos/t/n015.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Ученіе идетъ весело"},
+ {"id": "n015", "src": "photos/n015.jpg", "thumb": "photos/t/n015.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Наталія и Марія: ученіе идетъ весело"},
  {"id": "n016", "src": "photos/n016.jpg", "thumb": "photos/t/n016.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Канониръ провѣряетъ орудіе"},
- {"id": "n019", "src": "photos/n019.jpg", "thumb": "photos/t/n019.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Пальникъ наготовѣ!"},
- {"id": "n020", "type": "video", "src": "photos/n020.mp4", "poster": "photos/n020.jpg", "thumb": "photos/t/n020.jpg", "w": 720, "h": 1280, "dur": 5.4, "sound": true, "sec": "fort", "cap": "Выстрѣлъ — и звонкій смѣхъ!", "date": "2024-12-07", "time": "11:48:24"},
- {"id": "n021", "type": "video", "src": "photos/n021.mp4", "poster": "photos/n021.jpg", "thumb": "photos/t/n021.jpg", "w": 720, "h": 1280, "dur": 6.7, "sound": true, "sec": "fort", "cap": "Второй выстрѣлъ — и полный восторгъ!", "date": "2024-12-07", "time": "11:51:39"},
- {"id": "n031", "type": "video", "src": "photos/n031.mp4", "poster": "photos/n031.jpg", "thumb": "photos/t/n031.jpg", "w": 720, "h": 1280, "dur": 10.1, "sound": true, "sec": "fort", "cap": "Тише! Мы въ засадѣ", "date": "2024-12-07", "time": "12:27:00"},
+ {"id": "n019", "src": "photos/n019.jpg", "thumb": "photos/t/n019.jpg", "w": 1500, "h": 2000, "sec": "guns", "cap": "Марія: пальникъ наготовѣ!"},
+ {"id": "n020", "type": "video", "src": "photos/n020.mp4", "poster": "photos/n020.jpg", "thumb": "photos/t/n020.jpg", "w": 720, "h": 1280, "dur": 5.4, "sound": true, "sec": "fort", "cap": "Выстрѣлъ Наталіи — и звонкій смѣхъ!", "date": "2024-12-07", "time": "11:48:24"},
+ {"id": "n021", "type": "video", "src": "photos/n021.mp4", "poster": "photos/n021.jpg", "thumb": "photos/t/n021.jpg", "w": 720, "h": 1280, "dur": 6.7, "sound": true, "sec": "fort", "cap": "Выстрѣлъ Маріи — и полный восторгъ!", "date": "2024-12-07", "time": "11:51:39"},
+ {"id": "n031", "type": "video", "src": "photos/n031.mp4", "poster": "photos/n031.jpg", "thumb": "photos/t/n031.jpg", "w": 720, "h": 1280, "dur": 10.1, "sound": true, "sec": "fort", "cap": "Тише! Марія въ засадѣ", "date": "2024-12-07", "time": "12:27:00"},
  {"id": "n022", "src": "photos/n022.jpg", "thumb": "photos/t/n022.jpg", "w": 1500, "h": 2000, "sec": "fort", "cap": "Узникъ острога принимаетъ гостей"},
  {"id": "n032", "type": "video", "src": "photos/n032.mp4", "poster": "photos/n032.jpg", "thumb": "photos/t/n032.jpg", "w": 720, "h": 1280, "dur": 13.1, "sound": true, "sec": "fort", "cap": "«Ваше благородіе, не надо меня аускультировать!»", "date": "2024-12-07", "time": "12:47:14"},
- {"id": "n023", "src": "photos/n023.jpg", "thumb": "photos/t/n023.jpg", "w": 1500, "h": 2000, "sec": "terem", "cap": "Канониръ въ мѣховой шапкѣ и его спутницы"},
- {"id": "n024", "src": "photos/n024.jpg", "thumb": "photos/t/n024.jpg", "w": 1500, "h": 2000, "sec": "terem", "cap": "Дама въ бѣломъ у рѣзного терема", "oval": true},
- {"id": "n025", "src": "photos/n025.jpg", "thumb": "photos/t/n025.jpg", "w": 1500, "h": 2000, "sec": "terem", "cap": "Дама въ синей шапочкѣ грѣется на солнцѣ", "oval": true},
- {"id": "n026", "src": "photos/n026.jpg", "thumb": "photos/t/n026.jpg", "w": 1500, "h": 2000, "sec": "terem", "cap": "Портретъ на память", "oval": true},
+ {"id": "n023", "src": "photos/n023.jpg", "thumb": "photos/t/n023.jpg", "w": 1500, "h": 2000, "sec": "terem", "cap": "Канониръ въ мѣховой шапкѣ, Натали и Мари"},
+ {"id": "n024", "src": "photos/n024.jpg", "thumb": "photos/t/n024.jpg", "w": 1500, "h": 2000, "sec": "terem", "cap": "Натали у рѣзного терема", "oval": true},
+ {"id": "n025", "src": "photos/n025.jpg", "thumb": "photos/t/n025.jpg", "w": 1500, "h": 2000, "sec": "terem", "cap": "Мари грѣется на солнцѣ", "oval": true},
+ {"id": "n026", "src": "photos/n026.jpg", "thumb": "photos/t/n026.jpg", "w": 1500, "h": 2000, "sec": "terem", "cap": "Мари: портретъ на память", "oval": true},
  {"id": "n027", "src": "photos/n027.jpg", "thumb": "photos/t/n027.jpg", "w": 1500, "h": 2000, "sec": "terem", "cap": "И еще одинъ — для альбома", "oval": true, "film": false},
  {"id": "n028", "src": "photos/n028.jpg", "thumb": "photos/t/n028.jpg", "w": 1500, "h": 2000, "sec": "terem", "cap": "Юные кладоискатели за работой"},
  {"id": "n029", "src": "photos/n029.jpg", "thumb": "photos/t/n029.jpg", "w": 2000, "h": 1483, "sec": "terem", "cap": "Самоцвѣты, бусы и старинныя монеты"}
@@ -564,7 +578,8 @@ function secHTML(s, k){
       + `<p class="tg-text">${lines.map(l => `<span>${esc(l)}</span>`).join(" ")}</p></div>` + paras(s.text) + figsHTML(list) + box;
   } else if (s.style === "runes"){
     cls = "rn";
-    body = `<div class="rn-band" aria-hidden="true">${RUNES}</div>` + h + paras(s.text) + figsHTML(list) + box + `<div class="rn-band end" aria-hidden="true">${RUNES}</div>`;
+    const sign = s.sign ? `<div class="rn-sign"><b lang="non">${esc(s.sign.r)}</b><span>${esc(s.sign.t)}</span></div>` : "";
+    body = `<div class="rn-band" aria-hidden="true">${RUNES}</div>` + h + paras(s.text) + sign + figsHTML(list) + box + `<div class="rn-band end" aria-hidden="true">${RUNES}</div>`;
   } else if (s.style === "petrine"){
     cls = "pt";
     body = `<div class="pt-orn">${ORN}</div>` + h + (s.date ? `<div class="pt-date">${esc(s.date)}</div>` : "") + paras(s.text, true) + figsHTML(list) + box;
@@ -590,7 +605,8 @@ function renderPaper(){
     + `<div class="front-cols"><nav class="index" aria-label="В номере"><h4>В номере</h4><ol>${idx}</ol></nav>`
     + `<div>${F.weather ? `<aside class="weather"><h4>Погода в Гардарике</h4>${esc(F.weather)}</aside>` : ""}`
     + (FILM_N() ? `<button class="cine-link" data-cine="1"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="7.6" r="1.7"/><circle cx="12" cy="16.4" r="1.7"/><circle cx="7.6" cy="12" r="1.7"/><circle cx="16.4" cy="12" r="1.7"/></svg>Смотреть кинохронику</button>` : "")
-    + `</div></div>`;
+    + `</div></div>`
+    + (F.names ? `<aside class="names"><h4>Имена сквозь века</h4><p class="names-sub">как звали бы наших корреспонденток в разные эпохи</p><dl>${F.names.map(([era, n, k]) => `<dt>${esc(era)}</dt><dd${k === "rune" ? ' class="rune"' : ""}>${esc(n)}</dd>`).join("")}</dl>${F.namesNote ? `<p class="names-note">${esc(F.namesNote)}</p>` : ""}</aside>` : "");
   $("#pages").innerHTML = SECS.map(secHTML).join("");
   const ads = DATA.ads || [];
   $("#ads").innerHTML = ads.length ? `<h3 class="ads-h">Объявления</h3><div class="ads-grid">${ads.map(a => `<div class="ad"><b>${esc(a.h)}</b>${esc(a.t)}</div>`).join("")}</div>` : "";
@@ -916,7 +932,10 @@ function creditsHTML(){
 }
 function frameHTML(f){
   if (f.t === "leader") return `<div class="ld"><div class="ld-ring"></div><div class="ld-ring r2"></div><div class="ld-cross"></div><div class="ld-hand"></div>${[4, 3, 2].map(n => `<b class="ld-n" data-n="${n}">${n}</b>`).join("")}<div class="ld-black"></div></div>${FX}`;
-  if (f.t === "title") return `<div class="it"><div class="it-box"><div class="it-k">«${esc(DATA.paper)}» представляют</div><div class="it-h">Кинохроника</div><div class="it-y">${esc(DATA.title)} · ${esc(DATA.year)}</div><div class="it-s">Немое кино. За роялем — тапёр.</div></div></div>${FX}`;
+  if (f.t === "title"){
+    const cast = (DATA.cast || []).filter(Boolean);
+    return `<div class="it"><div class="it-box"><div class="it-k">«${esc(DATA.paper)}» представляют</div><div class="it-h">Кинохроника</div><div class="it-y">${esc(DATA.title)} · ${esc(DATA.year)}</div><div class="it-s">Немое кино${cast.length ? ". В ролях — " + cast.map(esc).join(" и ") : ""}. За роялем — тапёр.</div></div></div>${FX}`;
+  }
   if (f.t === "inter") return `<div class="it"><div class="it-box"><div class="it-k">Часть ${ORD[f.k] || f.k + 1}</div><div class="it-h">${esc(f.s.film || f.s.head)}</div><div class="it-s">${esc(f.s.era)}</div></div></div>${FX}`;
   if (f.t === "photo" || f.t === "video"){
     const p = f.p, sr = innerWidth / innerHeight, pr = p.w && p.h ? p.w / p.h : sr;
