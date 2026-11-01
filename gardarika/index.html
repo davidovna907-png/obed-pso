@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Гардарика 2026</title>
 <meta name="description" content="Фильм «Гардарика 2026»: фото и видео под гангстерский бит, с титрами">
+<!-- превью ссылки в мессенджерах: картинка с QR-кодом (icons/og.jpg), чтобы и одна пересланная ссылка показывала QR -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Гардарика 2026">
+<meta property="og:title" content="Гардарика 2026 — фильм-приложение">
+<meta property="og:description" content="Фото и видео под гангстерский бит. Откройте ссылку и нажмите «Установить приложение»: фильм будет смотреться без интернета.">
+<meta property="og:url" content="https://davidovna907-png.github.io/obed-pso/gardarika/">
+<meta property="og:image" content="https://davidovna907-png.github.io/obed-pso/gardarika/icons/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Гардарика 2026 — QR-код приложения">
+<meta property="og:locale" content="ru_RU">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -1421,12 +1433,21 @@ document.addEventListener("keydown", e => { if (e.key === "Escape"){ if (!$("#ga
 const SHARE_TEXT = "🎬 «Гардарика 2026» — фильм-приложение. Наведите камеру телефона на QR-код или откройте ссылку и нажмите «Установить приложение»: фильм появится на экране телефона со своим значком и будет смотреться без интернета.";
 /* друзьям приложение уходит картинкой-приглашением с QR-кодом (icons/invite.jpg) вместе с текстом и ссылкой:
    QR-код можно навести камерой с другого телефона, а на своём — долгим нажатием на код в картинке (iPhone) или через Google Объектив */
+/* картинку-приглашение готовим заранее: телефон разрешает «Поделиться» только сразу после касания, и если сначала
+   скачивать картинку, iPhone может отправить одно описание со ссылкой — без QR-кода (так было у пользователя 1.11 в MAX) */
+let inviteFile = null;
+const prepInvite = () => inviteFile ? Promise.resolve(inviteFile) : fetch("icons/invite.jpg")
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.blob(); })
+  .then(b => (inviteFile = new File([b], "Гардарика-2026-QR.jpg", {type:"image/jpeg"})));
 async function shareApp(){
   try {
-    const blob = await (await fetch("icons/invite.jpg")).blob();
-    const file = new File([blob], "Гардарика-2026-QR.jpg", {type:"image/jpeg"});
+    const file = inviteFile || await prepInvite();
     if (navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file], title:"Гардарика 2026", text:SHARE_TEXT + "\n" + APP_URL}); return; }
-  } catch(e){ if (e && e.name === "AbortError") return; }
+  } catch(e){
+    if (e && e.name === "AbortError") return;
+    /* касание «устарело», пока грузилась картинка: теперь она готова — второе нажатие отправит её сразу */
+    if (e && e.name === "NotAllowedError" && inviteFile){ toast("Приглашение готово — нажмите ещё раз"); return; }
+  }
   /* картинку отправить нельзя (компьютер, старый браузер) — текст со ссылкой */
   if (navigator.share){ try { await navigator.share({title:"Гардарика 2026", text:SHARE_TEXT, url:APP_URL}); } catch(e){} return; }
   try { await navigator.clipboard.writeText(SHARE_TEXT + "\n" + APP_URL); toast("Приглашение скопировано — вставьте его в чат"); }
@@ -1465,6 +1486,7 @@ if (!isStandalone() && !store.get("gard-gate-seen", false)) openGate();
 if ("serviceWorker" in navigator && location.protocol !== "file:"){
   navigator.serviceWorker.register("sw.js").then(saveOffline).catch(() => {});
 }
+setTimeout(() => { prepInvite().catch(() => {}); }, 1500);   /* приглашение — заранее, см. shareApp */
 </script>
 </body>
 </html>

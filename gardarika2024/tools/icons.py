@@ -124,3 +124,35 @@ ctext(d, W / 2, H - 46, URL.replace("https://", ""), font("PTMono.ttf", 22), (11
 im.save(os.path.join(APP, "icons/invite.jpg"), quality=86, optimize=True, progressive=True)
 inv = cv2.imread(os.path.join(APP, "icons/invite.jpg"))
 print("QR в приглашении:", cv2.QRCodeDetector().detectAndDecode(inv)[0] == URL)
+
+# ---------- картинка для ссылки в мессенджерах (og.jpg, 1200×630): шапка газеты, заголовок и QR-код ----------
+# Её показывают Telegram, MAX, WhatsApp, ВКонтакте, когда пересылают одну ссылку — так у друзей всё равно видно QR-код.
+W2, H2 = 1200, 630
+og = paper(W2, H2, 5); d = ImageDraw.Draw(og)
+d.rectangle((0, 0, W2, 52), fill=INK)
+m2 = font("PTMono.ttf", 22)
+d.text((36, 15), "№ 1", font=m2, fill=CREAM)
+ctext(d, W2 / 2, 15, "7 ДЕКАБРЯ 2024", m2, CREAM)
+t = "ЦЕНА — УЛЫБКА"; d.text((W2 - 36 - d.textlength(t, font=m2), 15), t, font=m2, fill=CREAM)
+cx = 378
+ctext(d, cx, 76, "* ГАЗЕТА ПУТЕШЕСТВИЙ ВО ВРЕМЕНИ *", font("PTMono.ttf", 18), (111, 99, 82))
+mast2 = font("OldStandard-Bold.ttf", 94)
+ctext(d, cx, 102, "Гардарикские", mast2, INK)
+ctext(d, cx, 200, "ведомости", mast2, INK)
+for y, w in ((322, 5), (332, 2)):
+    d.line((36, y, 720, y), fill=INK, width=w)
+d.rectangle((36, 352, 36 + 262, 352 + 38), fill=RED)
+d.text((50, 359), "СЕНСАЦИЯ НОМЕРА", font=font("PTMono.ttf", 22), fill=CREAM)
+h2 = font("OldStandard-Bold.ttf", 50)
+d.text((36, 400), "Путешествие во времени", font=h2, fill=INK)
+d.text((36, 458), "удалось!", font=h2, fill=INK)
+d.text((36, 540), "Наталья и Мария — сквозь века, от викингов до комиссаров", font=font("PTSerif-Italic.ttf", 25), fill=(63, 55, 44))
+q2 = qr_img.resize((350, 350), Image.NEAREST)
+qx, qy = 792, 86
+d.rectangle((qx - 14, qy - 14, qx + 350 + 14, qy + 350 + 14), fill=(255, 255, 255), outline=INK, width=3)
+og.paste(q2, (qx, qy))
+ctext(d, qx + 175, 470, "Подписка на газету", font("OldStandard-Bold.ttf", 36), INK)
+ctext(d, qx + 175, 518, "наведите камеру телефона", font("PTSerif-Regular.ttf", 25), (63, 55, 44))
+ctext(d, qx + 175, 552, "и нажмите «Установить»", font("PTSerif-Regular.ttf", 25), (63, 55, 44))
+og.save(os.path.join(APP, "icons/og.jpg"), quality=86, optimize=True, progressive=True)
+print("QR в og.jpg:", cv2.QRCodeDetector().detectAndDecode(cv2.imread(os.path.join(APP, "icons/og.jpg")))[0] == URL)
