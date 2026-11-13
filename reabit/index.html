@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Памятки РЕАБИТ</title>
+<meta name="description" content="Памятки РЕАБИТ: открываются по паролю, сохраняются в телефон и работают без интернета">
+<meta name="robots" content="noindex,nofollow">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Памятки">
+<meta name="theme-color" content="#0F171E">
+<meta name="format-detection" content="telephone=no">
+<!--
+  Приложение «Памятки РЕАБИТ» (просьба пользователя 12.11.2026: памятки на экране телефона, открываются без интернета).
+  Памятки лежат в закрытом репозитории РЕАБИТ, поэтому здесь они только зашифрованные (AES-256-GCM, ключ — PBKDF2 из пароля):
+  data.bin — каталог, files/*.bin — PDF и обложки; собирает их reabit/tools/build.py. Пароль нигде не хранится: его знает пользователь.
+  После первого входа ключ (не пароль) лежит в памяти телефона (localStorage reabit-key), «Выйти» его стирает.
+  Памятки сохраняются в телефон кэшем reabit-files (кнопка «Сохранить в телефон», дальше — сами при каждом открытии с интернетом).
+-->
+<style>
+@font-face{font-family:"Golos Text";src:url(fonts/golos-cyr.woff2) format("woff2");font-weight:400 700;font-display:swap;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Golos Text";src:url(fonts/golos-lat.woff2) format("woff2");font-weight:400 700;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:Unbounded;src:url(fonts/unbounded-cyr.woff2) format("woff2");font-weight:500 700;font-display:swap;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:Unbounded;src:url(fonts/unbounded-lat.woff2) format("woff2");font-weight:500 700;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+:root{
+  --bg:#0F171E;--surface:#17222D;--fg:#E5ECF2;--muted:#9AABBB;--line:#2A3947;--navy:#7FB4E6;--teal:#5CC9B9;--teal-ink:#06231F;
+  --red:#F08A80;--chip:#1F2D3A;--btn-line:#375063;--page:#0B1117;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;--display:Unbounded,"Golos Text",system-ui,sans-serif;
+  color-scheme:dark
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);overscroll-behavior-y:none}  /* экран не оттягивается: сверху и снизу не появляется пустое место */
+body{color:var(--fg);font:400 16px/1.45 var(--body);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:40}  /* полоска под часами */
+html.pv-open,html.pv-open body{overflow:hidden}
+button{font:inherit;color:inherit}
+[hidden]{display:none!important}
+.vh{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.ic-in{width:1.2em;height:1.2em;vertical-align:-.25em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;color:var(--navy)}
+.btn-main{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 24px;border:0;border-radius:999px;background:var(--teal);color:var(--teal-ink);font:700 16.5px/1.1 var(--body);text-decoration:none;cursor:pointer}
+.btn-main svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.btn-main:disabled{opacity:.55}
+.link{display:inline-flex;align-items:center;min-height:44px;padding:0 2px;border:0;background:none;color:var(--navy);font:500 15px/1.3 var(--body);text-align:left;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+
+/* ---------- вход по паролю ---------- */
+.lock{min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:calc(env(safe-area-inset-top,0px) + 28px) 16px calc(env(safe-area-inset-bottom,0px) + 28px)}
+.lock-box{width:100%;max-width:400px;display:grid;justify-items:center;gap:12px;text-align:center}
+.lock-ic{width:92px;height:92px;border-radius:22px;box-shadow:0 12px 30px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08)}
+.lock-h{margin:6px 0 0;font:600 24px/1.15 var(--display);letter-spacing:.01em}
+.lock-org{max-width:34ch;margin:0;color:var(--muted);font-size:14px;line-height:1.4}
+.form{width:100%;display:grid;gap:10px;margin-top:6px;text-align:left}
+.form label{font-weight:600;font-size:15px}
+.pw-wrap{position:relative}
+.pw{width:100%;min-height:54px;padding:0 54px 0 16px;border:1px solid var(--btn-line);border-radius:14px;background:var(--surface);color:var(--fg);font:500 18px/1.2 var(--body)}
+.pw:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:transparent}
+.eye{position:absolute;top:5px;right:5px;width:44px;height:44px;display:grid;place-items:center;border:0;border-radius:10px;background:none;color:var(--muted);cursor:pointer}
+.eye svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.eye[aria-pressed="true"] .eye-on,.eye[aria-pressed="false"] .eye-off{display:none}  /* глаз — «показать», перечёркнутый — «скрыть» */
+.hint{margin:0;color:var(--muted);font-size:13.5px;line-height:1.4}
+.form .btn-main{width:100%;margin-top:4px}
+.msg{min-height:1.4em;margin:0;color:var(--red);font-size:14.5px;line-height:1.4;text-align:center}
+.gate{width:100%;padding:16px;border:1px solid var(--line);border-radius:18px;background:var(--surface);text-align:left}
+.gate h2{margin:0 0 10px;font:600 16.5px/1.3 var(--body)}
+.gate p{margin:0 0 10px;font-size:15px}
+.gate ol{margin:0;padding-left:22px;display:grid;gap:9px;font-size:15px;line-height:1.4}
+.gate .sub{display:block;color:var(--muted);font-size:13.5px}
+.gate .note{margin:12px 0 4px;color:var(--muted);font-size:13.5px;line-height:1.4}
+.gate .btn-main{width:100%;margin:4px 0 6px}
+
+/* ---------- памятки ---------- */
+.wrap{max-width:760px;margin:0 auto;padding:0 16px calc(104px + env(safe-area-inset-bottom,0px))}
+.top{position:relative;display:flex;align-items:center;gap:12px;padding:calc(env(safe-area-inset-top,0px) + 10px) 0 2px;background:var(--bg)}  /* шапка не липкая */
+.top img{flex:none;width:42px;height:42px;border-radius:10px}
+.top h1{margin:0;font:600 18px/1.15 var(--display);letter-spacing:.01em}
+.top p{margin:2px 0 0;color:var(--muted);font-size:13px;line-height:1.3}
+.save{margin:12px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:var(--surface);font-size:14.5px;line-height:1.4}
+.save p{margin:0}
+.save .btn-main{margin-top:10px;min-height:46px;font-size:15.5px}
+.save .bar{height:6px;margin-top:9px;overflow:hidden;border-radius:3px;background:var(--line)}
+.save .bar i{display:block;width:var(--p,0%);height:100%;border-radius:inherit;background:var(--teal);transition:width .3s}
+.save.ok{margin-top:8px;padding:0;border:0;background:none;color:var(--teal);font-size:14px}
+.save.warn{border-color:rgba(240,138,128,.55)}
+.sec-h{margin:20px 0 2px;font:600 19px/1.2 var(--display)}
+.sec-note{margin:0 0 2px;color:var(--muted);font-size:14.5px}
+.card{display:grid;grid-template-columns:84px minmax(0,1fr);gap:12px 14px;margin:12px 0;padding:14px;border:1px solid var(--line);border-radius:18px;background:var(--surface)}
+.cover{display:block;width:84px;aspect-ratio:210/297;padding:0;overflow:hidden;border:0;border-radius:8px;background:#E3E9EE;box-shadow:0 4px 14px rgba(0,0,0,.35);cursor:pointer}
+.cover img{display:block;width:100%;height:100%;object-fit:cover;object-position:top}
+.cover img:not([src]){visibility:hidden}
+.info h3{margin:0;font:600 16.5px/1.25 var(--body)}
+.info p{margin:5px 0 0;color:var(--muted);font-size:14px;line-height:1.4}
+.info .pg{margin-top:6px;color:var(--navy);font-size:13px}
+.rows{grid-column:1/-1;display:grid}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.row:last-child{padding-bottom:0}
+.fmt{min-width:0;font-weight:600;font-size:14.5px;line-height:1.25}
+.fmt small{display:block;margin-top:2px;color:var(--muted);font-weight:400;font-size:12.5px;line-height:1.3}
+.chips{display:flex;flex:none;gap:6px}
+.chip{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;min-width:62px;min-height:46px;padding:4px 10px;border:1px solid var(--btn-line);border-radius:12px;background:var(--chip);font:600 14.5px/1.1 var(--body);cursor:pointer}
+.chip small{margin-top:2px;color:var(--muted);font-weight:400;font-size:11.5px}
+.chip:active,.st:active{background:var(--line)}
+.st{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:6px 2px;border:0;border-top:1px solid var(--line);background:none;font:500 15px/1.3 var(--body);text-align:left;cursor:pointer}
+.st span{flex:1;min-width:0}
+.st small{flex:none;color:var(--muted);font-size:13px}
+.st svg{flex:none;width:18px;height:18px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.about{display:grid;justify-items:start;gap:10px;margin:26px 0 0;padding-top:14px;border-top:1px solid var(--line);color:var(--muted);font-size:13.5px;line-height:1.45}
+.about p{margin:0}
+.about .btn-main{min-height:46px;font-size:15.5px}
+
+/* нижняя панель вкладок — стеклянная капсула (правило «Вид приложений») */
+.tabs{position:fixed;left:50%;bottom:max(10px,calc(env(safe-area-inset-bottom,0px) - 12px));z-index:45;display:flex;gap:2px;width:max-content;max-width:calc(100% - 16px);padding:5px;transform:translateX(-50%);border:1px solid rgba(255,255,255,.16);border-radius:999px;background:rgba(23,34,45,.5);backdrop-filter:blur(22px) saturate(1.6);-webkit-backdrop-filter:blur(22px) saturate(1.6);box-shadow:inset 0 1px 0 rgba(255,255,255,.26),0 10px 30px rgba(0,0,0,.45)}
+.tabs::before{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,0) 48%);pointer-events:none}
+.tab{position:relative;flex:1 1 auto;min-width:0;display:grid;justify-items:center;align-content:center;gap:2px;min-height:50px;padding:5px 12px;border:0;border-radius:999px;background:none;color:#B7C5D2;font:500 12px/1.1 var(--body);white-space:nowrap;cursor:pointer}
+.tab svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tab[aria-selected="true"]{background:rgba(255,255,255,.15);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+.tab[aria-selected="true"] svg{color:var(--teal)}
+@media (max-width:370px){.tab{padding:5px 7px}}
+
+/* ---------- просмотр памятки ---------- */
+.pv{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;background:var(--page)}
+.pv-top{flex:none;display:flex;align-items:center;gap:4px;padding:calc(env(safe-area-inset-top,0px) + 4px) 12px 4px 4px;background:var(--page)}
+.pv-back{flex:none;display:inline-flex;align-items:center;min-height:44px;padding:0 10px 0 2px;border:0;background:none;color:var(--navy);font:600 16px/1 var(--body);cursor:pointer}
+.pv-back svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.pv-ttl{flex:1;min-width:0}
+.pv-ttl b{display:block;overflow:hidden;font-size:15px;line-height:1.25;white-space:nowrap;text-overflow:ellipsis}
+.pv-ttl span{display:block;overflow:hidden;color:var(--muted);font-size:12.5px;line-height:1.3;white-space:nowrap;text-overflow:ellipsis}
+.seg{flex:none;display:flex;gap:6px;padding:2px 12px 8px;overflow-x:auto;scrollbar-width:none}
+.seg::-webkit-scrollbar{display:none}
+.seg button{flex:none;min-height:40px;padding:0 16px;border:1px solid var(--btn-line);border-radius:999px;background:var(--chip);font:600 14px/1 var(--body);cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--teal);background:var(--teal);color:var(--teal-ink)}
+.pv-body{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:4px 10px calc(100px + env(safe-area-inset-bottom,0px))}
+.pv-pg{position:relative;max-width:900px;margin:0 auto 12px;overflow:hidden;border-radius:3px;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.5)}
+.pv-pg img{display:block;width:100%;height:100%}
+.pv-n{position:absolute;inset:0;display:grid;place-items:center;color:#9AA6B2;font:600 20px var(--body)}
+.pv-pg.ok .pv-n{display:none}
+.pv-msg{margin:48px 16px;color:var(--muted);text-align:center}
+.pv-bar{position:fixed;left:0;right:0;bottom:0;z-index:61;display:flex;justify-content:center;padding:18px 16px max(14px,env(safe-area-inset-bottom,0px));background:linear-gradient(rgba(11,17,23,0),rgba(11,17,23,.92) 45%);pointer-events:none}
+.pv-bar .btn-main{pointer-events:auto;white-space:nowrap;box-shadow:0 8px 26px rgba(0,0,0,.5)}
+@media (max-width:370px){.pv-bar .btn-main{padding:0 16px;font-size:15px}}
+
+.toast{position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom,0px));z-index:70;max-width:calc(100% - 32px);padding:11px 16px;transform:translate(-50%,16px);border-radius:14px;background:#E5ECF2;color:#0F171E;font:500 14.5px/1.35 var(--body);box-shadow:0 10px 30px rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){.toast,.save .bar i{transition:none}}
+</style>
+</head>
+<body>
+<div id="lock" class="lock" hidden>
+  <div class="lock-box">
+    <img class="lock-ic" src="icons/icon-192.png" alt="">
+    <h1 class="lock-h">Памятки РЕАБИТ</h1>
+    <p class="lock-org">ГАУЗ ОЗП ГКБ № 8 · Неврологическое отделение для больных с ОНМК (ПСО)</p>
+    <div id="gate" class="gate" hidden></div>
+    <form id="form" class="form" autocomplete="on">
+      <input class="vh" type="text" name="username" autocomplete="username" value="Памятки РЕАБИТ" tabindex="-1" aria-hidden="true" readonly>
+      <label for="pw">Пароль</label>
+      <div class="pw-wrap">
+        <input id="pw" class="pw" type="password" name="password" autocomplete="current-password" autocapitalize="none" autocorrect="off" spellcheck="false" enterkeyhint="go">
+        <button type="button" id="eye" class="eye" aria-label="Показать пароль" aria-pressed="false">
+          <svg class="eye-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="eye-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/><path d="M4 20 20 4"/></svg>
+        </button>
+      </div>
+      <p class="hint">Четыре слова и число. Большие и маленькие буквы, «е» и «ё», пробелы и дефисы — не важны.</p>
+      <button class="btn-main" type="submit" id="go">Открыть памятки</button>
+      <p id="msg" class="msg" role="alert"></p>
+    </form>
+    <button id="inst" class="link" type="button" data-act="install" hidden>Установить приложение на телефон</button>
+  </div>
+</div>
+
+<div id="app" hidden>
+  <div class="wrap">
+    <header class="top">
+      <img src="icons/icon-192.png" alt="">
+      <div><h1>Памятки РЕАБИТ</h1><p>ГАУЗ ОЗП ГКБ № 8 · ПСО</p></div>
+    </header>
+    <div id="save" class="save" hidden></div>
+    <main id="main"></main>
+  </div>
+  <nav id="tabs" class="tabs" role="tablist" aria-label="Разделы памяток"></nav>
+</div>
+
+<div id="pv" class="pv" hidden role="dialog" aria-modal="true" aria-labelledby="pv-t">
+  <div class="pv-top">
+    <button id="pv-x" class="pv-back" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Назад</button>
+    <div class="pv-ttl"><b id="pv-t"></b><span id="pv-s"></span></div>
+  </div>
+  <div id="pv-seg" class="seg"></div>
+  <div id="pv-body" class="pv-body"></div>
+  <div class="pv-bar"><button id="pv-share" class="btn-main" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3.5M7.5 8 12 3.5 16.5 8M5 12.5V20h14v-7.5"/></svg>Отправить или напечатать</button></div>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<noscript><p style="padding:24px 16px">Для памяток нужен включённый JavaScript.</p></noscript>
+
+<script>
+(() => {
+"use strict";
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch (e){ return null; } },
+  set(k, v){ try { localStorage.setItem(k, v); } catch (e){} },
+  del(k){ try { localStorage.removeItem(k); } catch (e){} }
+};
+const K_KEY = "reabit-key", K_TAB = "reabit-tab", K_SAVE = "reabit-save", K_GATE = "reabit-gate-seen";
+const C_FILES = "reabit-files", C_DATA = "reabit-data";
+const HAS_CACHE = "caches" in window;
+const abs = p => new URL(p, location.href).href;
+const MB = n => (n / 1048576).toFixed(n < 10485760 ? 1 : 0).replace(".", ",");
+const plural = (n, a, b, c) => { const m = n % 100, d = n % 10; return m > 10 && m < 20 ? c : d === 1 ? a : d > 1 && d < 5 ? b : c; };
+const HINT = {a5: "для выдачи на руки", b4: "сложить пополам, печать на А4", a4: "крупный шрифт для слабовидящих", a4s: "печать на листах А4"};
+const SVG = p => `<svg viewBox="0 0 24 24" aria-hidden="true">${p}</svg>`;
+const ICON = {
+  obshchie: SVG('<path d="M12 20.5s-7.5-4.6-7.5-10.4A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.8c0 5.8-7.5 10.4-7.5 10.4z"/><path d="M7.3 12.3h2.6l1.3-2.4 2 4.4 1.3-2h2.3"/>'),
+  logoped: SVG('<path d="M4.5 5h15A1.5 1.5 0 0 1 21 6.5V15a1.5 1.5 0 0 1-1.5 1.5H11L6.5 20v-3.5h-2A1.5 1.5 0 0 1 3 15V6.5A1.5 1.5 0 0 1 4.5 5z"/><path d="M8 10.8h.01M12 10.8h.01M16 10.8h.01" stroke-width="2.8"/>'),
+  psiholog: SVG('<path d="M9.5 21v-3.5c-2.6-1.2-4.4-3.8-4.4-6.8A6.9 6.9 0 0 1 12 3.8c3.6 0 6.5 2.7 6.9 6.2l1.4 3.3-1.6.5v2.4a1.8 1.8 0 0 1-1.8 1.8h-1.9V21"/><path d="M11.9 12.6s-2.4-1.4-2.4-3a1.3 1.3 0 0 1 2.4-.7 1.3 1.3 0 0 1 2.4.7c0 1.6-2.4 3-2.4 3z"/>'),
+  gimnastiki: SVG('<circle cx="12" cy="4.6" r="1.9"/><path d="M5 8.5l7 2 7-2M12 10.5v4.5M12 15l-3.5 6M12 15l3.5 6"/>'),
+  stend: SVG('<rect x="3.5" y="3.5" width="17" height="12.5" rx="1.8"/><path d="M7 8h6M7 11.5h10M9 20.5l3-4.5 3 4.5"/>'),
+  _: SVG('<path d="M7 3.5h7l4.5 4.5v11a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5z"/><path d="M14 3.5V8h4.5M8.5 12.5h7M8.5 16h5"/>')
+};
+const I_SHARE = '<svg class="ic-in" viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M5 13v8h14v-8"/></svg>';
+const I_ADD = '<svg class="ic-in" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg>';
+const I_DOTS = '<svg class="ic-in" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="18" cy="12" r="1.6"/></svg>';
+const I_NEXT = SVG('<path d="M9 5l7 7-7 7"/>');
+
+let toastT = 0;
+function toast(t, ms){
+  const el = $("#toast"); el.textContent = t; el.classList.add("on");
+  clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove("on"), ms || 3200);
+}
+
+/* ---------- шифр: тот же, что в tools/build.py ---------- */
+const norm = p => p.normalize("NFC").toLowerCase().replace(/ё/g, "е").replace(/[\s\-_.,‐-―]+/g, "");
+const b64d = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const b64e = u => { let s = ""; for (let i = 0; i < u.length; i++) s += String.fromCharCode(u[i]); return btoa(s); };
+const fail = code => Object.assign(new Error(code), {code});
+let KEY = null;
+async function derive(pw){
+  let k;
+  try { const r = await fetch("key.json", {cache: "no-cache"}); if (!r.ok) throw 0; k = await r.json(); } catch (e){ throw fail("net"); }
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(norm(pw)), "PBKDF2", false, ["deriveBits"]);
+  return new Uint8Array(await crypto.subtle.deriveBits({name: "PBKDF2", hash: "SHA-256", salt: b64d(k.salt), iterations: k.iter}, base, 256));
+}
+const useKey = raw => crypto.subtle.importKey("raw", raw, "AES-GCM", false, ["decrypt"]);
+function decrypt(buf, key){
+  const u = new Uint8Array(buf);
+  return crypto.subtle.decrypt({name: "AES-GCM", iv: u.subarray(0, 12)}, key || KEY, u.subarray(12));
+}
+
+/* ---------- каталог (data.bin): из памяти сразу, с сайта — в фоне ---------- */
+async function cachedData(){
+  if (!HAS_CACHE) return null;
+  try { const r = await (await caches.open(C_DATA)).match(abs("data.bin")); return r ? await r.arrayBuffer() : null; } catch (e){ return null; }
+}
+async function netData(){
+  const ctl = "AbortController" in window ? new AbortController() : null;
+  const t = setTimeout(() => { if (ctl) ctl.abort(); }, 20000);
+  try { const r = await fetch("data.bin?t=" + Date.now(), {cache: "no-store", signal: ctl ? ctl.signal : undefined}); return r.ok ? await r.arrayBuffer() : null; }
+  catch (e){ return null; }
+  finally { clearTimeout(t); }
+}
+async function keepData(buf){
+  if (!HAS_CACHE) return;
+  try { await (await caches.open(C_DATA)).put(abs("data.bin"), new Response(new Blob([buf]), {headers: {"Content-Type": "application/octet-stream"}})); } catch (e){}
+}
+const readCat = async (buf, key) => JSON.parse(new TextDecoder().decode(await decrypt(buf, key)));
+function sameBuf(a, b){
+  if (!a || !b || a.byteLength !== b.byteLength) return false;
+  const x = new Uint8Array(a), y = new Uint8Array(b);
+  for (let i = 0; i < x.length; i++) if (x[i] !== y[i]) return false;
+  return true;
+}
+
+/* зашифрованный файл: из памяти телефона, иначе с сайта (и сразу в память) */
+async function getEnc(name){
+  const u = abs("files/" + name);
+  let c = null;
+  if (HAS_CACHE) { try { c = await caches.open(C_FILES); const hit = await c.match(u); if (hit) return await hit.arrayBuffer(); } catch (e){ c = null; } }
+  const r = await fetch(u, {cache: "no-store"});
+  if (!r.ok) throw fail("http");
+  const buf = await r.arrayBuffer();
+  if (c) { try { await c.put(u, new Response(new Blob([buf]), {headers: {"Content-Type": "application/octet-stream"}})); } catch (e){} }
+  return buf;
+}
+
+/* ---------- установка на экран «Домой» ---------- */
+const UA = navigator.userAgent;
+const APP_URL = location.origin + location.pathname.replace(/index\.html$/, "");
+const isIOS = /iPad|iPhone|iPod/.test(UA) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const isStandalone = () => matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const inApp = /FBAN|FBAV|Instagram|Line\/|Telegram|WhatsApp|VKClient|vkclient|OKApp|MicroMessenger|; wv\)/i.test(UA) || (isIOS && !/Safari\//.test(UA));
+let installEvt = null;
+/* На iPhone у установленного приложения своя память, отдельно от Safari: поэтому сначала — установка, потом пароль */
+function gateHTML(){
+  if (!isIOS || isStandalone()) return "";
+  const skip = '<button type="button" class="link" data-act="skip">Ввести пароль без установки</button>';
+  if (inApp) return `<h2>Ссылка открылась внутри мессенджера</h2><p>Отсюда приложение не установить — нужен Safari.</p>
+    <a class="btn-main" href="x-safari-${esc(APP_URL)}">Открыть в Safari</a>
+    <p class="note">Если не открылось: нажмите ${I_DOTS} или значок компаса → <b>«Открыть в Safari»</b>.</p>${skip}`;
+  return `<h2>Сначала установите приложение</h2><ol>
+    <li>Нажмите ${I_SHARE} <b>«Поделиться»</b> внизу экрана. <span class="sub">В новых iOS он прячется под кнопкой ${I_DOTS}.</span></li>
+    <li>Выберите ${I_ADD} <b>«На экран „Домой“»</b>.</li>
+    <li>Оставьте включённым «Открыть как веб-приложение» и нажмите <b>«Добавить»</b>.</li></ol>
+    <p class="note">Потом откройте «Памятки» со значка на экране и введите пароль там — при интернете, лучше по Wi‑Fi: памятки сохранятся в приложение и будут открываться без сети.</p>${skip}`;
+}
+addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; installUI(); });
+addEventListener("appinstalled", () => { installEvt = null; installUI(); toast("Приложение установлено: значок «Памятки» на экране"); });
+function installUI(){
+  $("#inst").hidden = !installEvt || isStandalone();
+  const f = document.querySelector(".about");
+  if (f && CAT) f.outerHTML = aboutHTML();
+}
+
+/* ---------- вход ---------- */
+function showLock(msg){
+  closePv(true);
+  $("#app").hidden = true; $("#lock").hidden = false;
+  $("#msg").textContent = msg || "";
+  const g = gateHTML();
+  const gate = !!g && !store.get(K_GATE);
+  $("#gate").innerHTML = gate ? g : ""; $("#gate").hidden = !gate; $("#form").hidden = gate;
+  installUI();
+}
+$("#eye").addEventListener("click", () => {
+  const i = $("#pw"), show = i.type === "password";
+  i.type = show ? "text" : "password";
+  $("#eye").setAttribute("aria-pressed", String(show));
+  $("#eye").setAttribute("aria-label", show ? "Скрыть пароль" : "Показать пароль");
+  i.focus();
+});
+$("#form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const pw = $("#pw").value, go = $("#go"), msg = $("#msg");
+  if (!norm(pw)) { msg.textContent = "Введите пароль."; return; }
+  if (!(window.crypto && crypto.subtle)) { msg.textContent = "Этот браузер не открывает защищённые памятки. Откройте ссылку в Safari или Chrome."; return; }
+  go.disabled = true; go.textContent = "Проверяю пароль…"; msg.textContent = "";
+  try {
+    const raw = await derive(pw), key = await useKey(raw);
+    let buf = await netData();
+    const fresh = !!buf;
+    if (!buf) buf = await cachedData();
+    if (!buf) throw fail("net");
+    let cat;
+    try { cat = await readCat(buf, key); } catch (err){ throw fail("pw"); }
+    KEY = key; store.set(K_KEY, b64e(raw)); $("#pw").value = "";
+    if (fresh) await keepData(buf);
+    start(cat);
+  } catch (err){
+    if (err && err.code === "pw") { msg.textContent = "Пароль не подошёл. Проверьте слова и число."; $("#pw").select(); }
+    else msg.textContent = "Нет связи с сайтом. Для первого входа нужен интернет — проверьте его и нажмите ещё раз.";
+  } finally { go.disabled = false; go.textContent = "Открыть памятки"; }
+});
+
+/* ---------- памятки ---------- */
+let CAT = null, VIEW = [], tab = store.get(K_TAB) || "";
+function start(cat){
+  CAT = cat;
+  $("#lock").hidden = true; $("#app").hidden = false;
+  render();
+  checkSaved();
+  setTimeout(() => { loadPdfjs().catch(() => {}); }, 1200);   /* чтобы первая памятка открылась быстрее */
+}
+function render(){
+  const secs = CAT.sections;
+  if (!secs.some(s => s.id === tab)) tab = secs[0].id;
+  $("#tabs").innerHTML = secs.map(s => `<button class="tab" role="tab" type="button" data-tab="${esc(s.id)}" aria-selected="${s.id === tab}">${ICON[s.id] || ICON._}<span>${esc(s.tab || s.title)}</span></button>`).join("");
+  showTab(tab, false);
+}
+function showTab(id, top){
+  tab = id; store.set(K_TAB, id);
+  [...$("#tabs").children].forEach(b => b.setAttribute("aria-selected", String(b.dataset.tab === id)));
+  const s = CAT.sections.find(x => x.id === id);
+  VIEW = [];
+  $("#main").innerHTML = `<h2 class="sec-h">${esc(s.title)}</h2>${s.note ? `<p class="sec-note">${esc(s.note)}</p>` : ""}${s.items.map(itemHTML).join("")}${aboutHTML()}`;
+  observeCovers();
+  if (top !== false) window.scrollTo(0, 0);
+}
+const pagesTxt = n => n ? n + " стр." : "";
+function itemHTML(it){
+  const rows = it.rows ? it.rows.map(r => ({fmt: r.fmt, hint: r.hint, files: r.files})) : [{fmt: "Стенд А4", files: it.stand || [], stand: true}];
+  const first = VIEW.length;
+  rows.forEach(r => VIEW.push({title: it.title, fmt: r.fmt, files: r.files}));
+  const ci = Math.max(0, rows.findIndex(r => r.hint !== "b4"));   /* обложка — та же памятка, что открывается по нажатию на неё */
+  const cover = `<button class="cover" type="button" data-v="${first + ci}" data-f="0" aria-label="Открыть «${esc(it.title)}»"><img data-cover="${esc(it.cover)}" alt=""></button>`;
+  const info = `<div class="info"><h3>${esc(it.title)}</h3>${it.desc ? `<p>${esc(it.desc)}</p>` : ""}${it.pages ? `<p class="pg">${it.pages} стр.</p>` : ""}</div>`;
+  const body = rows.map((r, i) => r.stand
+    ? r.files.map((f, j) => `<button class="st" type="button" data-v="${first + i}" data-f="${j}"><span>${esc(f.label)}</span><small>${pagesTxt(f.pages)}</small>${I_NEXT}</button>`).join("")
+    : `<div class="row"><div class="fmt">${esc(r.fmt)}${HINT[r.hint] ? `<small>${esc(HINT[r.hint])}</small>` : ""}</div><div class="chips">${
+        r.files.map((f, j) => `<button class="chip" type="button" data-v="${first + i}" data-f="${j}" aria-label="${esc(r.fmt + ", " + f.label + ", " + pagesTxt(f.pages))}">${esc(f.label)}<small>${pagesTxt(f.pages)}</small></button>`).join("")
+      }</div></div>`).join("");
+  return `<article class="card">${cover}${info}<div class="rows">${body}</div></article>`;
+}
+function aboutHTML(){
+  const n = CAT.sections.reduce((a, s) => a + s.items.length, 0);
+  let inst = "";
+  if (!isStandalone()) {
+    if (installEvt) inst = '<button class="btn-main" type="button" data-act="install">Установить приложение</button>';
+    else if (isIOS) inst = `<p>Чтобы памятки были на экране «Домой» и открывались без интернета: ${I_SHARE} «Поделиться» → ${I_ADD} «На экран „Домой“», затем откройте «Памятки» со значка и введите пароль.</p>`;
+  }
+  return `<footer class="about"><p>Каталог от ${esc(CAT.date || "")} · ${n} ${plural(n, "памятка", "памятки", "памяток")}.</p>
+    <p>Нажмите на обложку, «Цвет» или «Ч/б» — памятка откроется для просмотра. Кнопка «Отправить или напечатать» открывает меню телефона: напечатать, сохранить в «Файлы», отправить в мессенджер.</p>
+    ${inst}<button class="link" type="button" data-act="forget">Выйти — забыть пароль на этом телефоне</button></footer>`;
+}
+
+/* обложки: расшифровываются, когда карточка подходит к экрану */
+const COVERS = new Map();
+let coverIO = null;
+function observeCovers(){
+  const imgs = document.querySelectorAll("img[data-cover]");
+  if (!("IntersectionObserver" in window)) { imgs.forEach(loadCover); return; }
+  if (coverIO) coverIO.disconnect();
+  coverIO = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { coverIO.unobserve(en.target); loadCover(en.target); } }), {rootMargin: "600px 0px"});
+  imgs.forEach(im => coverIO.observe(im));
+}
+async function loadCover(im){
+  const n = im.dataset.cover;
+  if (!n) return;
+  try {
+    let u = COVERS.get(n);
+    if (!u) { const plain = await decrypt(await getEnc(n)); u = URL.createObjectURL(new Blob([plain], {type: "image/jpeg"})); COVERS.set(n, u); }
+    im.src = u;
+  } catch (e){}
+}
+
+/* ---------- сохранение в телефон: все файлы каталога в кэш reabit-files ---------- */
+let saving = false, gen = 0;   /* gen растёт, когда пришёл новый каталог: сохранение тогда идёт заново */
+function wanted(){
+  const m = new Map();
+  CAT.sections.forEach(s => s.items.forEach(it => {
+    if (it.cover) m.set(abs("files/" + it.cover), it.cs || 60000);
+    [...(it.rows || []).flatMap(r => r.files), ...(it.stand || [])].forEach(f => m.set(abs("files/" + f.f), (f.size || 0) + 28));
+  }));
+  return m;
+}
+async function savedState(){
+  const want = wanted(), have = new Set();
+  let total = 0, done = 0;
+  want.forEach(v => { total += v; });
+  const c = await caches.open(C_FILES), keys = await c.keys();
+  keys.forEach(r => { if (want.has(r.url)) { have.add(r.url); done += want.get(r.url); } });
+  return {want, have, total, done, c, keys};
+}
+async function dropStale(st){   /* убранные или заменённые памятки — из памяти телефона */
+  for (const r of st.keys) if (!st.want.has(r.url)) { try { await st.c.delete(r); } catch (e){} }
+}
+async function checkSaved(){
+  if (!HAS_CACHE || !CAT) return;
+  try {
+    const st = await savedState();
+    if (!saving) await dropStale(st);
+    if (st.done >= st.total) showSave("ok");
+    else if (store.get(K_SAVE) === "1") saveAll();
+    else showSave("ask", st);
+  } catch (e){}
+}
+async function saveAll(){
+  if (saving || !CAT || !HAS_CACHE) return;
+  saving = true; store.set(K_SAVE, "1");
+  const g = gen;
+  let quota = false;
+  try {
+    try { if (navigator.storage && navigator.storage.persist) await navigator.storage.persist(); } catch (e){}
+    const st = await savedState();
+    await dropStale(st);
+    let done = st.done;
+    const queue = [...st.want.keys()].filter(u => !st.have.has(u));
+    showSave("run", {done, total: st.total});
+    const worker = async () => {
+      while (queue.length && !quota) {
+        const u = queue.shift();
+        try {
+          const r = await fetch(u, {cache: "no-store"});
+          if (r.ok) { await st.c.put(u, r); done += st.want.get(u); }
+        } catch (e){ if (e && (e.name === "QuotaExceededError" || /quota/i.test(e.message || ""))) quota = true; }
+        showSave("run", {done, total: st.total});
+      }
+    };
+    await Promise.all([worker(), worker(), worker()]);
+    if (g === gen) showSave(done >= st.total ? "ok" : quota ? "full" : "part", {done, total: st.total});
+  } catch (e){}
+  saving = false;
+  if (g !== gen) saveAll();
+}
+function showSave(kind, st){
+  const el = $("#save");
+  el.hidden = false;
+  if (kind === "ok") { el.className = "save ok"; el.textContent = "✓ Все памятки в телефоне — открываются без интернета"; return; }
+  el.className = kind === "full" || kind === "part" ? "save warn" : "save";
+  if (kind === "ask") {
+    el.innerHTML = `<p>Чтобы памятки открывались без интернета, сохраните их в телефон: ${MB(st.total - st.done)} МБ, лучше по Wi‑Fi.</p><button class="btn-main" type="button" data-act="save">Сохранить в телефон</button>`;
+    return;
+  }
+  const p = Math.min(100, Math.round(st.done / st.total * 100)) + "%";
+  if (kind === "run") {
+    const txt = (navigator.onLine === false ? "Нет интернета: сохранено " : "Сохраняю памятки в телефон: ") + MB(st.done) + " из " + MB(st.total) + " МБ";
+    const t = el.querySelector("p"), bar = el.querySelector(".bar i");
+    if (t && bar && el.dataset.k === "run") { t.textContent = txt; bar.style.setProperty("--p", p); return; }
+    el.innerHTML = `<p>${esc(txt)}</p><div class="bar"><i style="--p:${p}"></i></div>`;
+    el.dataset.k = "run";
+    return;
+  }
+  el.dataset.k = "";
+  el.innerHTML = kind === "full"
+    ? `<p>В телефоне не хватает места: сохранено ${MB(st.done)} из ${MB(st.total)} МБ. Освободите место и нажмите «Продолжить».</p><button class="btn-main" type="button" data-act="save">Продолжить</button>`
+    : `<p>Сохранено ${MB(st.done)} из ${MB(st.total)} МБ — пропала связь. Остальное сохранится само, когда появится интернет.</p><button class="btn-main" type="button" data-act="save">Продолжить</button>`;
+}
+addEventListener("online", () => { if (CAT && store.get(K_SAVE) === "1") saveAll(); });
+
+/* ---------- просмотр: страницы PDF рисует pdf.js (vendor/, работает без интернета) ---------- */
+let pdfjsP = null;
+function loadPdfjs(){
+  if (!pdfjsP) pdfjsP = new Promise((ok, bad) => {
+    if (window.pdfjsLib) { ok(window.pdfjsLib); return; }
+    const sc = document.createElement("script");
+    sc.src = "vendor/pdf.min.js";
+    sc.onload = () => { try { window.pdfjsLib.GlobalWorkerOptions.workerSrc = "vendor/pdf.worker.min.js"; ok(window.pdfjsLib); } catch (e){ bad(e); } };
+    sc.onerror = () => bad(new Error("pdfjs"));
+    document.head.appendChild(sc);
+  });
+  pdfjsP.catch(() => { pdfjsP = null; });
+  return pdfjsP;
+}
+const pv = $("#pv"), pvBody = $("#pv-body"), pvT = $("#pv-t"), pvS = $("#pv-s"), pvSeg = $("#pv-seg"), pvShare = $("#pv-share");
+let cur = null, opener = null, pushed = false;
+function info(n){
+  if (!cur) return;
+  const e = VIEW[cur.v], f = e.files[cur.fi];
+  pvS.textContent = e.fmt + " · " + f.label + (n ? " · стр. " + n + " из " + cur.n : "");
+}
+function closeDoc(){
+  if (!cur) return;
+  if (cur.io) cur.io.disconnect();
+  if (cur.doc) { try { cur.doc.destroy(); } catch (e){} }
+  cur.urls.forEach(u => URL.revokeObjectURL(u));
+  cur = null;
+}
+function openPv(v, fi, from){
+  const e = VIEW[v];
+  if (!e || !e.files[fi]) return;
+  const f = e.files[fi];
+  closeDoc();
+  if (from) opener = from;
+  const me = cur = {v, fi, n: f.pages || 0, urls: [], io: null, doc: null, file: null};
+  pvT.textContent = e.title;
+  pvSeg.innerHTML = e.files.length > 1 ? e.files.map((g, i) => `<button type="button" data-fi="${i}" aria-pressed="${i === fi}">${esc(g.label)}</button>`).join("") : "";
+  pvSeg.hidden = e.files.length < 2;
+  info(0);
+  pvShare.disabled = true;
+  pvBody.innerHTML = '<p class="pv-msg">Открываю памятку…</p>';
+  if (pv.hidden) {
+    pv.hidden = false; document.documentElement.classList.add("pv-open");
+    try { history.pushState({pv: 1}, ""); pushed = true; } catch (err){}
+    $("#pv-x").focus({preventScroll: true});
+  }
+  const sel = pvSeg.querySelector('[aria-pressed="true"]');
+  if (sel && sel.scrollIntoView) sel.scrollIntoView({inline: "center", block: "nearest"});
+  Promise.all([loadPdfjs(), getEnc(f.f).then(b => decrypt(b))]).then(([lib, plain]) => {
+    if (cur !== me) return null;
+    me.file = new File([plain], f.name, {type: "application/pdf"});   /* готов заранее: «Поделиться» iPhone разрешает только сразу после касания */
+    pvShare.disabled = false;
+    return lib.getDocument({data: new Uint8Array(plain.slice(0)), isEvalSupported: false}).promise;
+  }).then(doc => {
+    if (!doc) return;
+    if (cur !== me) { doc.destroy(); return; }
+    me.doc = doc; me.n = doc.numPages;
+    return doc.getPage(1).then(p1 => {
+      if (cur !== me) return;
+      const vp = p1.getViewport({scale: 1});
+      let h = "";
+      for (let i = 1; i <= me.n; i++) h += `<div class="pv-pg" data-n="${i}" style="aspect-ratio:${(vp.width / vp.height).toFixed(4)}"><span class="pv-n">${i}</span></div>`;
+      pvBody.innerHTML = h; pvBody.scrollTop = 0; info(1);
+      me.io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) draw(me, en.target); }), {root: pvBody, rootMargin: "900px 0px"});
+      pvBody.querySelectorAll(".pv-pg").forEach(el => me.io.observe(el));
+    });
+  }).catch(() => {
+    if (cur === me) pvBody.innerHTML = `<p class="pv-msg">Не получилось открыть памятку. ${navigator.onLine === false ? "Нет интернета, а эта памятка ещё не сохранена в телефон." : "Нажмите «Назад» и попробуйте ещё раз."}</p>`;
+  });
+}
+function draw(me, el){
+  if (el.dataset.st) return;
+  el.dataset.st = "1";
+  const n = +el.dataset.n;
+  me.doc.getPage(n).then(page => {
+    if (cur !== me) return;
+    const v1 = page.getViewport({scale: 1});
+    const w = Math.min(Math.max(el.clientWidth, 300) * Math.min(window.devicePixelRatio || 1, 2), 1700);
+    const vp = page.getViewport({scale: w / v1.width});
+    const c = document.createElement("canvas");
+    c.width = Math.round(vp.width); c.height = Math.round(vp.height);
+    const ctx = c.getContext("2d");
+    ctx.fillStyle = "#FFFFFF"; ctx.fillRect(0, 0, c.width, c.height);
+    return page.render({canvasContext: ctx, viewport: vp}).promise.then(() => {
+      if (cur !== me) return;
+      c.toBlob(bl => {
+        if (!bl || cur !== me) return;
+        const u = URL.createObjectURL(bl); me.urls.push(u);
+        const im = new Image(); im.alt = "Страница " + n; im.src = u;
+        el.appendChild(im); el.classList.add("ok");
+        c.width = c.height = 0;
+        page.cleanup();
+      }, "image/jpeg", 0.9);
+    });
+  }).catch(() => { el.dataset.st = ""; });
+}
+function closePv(fromPop){
+  if (pv.hidden) return;
+  closeDoc();
+  pv.hidden = true; pvBody.innerHTML = ""; document.documentElement.classList.remove("pv-open");
+  if (pushed) { pushed = false; if (!fromPop) history.back(); }
+  if (opener) { try { opener.focus({preventScroll: true}); } catch (e){} }
+}
+$("#pv-x").addEventListener("click", () => closePv());
+addEventListener("popstate", () => { if (!pv.hidden) { pushed = false; closePv(true); } });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !pv.hidden) closePv(); });
+pvSeg.addEventListener("click", e => { const b = e.target.closest("button"); if (b && cur && +b.dataset.fi !== cur.fi) openPv(cur.v, +b.dataset.fi); });
+pvBody.addEventListener("scroll", () => {
+  if (!cur || !cur.doc) return;
+  const y = pvBody.scrollTop + pvBody.clientHeight / 3, pgs = pvBody.children;
+  let n = 1;
+  for (let i = 0; i < pgs.length; i++) { if (pgs[i].offsetTop <= y) n = i + 1; else break; }
+  info(n);
+}, {passive: true});
+pvShare.addEventListener("click", () => {
+  const f = cur && cur.file;
+  if (!f) { toast("Памятка ещё открывается — секунду…"); return; }
+  let can = false;
+  try { can = !!(navigator.share && navigator.canShare && navigator.canShare({files: [f]})); } catch (e){}
+  if (can) {
+    navigator.share({files: [f]}).catch(err => { if (!err || err.name !== "AbortError") toast("Меню «Поделиться» не открылось — нажмите ещё раз."); });
+    return;
+  }
+  const u = URL.createObjectURL(f), a = document.createElement("a");
+  a.href = u; a.download = f.name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(u), 60000);
+  toast("Файл скачан: " + f.name);
+});
+
+/* ---------- нажатия ---------- */
+document.addEventListener("click", e => {
+  const t = e.target.closest("[data-tab],[data-v],[data-act]");
+  if (!t) return;
+  if (t.dataset.tab) { if (t.dataset.tab !== tab) showTab(t.dataset.tab); else window.scrollTo({top: 0, behavior: "smooth"}); return; }
+  if (t.dataset.v) { openPv(+t.dataset.v, +t.dataset.f, t); return; }
+  const act = t.dataset.act;
+  if (act === "save") saveAll();
+  else if (act === "skip") { store.set(K_GATE, "1"); $("#gate").hidden = true; $("#form").hidden = false; $("#pw").focus(); }
+  else if (act === "install" && installEvt) { const ev = installEvt; ev.prompt(); ev.userChoice.finally(() => { installEvt = null; installUI(); }); }
+  else if (act === "forget") forget();
+});
+function forget(){
+  if (!confirm("Забыть пароль на этом телефоне? Сохранённые памятки останутся, но откроются только после ввода пароля.")) return;
+  store.del(K_KEY); KEY = null; CAT = null;
+  if (coverIO) coverIO.disconnect();
+  COVERS.forEach(u => URL.revokeObjectURL(u)); COVERS.clear();
+  $("#main").innerHTML = ""; $("#tabs").innerHTML = ""; $("#save").hidden = true;
+  showLock();
+}
+
+/* ---------- запуск ---------- */
+async function refresh(old){
+  const nb = await netData();
+  if (!nb || sameBuf(nb, old)) { checkSaved(); return; }
+  let cat;
+  try { cat = await readCat(nb); }
+  catch (e){ toast("На сайте памятки с новым паролем. Нажмите внизу «Выйти» и введите новый пароль.", 7000); checkSaved(); return; }
+  await keepData(nb);
+  const keepTop = window.scrollY;
+  CAT = cat; gen++; render(); window.scrollTo(0, keepTop);
+  toast("Памятки обновлены");
+  checkSaved();
+}
+async function boot(){
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+  const saved = store.get(K_KEY);
+  if (saved && window.crypto && crypto.subtle) {
+    try {
+      KEY = await useKey(b64d(saved));
+      const old = await cachedData();
+      if (old) {
+        let cat = null;
+        try { cat = await readCat(old); } catch (e){}
+        if (cat) { CAT = cat; start(cat); refresh(old); return; }
+      }
+      const nb = await netData();
+      if (nb) {
+        let cat = null;
+        try { cat = await readCat(nb); } catch (e){}
+        if (cat) { await keepData(nb); start(cat); return; }
+        store.del(K_KEY); KEY = null;
+        showLock("Пароль сменился — введите новый пароль.");
+        return;
+      }
+      KEY = null;
+      showLock("Нет интернета, а памятки ещё не сохранены в этот телефон. Подключитесь к интернету и откройте приложение снова.");
+      return;
+    } catch (e){ KEY = null; }
+  }
+  showLock();
+}
+boot();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "id": "./",
+  "name": "Памятки РЕАБИТ",
+  "short_name": "Памятки",
+  "description": "Памятки РЕАБИТ неврологического отделения для больных с ОНМК (ПСО) ГКБ № 8: просмотр, печать и отправка без интернета",
+  "lang": "ru",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone"],
+  "orientation": "any",
+  "background_color": "#0F171E",
+  "theme_color": "#0F171E",
+  "categories": ["medical", "health", "education"],
+  "prefer_related_applications": false,
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
