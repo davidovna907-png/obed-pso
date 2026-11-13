@@ -3,6 +3,7 @@
 # Собирает всё из памятки РЕАБИТ А4 (Reabilitaciya_i_uhod_A4_cvet.pdf, с 10.11.2026 — на основе большого стенда, 21 лист):
 #   облегчённый PDF (без потерь: рисунки чёрно-белые — храним серыми 8 бит с PNG-предиктором, страницы сверяются попиксельно),
 #   картинки страниц p/NN.png (1100 px, PNG 64 цвета), превью для мессенджеров og.jpg, значок и index.html с оглавлением.
+#   Логотип ГКБ № 8 (tools/logo_gkb8.png, прислала пользователь 13.11.2026) — в шапке страницы, в значке и в превью.
 # Запуск: python3 uhod/tools/build.py путь/к/Reabilitaciya_i_uhod_A4_cvet.pdf
 import html, io, os, struct, sys
 import numpy as np
@@ -15,6 +16,7 @@ PDF = 'Reabilitaciya_i_uhod_posle_insulta.pdf'
 URL = 'https://davidovna907-png.github.io/obed-pso/uhod/'
 W = 1100                                                                  # ширина картинок страниц, px
 FONT = '/usr/share/fonts/truetype/dejavu/DejaVuSans%s.ttf'
+LOGO = os.path.join(OUT, 'tools', 'logo_gkb8.png')
 TOC = [
     ('Главное', [(2, '1. Что такое инсульт'), (3, '2. Коротко о главном: 10 правил'), (4, '3. Как проходит реабилитация')]),
     ('Уход и положение', [(5, '4. Как помогать'), (6, '5. Правильное положение в постели'), (7, '6. Берегите больное плечо'),
@@ -98,7 +100,9 @@ def og(cover):                     # превью ссылки в мессенд
     dr = ImageDraw.Draw(im)
     f = lambda s, b=False: ImageFont.truetype(FONT % ('-Bold' if b else ''), s)
     x = 44 + c.width + 56
-    dr.text((x, 70), 'ГАУЗ ОЗП ГКБ № 8 · ПСО', font=f(27, True), fill='#1F5F99')
+    lg = Image.open(LOGO).convert('RGB').resize((64, 64), Image.LANCZOS)
+    im.paste(lg, (x, 52))
+    dr.text((x + 76, 70), 'ГАУЗ ОЗП ГКБ № 8 · ПСО', font=f(27, True), fill='#1F5F99')
     y = 130
     for line in ('Реабилитация', 'и уход', 'после инсульта'):
         dr.text((x, y), line, font=f(62, True), fill='#1B2A41')
@@ -110,14 +114,13 @@ def og(cover):                     # превью ссылки в мессенд
     im.save(os.path.join(OUT, 'og.jpg'), quality=86, optimize=True, progressive=True)
 
 
-def icon():                        # значок для экрана «Домой»: белый крест на синем, как в шапке памятки
+def icon():                        # значок для экрана «Домой» и логотип для шапки — логотип ГКБ № 8, как на листах памятки
+    lg = Image.open(LOGO).convert('RGB')
     s = 180
-    im = Image.new('RGB', (s, s), '#2A7FD4')
-    dr = ImageDraw.Draw(im)
-    a, b = s * 0.2, s * 0.4
-    dr.rectangle((b, a, s - b, s - a), fill='#FFFFFF')
-    dr.rectangle((a, b, s - a, s - b), fill='#FFFFFF')
+    im = Image.new('RGB', (s, s), '#FFFFFF')
+    im.paste(lg.resize((156, 156), Image.LANCZOS), (12, 12))
     im.save(os.path.join(OUT, 'apple-touch-icon.png'), optimize=True)
+    lg.resize((168, 168), Image.LANCZOS).save(os.path.join(OUT, 'logo_gkb8.png'), optimize=True)
 
 
 def page_html(sizes):
