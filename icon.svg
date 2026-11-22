@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="tile" x2=".8" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#37312e"/><stop offset="1" stop-color="#19191c"/>
+    </linearGradient>
+    <linearGradient id="copper" x1="0" y1="0" x2=".8" y2="1">
+      <stop stop-color="#efba92"/><stop offset=".62" stop-color="#d59776"/><stop offset="1" stop-color="#bb7e66"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#tile)"/>
+  <!-- Сервировочный колпак с фарфоровой ручкой и льняной салфеткой. -->
+  <path d="M256 151v23" fill="none" stroke="#e6d7c2" stroke-width="13"/>
+  <rect x="233" y="137" width="46" height="20" rx="10" fill="#f0e6d5"/>
+  <path d="M101 301c5-77 69-138 155-138s150 61 155 138z" fill="url(#copper)"/>
+  <path d="M143 269c12-35 36-60 67-73" fill="none" stroke="#f4d3b5" stroke-width="11" stroke-linecap="round"/>
+  <path d="M85 322h342l-15 15a30 30 0 0 1-21 9H121a30 30 0 0 1-21-9z" fill="#f0e6d5"/>
+  <path d="M300 322h74l-30 43a7 7 0 0 1-11 1z" fill="#a8c3cf"/>
+</svg>
