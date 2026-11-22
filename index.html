@@ -52,7 +52,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .deadline{margin-top:5px;display:flex;align-items:center;gap:9px;font-size:14px;line-height:1.3;color:var(--muted)}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none;box-shadow:0 0 0 3px var(--accent-soft)}
 .deadline.closed .dot{background:var(--warn);box-shadow:none}
-.deadline strong{color:var(--ink);font-weight:600;white-space:nowrap}
+.deadline strong{color:var(--ink);font-weight:600}
 
 /* выбор участника */
 .who{margin-top:8px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
@@ -71,6 +71,12 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .add-row .btn{min-height:50px;font-size:16px;padding:0 14px;flex:none}
 
 .hint{color:var(--muted);font-size:16px;margin:6px 0 0}
+.menu-nav{display:flex;gap:8px;overflow-x:auto;padding:5px 3px 8px;margin:14px -3px 0}
+.menu-nav a{flex:none;display:inline-flex;align-items:center;min-height:44px;padding:0 15px;color:var(--ink);background:var(--surface);border:1px solid #647870;border-radius:24px;text-decoration:none;font-size:15px}
+.menu-nav a:focus-visible,.sec h2:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sec h2{scroll-margin-top:calc(12px + env(safe-area-inset-top,0px))}
+.item:focus-visible{outline-offset:-4px}
+@media(max-width:359px){.add-row{flex-wrap:wrap}.who .add-row input{flex-basis:100%}.btn-row>.btn{padding-inline:8px}}
 .stale{margin-top:16px;padding:12px 14px;border-radius:16px;background:var(--plum-soft);font-size:16px;line-height:1.35}
 .stale b{font-weight:600}
 
@@ -84,7 +90,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .sec.premium .list{background:var(--plum-soft);box-shadow:none;border:1px solid color-mix(in srgb,var(--plum) 30%,transparent)}
 .sec.premium .sec-h h2{color:var(--plum)}
 .item{display:grid;grid-template-columns:34px 1fr auto;gap:14px;align-items:start;width:100%;text-align:left;padding:16px 16px 16px 14px;min-height:64px}
-.tick{width:30px;height:30px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;margin-top:1px;transition:background .15s,border-color .15s}
+.tick{width:30px;height:30px;border-radius:50%;border:2px solid #70837B;display:grid;place-items:center;margin-top:1px;transition:background .15s,border-color .15s}
 .tick svg{width:16px;height:16px;opacity:0;transform:scale(.6);transition:.15s}
 .item[aria-checked="true"] .tick{background:var(--accent);border-color:var(--accent)}
 .item[aria-checked="true"] .tick svg{opacity:1;transform:none}
@@ -439,7 +445,7 @@ textarea{min-height:130px;resize:vertical;font-size:16px;font-weight:400}
 
     <section class="view" id="v-order" hidden aria-label="Общий заказ">
       <h2 class="title" id="order-title">Общий заказ ПСО</h2>
-      <p class="msg" id="sync" hidden style="margin:-4px 4px 12px"></p>
+      <p class="msg" id="sync" role="status" hidden style="margin:-4px 4px 12px"></p>
       <div id="order-body"></div>
       <div class="card" id="push-card" hidden></div>
       <div class="phone" id="cafe-phone">
@@ -488,7 +494,7 @@ textarea{min-height:130px;resize:vertical;font-size:16px;font-weight:400}
 <div class="dock">
   <div class="cart" id="cart" hidden>
     <span class="cart-info"><span class="c1" id="cart-n"></span><span class="c2 num" id="cart-sum"></span></span>
-    <button class="ok" id="ok" aria-label="ОК, открыть заказ">ОК</button>
+    <button class="ok" id="ok">К заказу</button>
   </div>
   <nav class="tabs" role="tablist">
     <button class="tab" role="tab" aria-selected="true" data-v="menu">
@@ -504,7 +510,7 @@ textarea{min-height:130px;resize:vertical;font-size:16px;font-weight:400}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script>
+<script id="order-app">
 (function(){
 const MENU = JSON.parse(document.getElementById('menu-data').textContent);
 /* общий заказ для всех телефонов: адрес веб-приложения Google Apps Script (apps-script/Code.gs); пусто — заказы хранятся только на этом телефоне */
@@ -516,6 +522,9 @@ const pad = n=>String(n).padStart(2,'0');
 const [Y,M,D] = MENU.date.split('-').map(Number);
 const menuDate = new Date(Y, M-1, D);
 const ddmm = pad(D)+'.'+pad(M), dmy = ddmm+'.'+Y;
+const cutoffTime = MENU.collectBy || '21:00';
+const cutoffAt = Date.parse(MENU.date+'T'+cutoffTime+':00+05:00') - 86400000;
+const todayISO = ()=>new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Yekaterinburg',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 const CAFE = (MENU.cafe||'Кафе').split(' · ')[0];
 const byId = {}, ORDER = [];
 MENU.sections.forEach(s=>s.items.forEach(i=>{byId[i.id]=Object.assign({section:s.title},i);ORDER.push(i.id)}));
@@ -570,6 +579,8 @@ const saveRoster=()=>store.set(K.roster,roster), saveOrders=()=>store.set(K.orde
 saveRoster(); saveOrders(); saveActive();
 /* участники, чьи изменения общая таблица ещё не подтвердила; при первом запуске с общим заказом сюда попадает всё, что уже есть на телефоне */
 const K_DIRTY = 'pso:dirty:'+MENU.date;
+const K_MISSED = 'pso:missed:'+MENU.date;
+let missed=store.get(K_MISSED,[]);
 const dirty = new Set((d=>ORDERS_API?(Array.isArray(d)?d:Object.keys(orders)):[])(store.get(K_DIRTY,null)));
 const saveDirty = ()=>{if(ORDERS_API)store.set(K_DIRTY,[...dirty])};
 /* код организатора хранится только на его телефоне: с ним видны заказы всех коллег и общая сумма */
@@ -582,22 +593,23 @@ $('phone').textContent = MENU.phone;
 if(!canStore) $('nostore').hidden = false;
 
 /* ---------- срок: заказы до 21:00 накануне ---------- */
-function isClosed(){const [h,m]=(MENU.collectBy||'21:00').split(':').map(Number);return new Date()>=new Date(Y,M-1,D-1,h,m)}
+let serverClosed=false;
+function isClosed(){return serverClosed || Date.now()>=cutoffAt}
 const locked = ()=>colleague()&&isClosed();
 const lockMsg = ()=>'Приём заказов закрыт в '+deadlineText()+'. Изменить заказ можно только через организатора.';
 let wasClosed=null;
 function tickDeadline(){
-  const [h,m] = (MENU.collectBy||'21:00').split(':').map(Number);
-  const dl = new Date(Y,M-1,D-1,h,m), left = dl-new Date(), el=$('deadline');
-  const c=left<=0; if(c!==wasClosed){const first=wasClosed===null;wasClosed=c;if(!first){renderNotes();showSync()}}
-  const when = WDs[dl.getDay()]+' '+pad(dl.getDate())+'.'+pad(dl.getMonth()+1);
-  if(left<=0){$('dl-text').textContent='Сбор заказов закрыт ('+(MENU.collectBy||'21:00')+', '+when+')';el.classList.add('closed');return}
+  const left=cutoffAt-Date.now(), el=$('deadline');
+  const c=isClosed(); if(c!==wasClosed){const first=wasClosed===null;wasClosed=c;if(!first){renderMenu();renderNotes();refresh();showSync();if(current==='arch')renderArchive()}}
+  if(c){$('dl-text').textContent='Сбор закрыт · '+deadlineText();el.classList.add('closed');return}
   el.classList.remove('closed');
   const hrs=Math.floor(left/36e5), mins=Math.floor(left%36e5/6e4);
   const rest = hrs>=24 ? '' : ' · ещё <strong>'+(hrs?hrs+' ч ':'')+mins+' мин</strong>';
-  $('dl-text').innerHTML='Заказы до <strong>'+esc(MENU.collectBy||'21:00')+'</strong>, '+when+rest;
+  $('dl-text').innerHTML='Заказы до <strong>'+esc(deadlineText())+'</strong>'+rest;
 }
 tickDeadline(); setInterval(tickDeadline,30000);
+const untilCutoff=cutoffAt-Date.now();
+if(untilCutoff>0&&untilCutoff<2147483647)setTimeout(tickDeadline,untilCutoff);
 
 /* ---------- модель заказа ---------- */
 const sortedIds = items=>ORDER.filter(id=>items[id]>0);
@@ -681,28 +693,28 @@ async function checkName(nm){
 
 /* ---------- меню ---------- */
 function renderMenu(){
-  const today=new Date();today.setHours(0,0,0,0);
   const sel=curSel();
-  const stale = menuDate < today ? `<div class="stale">Это меню на <b>${WDs[menuDate.getDay()]} ${ddmm}</b>. Новое меню появится здесь после обновления.</div>` : '';
+  const stale = MENU.date < todayISO() ? `<div class="stale">Это меню на <b>${WDs[menuDate.getDay()]} ${ddmm}</b>. Новое меню появится здесь после обновления.</div>` : '';
+  const nav=MENU.sections.length>1 ? '<nav class="menu-nav" aria-label="Разделы меню">'+MENU.sections.map((s,k)=>`<a href="#section-${k}">${esc(s.title)}</a>`).join('')+'</nav>' : '';
   $('menu-list').classList.toggle('menu-locked',locked());
-  $('menu-list').innerHTML = stale + MENU.sections.map(s=>`
+  $('menu-list').innerHTML = stale + nav + MENU.sections.map((s,k)=>`
     <section class="sec${s.premium?' premium':''}">
-      <header class="sec-h"><h2>${esc(s.title)}</h2>${s.portion?`<span class="portion">${esc(s.portion)}</span>`:''}</header>
+      <header class="sec-h"><h2 id="section-${k}" tabindex="-1">${esc(s.title)}</h2>${s.portion?`<span class="portion">${esc(s.portion)}</span>`:''}</header>
       <ul class="list">${s.items.map(i=>`
         <li>
-          <button class="item" role="checkbox" aria-checked="${sel[i.id]?'true':'false'}" data-id="${i.id}">
+          <button class="item" role="checkbox" ${locked()?'disabled':''} aria-checked="${sel[i.id]?'true':'false'}" data-id="${i.id}">
             <span class="tick">${CHECK}</span>
             <span><span class="nm">${esc(i.name)}${i.new?'<span class="badge">НОВИНКА</span>':''}${i.grill?'<span class="grill">гриль</span>':''}</span>${i.desc?`<span class="ds">${esc(i.desc)}</span>`:''}</span>
             <span class="pr num">${i.price}<small>₽</small></span>
           </button>
           <div class="qty" data-q="${i.id}" ${sel[i.id]?'':'hidden'}>
-            <span class="step"><button data-dec="${i.id}" aria-label="Меньше">−</button><output class="num">${sel[i.id]||1}</output><button data-inc="${i.id}" aria-label="Больше">+</button></span>
+            <span class="step"><button data-dec="${i.id}" ${locked()?'disabled':''} aria-label="Убрать порцию: ${esc(i.name)}">−</button><output class="num">${sel[i.id]||1}</output><button data-inc="${i.id}" ${locked()?'disabled':''} aria-label="Добавить порцию: ${esc(i.name)}">+</button></span>
             <span class="sum num">${rub((sel[i.id]||1)*i.price)}</span>
           </div>
         </li>`).join('')}
       </ul>
     </section>`).join('') +
-    `<p class="hint" style="margin:22px 4px 0">Выберите участника вверху, отметьте его блюда галочкой и нажмите <b>«ОК»</b>. Все участники попадут в общий заказ.</p>`;
+    (locked()?'':`<p class="hint" style="margin:22px 4px 0">Отметьте блюда. Количество порций можно изменить кнопками «+» и «−». Статус сохранения виден во вкладке «${colleague()?'Мой заказ':'Заказы'}».</p>`);
 }
 function updateItem(id){
   const b=document.querySelector(`.item[data-id="${id}"]`), q=document.querySelector(`[data-q="${id}"]`);
@@ -746,7 +758,7 @@ function checkHTML(list,agg,n,s){
         <section class="p-person">
           <div class="p-ph"><span>${esc(p.name)}</span><span class="num">${rub(totals(p.items).s)}</span></div>
           ${personLines(p).map(l=>`<div class="p-line"><span>${esc(l.name)} × ${l.q}</span><span class="num">${rub(l.sum)}</span></div>`).join('')}
-          <div class="p-act"><button class="p-edit" data-edit="${esc(p.name)}">изменить</button><button class="p-drop" data-drop="${esc(p.name)}">убрать</button></div>
+          ${locked()?'':`<div class="p-act"><button class="p-edit" data-edit="${esc(p.name)}">изменить</button><button class="p-drop" data-drop="${esc(p.name)}">убрать</button></div>`}
         </section>`).join('')}
       </div>
       <div class="p-total"><span><b>Итого</b>${peopleWord(list.length)} · ${itemsWord(n)}</span><b class="num">${rub(s)}</b></div>
@@ -764,15 +776,15 @@ function renderOrder(){
     return;
   }
   /* коллеге — только его чек; файл для кафе, копирование и очистка — только организатору */
-  $('order-body').innerHTML=summaryHTML(list,n,s)+checkHTML(list,agg,n,s)+(col?'':`
+  $('order-body').innerHTML=summaryHTML(list,n,s)+(col?'':`
     <div class="btns">
-      <button class="btn primary big" id="save-png">Сохранить файл для кафе<small>картинка: блюда, суммы и итог, без фамилий</small></button>
+      <button class="btn primary" id="copy-order">Скопировать для кафе</button>
       <div class="btn-row">
         <button class="btn" id="save-txt">Текстовый файл</button>
-        <button class="btn" id="copy-order">Скопировать</button>
+        <button class="btn" id="save-png">Сохранить картинку</button>
       </div>
       ${ORDERS_API?'':'<button class="btn ghost danger" id="clear-all">Очистить весь заказ</button>'}
-    </div>`)+myPeopleHTML();
+    </div>`)+checkHTML(list,agg,n,s)+myPeopleHTML();
 }
 
 /* текст для кафе (файл и «Скопировать»): только блюда, количество, суммы и итог — без фамилий */
@@ -880,16 +892,32 @@ document.addEventListener('click',e=>{
 
 /* заказы на телефоне организатора могли устареть: перед файлом для кафе обновляем их из таблицы */
 async function readyForCafe(){
-  if(!ORDERS_API||(!busy&&!dirty.size&&!failed&&Date.now()-synced<60000)) return true;
-  toast('Обновляю заказы…');
-  await syncNow();
-  if(failed){toast('Нет связи — файл собран по данным на '+hmOf(synced));return true}
-  toast('Заказы обновлены — нажмите ещё раз');
-  return false;
+  if(ORDERS_API){
+    toast('Сверяю заказ с таблицей…');
+    await syncNow();
+    if(colleague())return false;
+    if(failed||dirty.size){toast('Не удалось сверить заказ с таблицей. Проверьте связь и повторите.');return false}
+  }
+  if(!people().length){toast('На эту дату пока нет заказов');return false}
+  return true;
+}
+/* Safari требует начать запись в буфер при нажатии. Сам текст будет готов после ответа таблицы. */
+async function copyFresh(getText){
+  const pending=getText();
+  try{
+    if(navigator.clipboard?.write && typeof ClipboardItem!=='undefined'){
+      const blob=pending.then(t=>{if(!t)throw new Error('Нет подтверждённого заказа');return new Blob([t],{type:'text/plain'})});
+      blob.catch(()=>{});
+      await navigator.clipboard.write([new ClipboardItem({'text/plain':blob})]);
+      toast('Заказ для кафе скопирован');return;
+    }
+  }catch(e){}
+  const t=await pending;
+  if(t)copy(t,'Заказ для кафе скопирован');
 }
 $('v-order').addEventListener('click',async e=>{
   if(e.target.closest('#copy-phone')){copy(MENU.phone,'Номер скопирован');return}
-  if(e.target.closest('#copy-order')){if(await readyForCafe())copy(orderText(),'Заказ скопирован');return}
+  if(e.target.closest('#copy-order')){await copyFresh(async()=>await readyForCafe()?orderText():null);return}
   if(e.target.closest('#save-txt')){if(!(await readyForCafe()))return;const t=orderText();offerFile(fileBase()+'.txt',t,'text/plain',()=>showText(t,'Скопируйте текст заказа'));return}
   const png=e.target.closest('#save-png');
   if(png){
@@ -1016,18 +1044,25 @@ function syncNow(){return new Promise(r=>{if(!ORDERS_API)return r();waiters.push
 function changed(nm){
   if(!ORDERS_API) return;
   dirty.add(nm); saveDirty();
-  clearTimeout(saveTimer); saveTimer=setTimeout(syncOrders,1000);
+  showSync();
+  clearTimeout(saveTimer); saveTimer=setTimeout(syncOrders,cutoffAt-Date.now()<5000?0:1000);
 }
 /* участники этого телефона: коллеге таблица отдаёт заказы только по ним */
 const myNames = ()=>[...new Set(roster.concat(Object.keys(orders),[...dirty]))];
 /* все запросы — POST без своих заголовков: Apps Script не отвечает на предварительные CORS-запросы */
 async function post(body){
-  const r=await fetch(ORDERS_API,{method:'POST',body:JSON.stringify(Object.assign({date:MENU.date},body))});
-  return r.json();
+  const controller=new AbortController(), timeout=setTimeout(()=>controller.abort(),20000);
+  try{
+    const r=await fetch(ORDERS_API,{method:'POST',signal:controller.signal,body:JSON.stringify(Object.assign({date:MENU.date},body))});
+    if(!r.ok)throw new Error('http');
+    return await r.json();
+  }finally{clearTimeout(timeout)}
 }
 async function api(body,scope){
-  const j=await post(Object.assign(adminKey?{key:adminKey}:{names:scope||[]},body));
-  if(j&&j.error==='key'&&adminKey){leaveOrganizer('Код организатора изменился — войдите снова');throw new Error('key')}
+  const requestKey=adminKey;
+  const j=await post(Object.assign(requestKey?{key:requestKey}:{names:scope||[]},body));
+  if(j?.error==='closed')throw new Error('closed');
+  if(j&&j.error==='key'&&requestKey===adminKey&&adminKey){leaveOrganizer('Код организатора изменился — войдите снова');throw new Error('key')}
   if(!j||!j.ok||!j.orders||typeof j.orders!=='object') throw new Error('bad reply');
   return j.orders;
 }
@@ -1039,18 +1074,25 @@ async function syncOrders(){
   if(!ORDERS_API) return;
   if(busy){again=true;return}
   busy=true; again=false; lastTry=Date.now(); clearTimeout(saveTimer);
-  const g=gen, names=[...dirty], sent={}, scope=adminKey?null:myNames();
+  const g=gen, names=[...dirty], sent={}, scope=adminKey?null:myNames(), readOnly=locked();
   names.forEach(nm=>sent[nm]=JSON.stringify(orders[nm]||{}));
   try{
-    const srv=await api(names.length?{set:names.map(payload)}:{},scope);
+    const srv=await api(names.length&&!readOnly?{set:names.map(payload)}:{},scope);
     if(g===gen){
+      if(readOnly&&names.length){
+        const remote=new Map(Object.entries(srv).map(([nm,it])=>[nm.toLowerCase(),it]));
+        const rejected=names.filter(nm=>canon({x:orders[nm]||{}})!==canon({x:remote.get(nm.toLowerCase())||{}}));
+        if(rejected.length){missed=[...new Set(missed.concat(rejected))];store.set(K_MISSED,missed)}
+      }
       names.forEach(nm=>{if(JSON.stringify(orders[nm]||{})===sent[nm])dirty.delete(nm)});
       saveDirty(); applyServer(srv,scope);
-      if(names.includes(active)&&current==='menu') toast('Заказ сохранён');
+      if(readOnly&&names.length){renderNotes();if(missed.length)toast('Последние изменения не приняты. Проверьте «Мой заказ».')}
+      if(!readOnly&&names.includes(active)&&current==='menu'&&!dirty.has(active)) toast('Заказ сохранён');
     }else again=true;
     failed=false; warnedUnsent=false; synced=Date.now();
   }catch(e){
-    if(e.message==='key') again=true;
+    if(e.message==='closed'){serverClosed=true;tickDeadline();again=true}
+    else if(e.message==='key') again=true;
     else{
       if(names.length&&!warnedUnsent){warnedUnsent=true;toast('Нет связи — заказ пока НЕ отправлен. Не закрывайте приложение, пока не появится интернет')}
       failed=true;
@@ -1061,7 +1103,7 @@ async function syncOrders(){
 }
 /* уходят из приложения с неотправленным заказом — пробуем отправить «вдогонку» (подтвердит следующая синхронизация) */
 function flushOnHide(){
-  if(!ORDERS_API||!dirty.size) return;
+  if(!ORDERS_API||!dirty.size||busy||locked()) return;
   try{fetch(ORDERS_API,{method:'POST',keepalive:true,body:JSON.stringify(Object.assign({date:MENU.date},adminKey?{key:adminKey}:{names:myNames()},{set:[...dirty].map(payload)}))}).catch(()=>{})}catch(e){}
 }
 /* таблица — главный источник; сильнее неё только изменения с этого телефона, которые ещё не сохранены */
@@ -1093,9 +1135,11 @@ function showSync(){
   const el=$('sync');
   el.hidden=!ORDERS_API; if(!ORDERS_API) return;
   const hm=hmOf(synced), col=colleague(), unsent=failed&&dirty.size>0;
-  el.classList.toggle('warn',failed);
-  el.textContent = unsent&&col ? 'Нет связи — заказ НЕ отправлен организатору. Не закрывайте приложение, пока не появится интернет.'
+  const late=col&&missed.length>0;
+  el.classList.toggle('warn',failed||late);
+  el.textContent = unsent&&col ? 'Нет связи. Сохранение изменений в общей таблице пока не подтверждено.'
     : failed ? 'Нет связи. Показано то, что сохранено на этом телефоне.'
+    : late ? 'К 21:00 таблица не подтвердила последние изменения: '+missed.join(', ')+'. Здесь показан принятый заказ. Для исправления свяжитесь с организатором.'
     : !synced ? 'Загружаю заказы…'
     : !col ? 'Заказы всех коллег · обновлено в '+hm
     : dirty.size ? 'Сохраняю заказ…'
@@ -1121,11 +1165,12 @@ function applyRole(){
   link.hidden=!ORDERS_API; delete link.dataset.sure;
   link.textContent=col?'Вход для организатора':'Выйти из режима организатора';
   if(col){arch=null;$('arch-body').innerHTML='';archMsg('')}
+  renderMenu(); renderNotes();
   if(col&&(current==='team'||current==='arch')) go('menu');
   renderPush();
 }
 function leaveOrganizer(msg){
-  adminKey=''; store.set('pso:admin','');
+  gen++; adminKey=''; store.set('pso:admin','');
   /* на телефоне остаются только свои участники */
   Object.keys(orders).forEach(nm=>{if(!roster.includes(nm)&&!dirty.has(nm))delete orders[nm]});
   saveOrders(); applyRole(); syncMenu(); renderChips(); refresh(); showSync(); toast(msg); resubscribe();
@@ -1151,7 +1196,7 @@ function orgLogin(){
     if(j&&j.error==='wait'){say('Слишком много неверных попыток. Подождите 10 минут.');return}
     if(j&&j.error==='key'){say('Неверный код');inp.select();return}
     if(!j||!j.ok||!j.admin||!j.orders){say('Нет связи. Попробуйте ещё раз.');return}
-    adminKey=code; store.set('pso:admin',code); w.remove();
+    gen++; adminKey=code; store.set('pso:admin',code); w.remove();
     failed=false; synced=Date.now();
     applyRole(); applyServer(j.orders,null); go('order'); showSync(); toast('Режим организатора включён'); resubscribe();
     if(dirty.size) syncOrders();
@@ -1171,14 +1216,13 @@ $('org-link').addEventListener('click',e=>{
 
 /* ---------- новое меню: заметка в приложении, значок на иконке ---------- */
 const K_SEEN='pso:menuSeen';
-const todayISO=()=>{const t=new Date();return t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate())};
 const seenMenu=String(store.get(K_SEEN,'')||'');
 let newMenu=!!seenMenu&&seenMenu<MENU.date&&MENU.date>=todayISO(), freshMenu='';
 if(!seenMenu||seenMenu>MENU.date) store.set(K_SEEN,MENU.date);
 function markSeen(){if(newMenu){newMenu=false;renderNotes()}store.set(K_SEEN,MENU.date)}
 function deadlineText(){
   const dl=new Date(Y,M-1,D-1);
-  return (MENU.collectBy||'21:00')+', '+WDs[dl.getDay()]+' '+pad(dl.getDate())+'.'+pad(dl.getMonth()+1);
+  return cutoffTime+' по Челябинску, '+WDs[dl.getDay()]+' '+pad(dl.getDate())+'.'+pad(dl.getMonth()+1);
 }
 /* приложение открыли — снять значок с иконки и уже показанные уведомления о меню */
 function clearBadge(){
@@ -1186,13 +1230,27 @@ function clearBadge(){
   if(swReg&&swReg.getNotifications) swReg.getNotifications().then(l=>l.forEach(n=>{if(n.tag==='menu'||n.tag==='summary')n.close()})).catch(()=>{});
 }
 /* приложение открыто долго: раз в 5 минут смотрим, не вышло ли новое меню */
-async function checkFresh(){
-  if(document.visibilityState!=='visible'||freshMenu) return;
+let checkingMenu=false, lastMenuCheck=0;
+const versionOf=doc=>['menu-data','order-app'].map(id=>doc.getElementById(id)?.textContent||'').join('\u0000');
+const ownVersion=versionOf(document);
+async function checkFresh(onReturn=false){
+  if(document.visibilityState!=='visible'||checkingMenu)return;
+  if(onReturn&&Date.now()-lastMenuCheck<10000&&!freshMenu)return;
+  checkingMenu=true; lastMenuCheck=Date.now();
   try{
-    const html=await (await fetch(location.pathname,{cache:'no-store'})).text();
-    const m=html.match(/id="menu-data"[^>]*>([\s\S]*?)<\/script>/), d=m&&JSON.parse(m[1]).date;
-    if(d&&/^\d{4}-\d{2}-\d{2}$/.test(d)&&d>MENU.date){freshMenu=d;renderNotes()}
-  }catch(e){}
+    const response=await fetch(location.pathname,{cache:'no-store'});
+    if(!response.ok)return;
+    const doc=new DOMParser().parseFromString(await response.text(),'text/html');
+    const data=JSON.parse(doc.getElementById('menu-data').textContent);
+    if(data.date<MENU.date||!Array.isArray(data.sections)||versionOf(doc)===ownVersion)return;
+    freshMenu=data.date;renderNotes();
+    if(onReturn&&!dirty.size&&!document.querySelector('.sheet')&&($('add-row').hidden||!$('p-new').value.trim()))location.reload();
+  }catch(e){}finally{checkingMenu=false}
+}
+async function reloadMenu(){
+  if(dirty.size)await syncNow();
+  if(dirty.size){toast('Сначала нужно сохранить заказ. Проверьте связь и повторите.');return}
+  location.reload();
 }
 
 /* ---------- уведомления о новом меню (Web Push через Google Таблицу организатора) ---------- */
@@ -1324,9 +1382,9 @@ function renderPush(){
 function renderNotes(){
   const box=$('menu-notes'), N=[];
   if(editFor!==null) N.push(`<div class="note edit"><span class="note-txt">✏️ Вы меняете заказ: <b>${esc(editFor)}</b></span><button class="btn primary sm" data-go="order">Готово</button></div>`);
-  const today=new Date();today.setHours(0,0,0,0);
-  if(locked()&&menuDate>=today) N.push(`<div class="note lock"><span class="note-txt">🔒 ${esc(lockMsg())}</span></div>`);
-  if(freshMenu) N.push(`<div class="note new"><span class="note-txt">Вышло <b>новое меню</b>.</span><button class="btn primary sm" data-reload>Обновить</button></div>`);
+  if(locked()&&MENU.date>=todayISO()) N.push(`<div class="note lock"><span class="note-txt">🔒 ${esc(lockMsg())}</span></div>`);
+  if(colleague()&&missed.length) N.push('<div class="note lock">Часть изменений не вошла в заказ. Подробности во вкладке «Мой заказ».</div>');
+  if(freshMenu) N.push(`<div class="note new"><span class="note-txt">${freshMenu>MENU.date?'Опубликовано новое меню.':'Доступна обновлённая версия.'}</span><button class="btn primary sm" data-reload>Обновить</button></div>`);
   else if(newMenu) N.push(`<div class="note new"><span class="note-txt">🆕 <b>Новое меню</b> на ${WDacc[menuDate.getDay()]}, ${ddmm}. Отметьте блюда до ${esc(deadlineText())}.</span><button class="note-x" data-note="new" aria-label="Скрыть">×</button></div>`);
   const asked=String(store.get(K_ASK,'')||''), askAgain=!asked||(Date.now()-new Date(asked).getTime())>14*864e5;
   if(askAgain&&pushState==='off') N.push(`<div class="note"><span class="note-txt">🔔 Сообщать, когда появится новое меню?</span><span class="note-btns"><button class="btn primary sm" data-push="on">Включить</button><button class="btn ghost sm" data-note="ask">Не сейчас</button></span></div>`);
@@ -1338,28 +1396,32 @@ document.addEventListener('click',e=>{
   if(p){const a=p.dataset.push;if(a==='on')enablePush();else if(a==='off')disablePush();else if(a==='test')testPush(p);else if(a==='all')notifyAll(p);else if(a==='sum')summaryNow(p);return}
   const n=e.target.closest('[data-note]');
   if(n){if(n.dataset.note==='new')markSeen();else{store.set(K_ASK,todayISO());renderNotes()}return}
-  if(e.target.closest('[data-reload]')) location.reload();
+  if(e.target.closest('[data-reload]')) reloadMenu();
 });
 
 /* ---------- архив заказов: только организатору ---------- */
 const MONTHS=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
 const MONTHSgen=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
-let arch=null, archAt=0, archBusy=false;
+let arch=null, archAt=0, archRequest=null;
 function archMsg(t,warn){const m=$('arch-msg');m.hidden=!t;m.textContent=t||'';m.classList.toggle('warn',!!warn)}
-async function loadArchive(force){
-  if(!ORDERS_API||colleague()) return;
-  if(archBusy) return;
-  if(!force&&arch&&Date.now()-archAt<60000){renderArchive();return}
-  archBusy=true; if(!arch) archMsg('Загружаю архив…');
+function loadArchive(force){
+  if(!ORDERS_API||colleague())return Promise.resolve(false);
+  if(archRequest)return archRequest;
+  if(!force&&arch&&Date.now()-archAt<60000){renderArchive();return Promise.resolve(true)}
+  archRequest=fetchArchive(gen).finally(()=>{archRequest=null});
+  return archRequest;
+}
+async function fetchArchive(role){
+  archMsg('Обновляю архив…');
   try{
     const j=await post({action:'archive',key:adminKey});
+    if(role!==gen||colleague())return false;
     if(j&&j.error==='key'){leaveOrganizer('Код организатора изменился — войдите снова');return}
     if(j&&j.error==='wait'){archMsg('С чужих устройств вводили неверный код. Архив откроется через 10 минут.',true);return}
     if(!j||!j.ok) throw new Error('reply');
     if(!Array.isArray(j.days)){arch=null;$('arch-body').innerHTML='';archMsg('Архив заработает после обновления скрипта в Google Таблице.',true);return}
-    arch=j.days; archAt=Date.now(); archMsg(''); renderArchive();
+    arch=j.days; archAt=Date.now(); archMsg(''); renderArchive();return true;
   }catch(e){archMsg(arch?'Нет связи. Показан архив, загруженный раньше.':'Нет связи. Попробуйте ещё раз.',true)}
-  finally{archBusy=false}
 }
 /* блюда участника хранятся в таблице текстом «Суп × 1; Котлета × 2» */
 const archLines=t=>String(t||'').split(/;\s*/).map(s=>s.trim()).filter(Boolean).map(s=>{const m=s.match(/^(.*\S)\s*[×x]\s*(\d+)$/);return m?{name:m[1],q:+m[2]}:{name:s,q:0}});
@@ -1379,6 +1441,7 @@ function renderArchive(){
   const body=$('arch-body');
   if(!arch){body.innerHTML='';return}
   if(!arch.length){body.innerHTML=`<div class="card"><div class="empty"><p>Пока пусто. Здесь появятся заказы по дням, когда коллеги начнут заказывать.</p></div></div>`;return}
+  const expanded=new Set(Array.from(body.querySelectorAll('details[open][data-date]'),el=>el.dataset.date));
   body.innerHTML=archMonths().map(m=>{
     const [y,mm]=m.k.split('-').map(Number), total=m.days.reduce((s,d)=>s+d.sum,0), mp=monthPeople(m);
     return `<section class="arch-month">
@@ -1387,8 +1450,8 @@ function renderArchive(){
         const dishes={};
         d.people.forEach(p=>archLines(p.text).forEach(l=>{if(l.q)dishes[l.name]=(dishes[l.name]||0)+l.q}));
         const dn=Object.keys(dishes);
-        return `<details class="arch-day">
-          <summary><span>${archLabel(d.date)}${d.date===MENU.date?' <span class="cur">идёт сбор</span>':''}</span><span class="ad-s num">${d.people.length} чел. · ${rub(d.sum)}</span></summary>
+        return `<details class="arch-day" data-date="${esc(d.date)}" ${expanded.has(d.date)?'open':''}>
+          <summary><span>${archLabel(d.date)}${d.date===MENU.date&&!isClosed()?' <span class="cur">идёт сбор</span>':''}</span><span class="ad-s num">${d.people.length} чел. · ${rub(d.sum)}</span></summary>
           <div class="ad-body">
             ${d.people.map(p=>`<div class="ap"><div class="ap-h"><b>${esc(p.name)}</b><span class="num">${rub(p.sum)}</span></div>${archLines(p.text).map(l=>`<div class="ap-l">${esc(l.name)}${l.q?' × '+l.q:''}</div>`).join('')}</div>`).join('')}
             ${dn.length?`<div class="p-kitchen"><h4>Всего по блюдам</h4>${dn.map(n=>`<div class="pk"><span>${esc(n)}</span><span class="num">${dishes[n]} шт</span></div>`).join('')}</div>`:''}
@@ -1417,12 +1480,20 @@ $('v-arch').addEventListener('click',e=>{
   }
   const cc=e.target.closest('[data-copy-cafe]');
   if(cc){
-    /* заказ дня для кафе — блюда, количество и итог, без фамилий (если новое меню уже вышло, а заказ ещё не отправлен) */
-    const d=(arch||[]).find(x=>x.date===cc.dataset.copyCafe); if(!d) return;
-    const t=archDay(d.date), dishes={};
-    d.people.forEach(p=>archLines(p.text).forEach(l=>{if(l.q)dishes[l.name]=(dishes[l.name]||0)+l.q}));
-    copy(['ЗАКАЗ ПСО — кафе «'+CAFE+'»','На '+WDacc[t.getDay()]+', '+pad(t.getDate())+'.'+pad(t.getMonth()+1)+'.'+t.getFullYear(),'']
-      .concat(Object.keys(dishes).map((n,k)=>(k+1)+'. '+n+' × '+dishes[n]),['','ИТОГО: '+rub(d.sum)]).join('\n'),'Заказ для кафе скопирован');
+    const date=cc.dataset.copyCafe;
+    copyFresh(async()=>{
+      if(!await loadArchive(true))return null;
+      const d=arch.find(day=>day.date===date);
+      if(!d){toast('В архиве больше нет заказов на этот день');return null}
+      const t=archDay(d.date), dishes=new Map();
+      for(const person of d.people){
+        const lines=archLines(person.text);
+        if(!lines.length||lines.some(line=>!line.q)){toast('В архиве есть неполная запись. Сверьте блюда в таблице.');return null}
+        for(const line of lines)dishes.set(line.name,(dishes.get(line.name)||0)+line.q);
+      }
+      return ['ЗАКАЗ ПСО — кафе «'+CAFE+'»','На '+WDacc[t.getDay()]+', '+pad(t.getDate())+'.'+pad(t.getMonth()+1)+'.'+t.getFullYear(),'']
+        .concat(Array.from(dishes,([name,q],i)=>(i+1)+'. '+name+' × '+q),['','ИТОГО: '+rub(d.sum)]).join('\n');
+    });
     return;
   }
   const cm=e.target.closest('[data-copy-month]');
@@ -1485,25 +1556,7 @@ renderNotes(); initPush(); checkFresh();
 setInterval(checkFresh,5*60000);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flushOnHide()});
 addEventListener('pagehide',flushOnHide);
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')clearBadge()});
-})();
-</script>
-
-<script>
-/* у приложения на экране «Домой» нет кнопки «обновить»: когда его открывают снова, подхватываем новое меню или новую версию */
-(function(){
-const sig=doc=>[...doc.querySelectorAll('body > script:not([src])')].map(s=>s.textContent).join('\n\u0000\n');
-const own=sig(document);
-let last=0;
-document.addEventListener('visibilitychange',async()=>{
-  if(document.visibilityState!=='visible'||Date.now()-last<60000) return;
-  last=Date.now();
-  try{
-    const html=await (await fetch(location.pathname,{cache:'no-store'})).text();
-    const doc=new DOMParser().parseFromString(html,'text/html');
-    if(doc.getElementById('menu-data')&&sig(doc)!==own) location.reload();
-  }catch(e){}
-});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){tickDeadline();clearBadge();checkFresh(true)}});
 })();
 </script>
 
