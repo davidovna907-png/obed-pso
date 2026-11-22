@@ -124,9 +124,12 @@ function doPost(e) {
       if (k !== 'ok') return { ok: false, error: k };
     }
     if (req.clear === true && !admin) return { ok: false, error: 'key' };
+    const set = Array.isArray(req.set) ? req.set.slice(0, 200) : [];
+    if (!admin && set.length && collectionClosed_(date, new Date())) {
+      return { ok: false, error: 'closed' };
+    }
     const sh = sheet_();
     if (req.clear === true) remove_(sh, rows_(sh).filter(r => r.date === date));
-    const set = Array.isArray(req.set) ? req.set.slice(0, 200) : [];
     set.forEach(o => save_(sh, date, o));
     const all = read_(sh, date);
     if (admin) return { ok: true, admin: true, orders: all };
@@ -164,7 +167,7 @@ function save_(sh, date, o) {
   const key = name.toLowerCase();
   const mine = rows_(sh).filter(r => r.date === date && r.name.toLowerCase() === key);
   if (!Object.keys(items).length) return remove_(sh, mine);
-  const row = [txt_(date), txt_(name), txt_(String(o.text || '').slice(0, 1000)),
+  const row = [txt_(date), txt_(name), txt_(String(o.text || '').slice(0, 45000)),
     Math.max(0, Number(o.sum) || 0), new Date(), txt_(JSON.stringify(items))];
   if (mine.length) {
     sh.getRange(mine[0].row, 1, 1, row.length).setValues([row]);
@@ -424,6 +427,12 @@ function liveMenu_() {
 }
 
 const TZ = 'Asia/Yekaterinburg';   /* Челябинск */
+/* На дату меню коллеги заказывают до 21:00 предыдущего дня по Челябинску. */
+function collectionClosed_(date, now) {
+  const cutoff = Date.parse(date + 'T21:00:00+05:00') - 86400000;
+  return !Number.isFinite(cutoff) || now.getTime() >= cutoff;
+}
+
 function daysFromToday_(n) {
   return Utilities.formatDate(new Date(Date.now() + n * 864e5), TZ, 'yyyy-MM-dd');
 }
