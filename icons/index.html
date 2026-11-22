@@ -1,0 +1,1561 @@
+<!doctype html><html lang="ru" data-theme="dark"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg?v=cloche" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=cloche">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Обед ПСО">
+<meta name="theme-color" content="#19191C" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#19191C" media="(prefers-color-scheme: dark)">
+</head><body>
+<title>Обед ПСО</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@400;500;600&display=swap">
+<style>
+:root{
+  --info:#365A70; --info-soft:#DBE8ED; --ground:#E3E7E4; --surface:#F3F4F1; --surface-2:#EAEEEB; --paper:#FAFBF8; --ink:#1E2523; --muted:#5F6A66;
+  --line:#CAD1CD; --accent:#4B6C63; --accent-ink:#F4F7F5; --accent-soft:#D3DDD8;
+  --plum:#86616F; --plum-soft:#EADFE3; --warn:#9A6B2F; --shadow:0 1px 2px rgba(30,40,36,.06),0 8px 24px rgba(30,40,36,.07);
+  --display:"Unbounded","Onest",system-ui,sans-serif; --body:"Onest",-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --info:#B1CCD8; --info-soft:#29333B; --ground:#19191C; --surface:#252428; --surface-2:#302D30; --paper:#2B282A; --ink:#F2EDE6; --muted:#BCB7B3;
+  --line:#454044; --accent:#E4AA89; --accent-ink:#30201A; --accent-soft:#40322D;
+  --plum:#D6B7CB; --plum-soft:#352B35; --warn:#E3BF83; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --info:#B1CCD8; --info-soft:#29333B; --ground:#19191C; --surface:#252428; --surface-2:#302D30; --paper:#2B282A; --ink:#F2EDE6; --muted:#BCB7B3;
+  --line:#454044; --accent:#E4AA89; --accent-ink:#30201A; --accent-soft:#40322D;
+  --plum:#D6B7CB; --plum-soft:#352B35; --warn:#E3BF83; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--ground);overscroll-behavior-y:none}  /* экран не оттягивается: сверху и снизу не появляется пустое место */
+body{color:var(--ink);font:400 18px/1.4 var(--body);-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:640px;margin:0 auto;padding-inline:16px;padding-block:0 160px}
+.num{font-variant-numeric:tabular-nums}
+
+/* шапка: компактная, вверху экрана; при листании уходит вверх вместе с меню и не возвращается, пока не долистаешь до верха (просьба пользователя 27.10) */
+.top{position:relative;z-index:5;background:var(--ground);padding-block:8px 9px;margin-inline:-16px;padding-inline:16px}
+/* полоска под часами телефона: уехавшая шапка и меню прячутся под неё */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--ground);z-index:9}
+.brand{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.brand h1{font:600 21px/1.15 var(--display);letter-spacing:-.01em;margin:0;white-space:nowrap}
+.brand h1 span{color:var(--accent)}
+.day{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:baseline;column-gap:6px;font:500 14px/1.2 var(--body);color:var(--muted);text-align:right}
+.day b{font:500 15px/1.2 var(--display);color:var(--ink);letter-spacing:.01em;white-space:nowrap}
+.deadline{margin-top:5px;display:flex;align-items:center;gap:9px;font-size:14px;line-height:1.3;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.deadline.closed .dot{background:var(--warn);box-shadow:none}
+.deadline strong{color:var(--ink);font-weight:600}
+
+/* выбор участника */
+.who{margin-top:8px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.who-lbl{display:block;flex:none;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 0 2px}
+.chips{flex:1 1 160px;min-width:0;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:2px;margin:-2px}
+.who .add-row{flex-basis:100%;margin-top:2px}
+@media (max-width:359px){.who-lbl.opt{display:none}}  /* узкий экран: подпись «Заказ для» убираем, ленте имён больше места */
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:0 14px;border-radius:99px;background:var(--surface);border:1px solid var(--line);font-weight:600;font-size:15px;white-space:nowrap}
+.chip[aria-checked="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.chip-n{min-width:22px;height:22px;padding:0 6px;border-radius:99px;background:var(--accent-soft);color:var(--ink);font-size:13px;line-height:22px;text-align:center}
+.chip[aria-checked="true"] .chip-n{background:var(--accent-ink);color:var(--accent)}
+.chip.add{background:none;border-style:dashed;color:var(--accent)}
+.add-row{display:flex;gap:8px;margin-top:10px}
+.add-row input{flex:1;min-width:0}
+.add-row .btn{min-height:50px;font-size:16px;padding:0 14px;flex:none}
+
+.hint{color:var(--muted);font-size:16px;margin:6px 0 0}
+.menu-nav{display:flex;gap:8px;overflow-x:auto;padding:5px 3px 8px;margin:14px -3px 0}
+.menu-nav a{flex:none;display:inline-flex;align-items:center;min-height:44px;padding:0 15px;color:var(--ink);background:var(--surface);border:1px solid #807675;border-radius:24px;text-decoration:none;font-size:15px}
+.menu-nav a:focus-visible,.sec h2:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sec h2{scroll-margin-top:calc(12px + env(safe-area-inset-top,0px))}
+.item:focus-visible{outline-offset:-4px}
+@media(max-width:359px){.add-row{flex-wrap:wrap}.who .add-row input{flex-basis:100%}.btn-row>.btn{padding-inline:8px}}
+.stale{margin-top:16px;padding:12px 14px;border-radius:16px;background:var(--plum-soft);font-size:16px;line-height:1.35}
+.stale b{font-weight:600}
+
+/* меню */
+.sec{margin-top:26px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:0 4px 10px}
+.sec-h h2{font:500 21px/1.15 var(--display);margin:0;letter-spacing:-.005em}
+.portion{font-size:15px;color:var(--muted);white-space:nowrap}
+.list{list-style:none;margin:0;padding:0;background:var(--surface);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+.list>li+li{border-top:1px solid var(--line)}
+.sec.premium .list{background:var(--plum-soft);box-shadow:none;border:1px solid color-mix(in srgb,var(--plum) 30%,transparent)}
+.sec.premium .sec-h h2{color:var(--plum)}
+.item{display:grid;grid-template-columns:34px 1fr auto;gap:14px;align-items:start;width:100%;text-align:left;padding:16px 16px 16px 14px;min-height:64px}
+.tick{width:30px;height:30px;border-radius:50%;border:2px solid #988B86;display:grid;place-items:center;margin-top:1px;transition:background .15s,border-color .15s}
+.tick svg{width:16px;height:16px;opacity:0;transform:scale(.6);transition:.15s}
+.item[aria-checked="true"]{background:color-mix(in srgb,var(--accent) 7%,transparent)}
+.item[aria-checked="true"] .tick{background:var(--accent);border-color:var(--accent)}
+.item[aria-checked="true"] .tick svg{opacity:1;transform:none}
+.tick svg path{stroke:var(--accent-ink)}
+.nm{display:block;font-weight:600;font-size:19px;line-height:1.28}
+.ds{display:block;color:var(--muted);font-size:15px;line-height:1.35;margin-top:4px}
+.pr{font:500 18px/1.3 var(--display);white-space:nowrap;padding-top:1px}
+.pr small{font:400 14px var(--body);color:var(--muted);margin-left:2px}
+.badge{display:inline-block;vertical-align:2px;margin-left:8px;font:600 11px/1 var(--body);letter-spacing:.08em;padding:4px 7px;border-radius:99px;background:var(--plum);color:var(--surface)}
+.grill{display:inline-block;margin-left:6px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--warn);font-weight:600;vertical-align:2px}
+.qty{display:flex;align-items:center;gap:12px;padding:0 16px 14px 62px}
+.step{display:inline-flex;align-items:center;background:var(--surface-2);border-radius:99px;border:1px solid var(--line)}
+.step button{width:44px;height:40px;font-size:22px;line-height:1;display:grid;place-items:center;color:var(--accent)}
+.step output{min-width:28px;text-align:center;font-weight:600;font-size:18px}
+.qty .sum{color:var(--muted);font-size:16px}
+
+/* нижняя панель: невысокая «стеклянная» капсула (эффект прозрачной линзы), прижата к низу экрана; итог — компактный, прямо над ней */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:10;padding:0 12px max(10px,calc(env(safe-area-inset-bottom,0px) - 12px));pointer-events:none}
+.dock>*{pointer-events:auto;max-width:616px;margin-inline:auto}
+.cart{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--accent);color:var(--accent-ink);border-radius:26px;padding:4px 4px 4px 18px;margin-bottom:6px;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 8px 22px rgba(0,0,0,.3)}
+.cart-info{flex:1;min-width:0}
+.cart .c1{display:block;font-size:13px;line-height:1.25;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cart .c2{display:block;font:600 16px/1.25 var(--display);white-space:nowrap}
+.ok{flex:none;min-width:66px;min-height:44px;padding:0 16px;border-radius:99px;background:var(--accent-ink);color:var(--accent);font:600 16px/1 var(--display);letter-spacing:.02em}
+.tabs{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:4px;border-radius:999px;background:var(--surface);background:color-mix(in srgb,var(--surface) 86%,transparent);backdrop-filter:blur(18px) saturate(1.8);-webkit-backdrop-filter:blur(18px) saturate(1.8);border:1px solid color-mix(in srgb,var(--ink) 14%,transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 -1px 0 rgba(0,0,0,.18),0 10px 28px rgba(0,0,0,.35)}
+.tabs::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.1),transparent 55%)}  /* блик сверху — как у линзы */
+.tab{padding:6px 2px 5px;border-radius:999px;font-size:12px;line-height:1.2;font-weight:600;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;position:relative;z-index:1;transition:background .2s,color .2s}
+.tab svg{width:22px;height:22px}
+.tab svg *{stroke:currentColor}
+.tab[aria-selected="true"]{background:var(--accent-soft);background:color-mix(in srgb,var(--accent) 20%,var(--surface));color:var(--accent);box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}
+.tab .cnt{position:absolute;top:1px;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:99px;background:var(--plum);color:var(--surface);font-size:11px;line-height:18px;text-align:center}
+
+/* карточки и формы */
+.card{background:var(--surface);border-radius:20px;box-shadow:var(--shadow);padding:18px}
+.card+.card{margin-top:14px}
+.title{font:500 24px/1.15 var(--display);margin:22px 4px 12px;letter-spacing:-.01em}
+label.lbl,.lbl{display:block;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;font-weight:600}
+input[type=text],textarea{width:100%;font:500 18px/1.35 var(--body);color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+textarea{min-height:130px;resize:vertical;font-size:16px;font-weight:400}
+.btns{display:grid;gap:10px;margin-top:16px}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;min-height:54px;border-radius:16px;font-weight:600;font-size:17px;padding:0 16px;background:var(--surface);border:1px solid var(--line);text-align:center}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.big{min-height:72px;flex-direction:column;gap:2px;font-size:19px}
+.btn.big small{font-size:14px;font-weight:400;opacity:.85}
+.btn.ghost{background:none;border-color:transparent;color:var(--muted);min-height:44px;font-size:16px}
+.btn.danger{color:var(--warn)}
+.empty{text-align:center;color:var(--muted);padding:26px 10px}
+.empty p{margin:0 0 14px}
+.msg{font-size:15px;margin-top:10px;color:var(--accent)}
+.msg.warn{color:var(--warn)}
+.edit-link{display:block;margin:10px auto 0;color:var(--accent);font-weight:600;font-size:16px;min-height:44px}
+
+/* чек заказа */
+.paper{margin-top:14px;background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:22px 18px 18px;position:relative;overflow:hidden}
+.paper::before{content:"";position:absolute;inset:0 0 auto 0;height:6px;background:var(--accent)}
+.p-eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.p-title{font:500 22px/1.2 var(--display);margin:8px 0 2px}
+.p-date{font:500 18px/1.2 var(--display);color:var(--accent)}
+.p-people{margin-top:16px;border-top:2px solid var(--ink)}
+.p-person{padding:12px 0;border-bottom:1px solid var(--line)}
+.p-person:last-child{border-bottom:0}
+.p-ph{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-weight:700;font-size:19px;line-height:1.3}
+.p-ph .num{font:600 18px/1.3 var(--display);white-space:nowrap}
+.p-act{display:flex;gap:18px;padding-left:14px;margin-top:4px}
+.p-edit,.p-drop{min-height:34px;padding:4px 0;font:600 15px var(--body);color:var(--accent)}
+.p-drop{color:var(--warn)}
+.sum-card{background:var(--accent);color:var(--accent-ink);border-radius:20px;padding:16px 18px;box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:center;gap:6px 14px;flex-wrap:wrap}
+.sum-lbl{display:block;font-size:14px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+.sum-sub{display:block;font-size:15px;opacity:.85;margin-top:2px}
+.sum-big{font:600 32px/1.1 var(--display);white-space:nowrap}
+.p-line{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-left:14px;margin-top:5px;font-size:16px;line-height:1.35}
+.p-line .num{color:var(--muted);white-space:nowrap}
+.p-total{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding-top:14px;border-top:2px solid var(--ink)}
+.p-total span{color:var(--muted);font-size:15px}
+.p-total span b{display:block;color:var(--ink);font:700 18px/1.3 var(--body);text-transform:uppercase;letter-spacing:.04em}
+.p-total>b{font:600 28px/1 var(--display);white-space:nowrap}
+.p-kitchen{margin-top:18px;padding-top:12px;border-top:1px dashed var(--line)}
+.p-kitchen h4{margin:0 0 6px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.pk{display:flex;justify-content:space-between;gap:12px;padding:3px 0;font-size:16px}
+.pk .num{font-weight:600;white-space:nowrap}
+
+/* список коллег */
+.roster{display:flex;flex-wrap:wrap;gap:8px}
+.rchip{display:inline-flex;align-items:center;gap:2px;min-height:44px;padding:0 4px 0 15px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line);font-weight:600;font-size:16px}
+.rchip .x{min-width:36px;height:36px;border-radius:99px;display:grid;place-items:center;color:var(--muted);font-size:20px}
+.rchip.sure{border-color:var(--warn)}
+.rchip.sure .x{padding:0 12px;font-size:14px;font-weight:600;color:var(--warn)}
+
+.phone{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:22px;padding:14px 16px;border-radius:16px;border:1px dashed var(--line);color:var(--muted);font-size:15px}
+.phone b{display:block;white-space:nowrap;color:var(--ink);font:500 18px var(--display);user-select:all}
+.phone .btn{min-height:44px;font-size:15px}
+.toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top,0px));transform:translate(-50%,-140%);background:var(--ink);color:var(--ground);padding:12px 18px;border-radius:14px;font-weight:600;font-size:16px;z-index:30;transition:transform .25s;max-width:calc(100% - 32px);text-align:center}
+.toast.show{transform:translate(-50%,0)}
+.sheet{position:fixed;inset:0;z-index:40;background:rgba(10,16,14,.45);display:flex;align-items:flex-end;justify-content:center;padding:12px}
+.sheet .card{width:100%;max-width:616px;max-height:88vh;overflow:auto;margin-bottom:env(safe-area-inset-bottom,0px)}
+.sheet textarea{min-height:40vh;font-family:ui-monospace,Menlo,monospace;font-size:14px}
+.sheet img{display:block;width:100%;border-radius:12px;border:1px solid var(--line)}
+/* заметки над меню */
+.note{display:flex;align-items:center;justify-content:space-between;gap:10px 12px;flex-wrap:wrap;margin-top:16px;padding:12px 10px 12px 16px;border-radius:16px;background:var(--surface);border:1px solid var(--line);font-size:16px;line-height:1.35}
+.note.new{background:var(--info-soft);border-color:color-mix(in srgb,var(--info) 48%,var(--info-soft))}
+.note.new b{color:var(--info)}
+.note b{font-weight:700}
+.note-txt{flex:1 1 200px}
+.note-btns{display:flex;gap:8px;flex:none}
+.note-x{flex:none;min-width:44px;min-height:44px;border-radius:12px;font-size:24px;line-height:1;color:var(--muted);display:grid;place-items:center}
+.btn.sm{min-height:44px;font-size:16px;padding:0 14px}
+#push-card{margin-top:14px}
+.note.lock{background:var(--plum-soft);border-color:color-mix(in srgb,var(--plum) 35%,transparent)}
+.note.edit{background:var(--surface-2);border-color:var(--accent)}
+.menu-locked .tick{opacity:.4}
+.cart.unsent{background:var(--warn)}
+
+/* архив */
+.arch-month{margin-top:22px}
+.arch-mh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:0 4px 10px}
+.arch-mh h3{font:500 20px/1.2 var(--display);margin:0}
+.arch-mh span{color:var(--muted);font-size:15px;white-space:nowrap}
+.arch-day+.arch-day{border-top:1px solid var(--line)}
+.arch-day>summary,.arch-sum>summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:58px;padding:12px 16px;cursor:pointer;font-weight:600;font-size:17px}
+.arch-sum>summary{padding:0;min-height:44px;color:var(--accent)}
+.arch-day>summary::-webkit-details-marker,.arch-sum>summary::-webkit-details-marker{display:none}
+.arch-day>summary::after,.arch-sum>summary::after{content:"";flex:none;width:9px;height:9px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);margin:-4px 4px 0 0;transition:transform .15s}
+.arch-day[open]>summary::after,.arch-sum[open]>summary::after{transform:rotate(225deg);margin-top:4px}
+.arch-day>summary>span:first-child{flex:1}
+.ad-s{color:var(--muted);font-weight:500;white-space:nowrap}
+.ad-body{padding:0 16px 16px}
+.ap{padding:10px 0;border-top:1px solid var(--line)}
+.ap-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:17px}
+.ap-h .num{white-space:nowrap}
+.ap-l{color:var(--muted);font-size:15px;line-height:1.35;padding-left:12px;margin-top:3px}
+.arch-sum{margin-top:10px;padding:8px 16px}
+.arch-sum .pk{border-top:1px solid var(--line);padding:8px 0}
+.cur{display:inline-block;vertical-align:2px;margin-left:6px;font:600 11px/1 var(--body);letter-spacing:.06em;text-transform:uppercase;padding:4px 7px;border-radius:99px;background:var(--accent-soft);color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<script type="application/json" id="menu-data">
+{
+ "date": "2026-11-23",
+ "cafe": "Кухня · вкусная доставка",
+ "phone": "+7 (351) 230-66-66",
+ "deadline": "10:00",
+ "collectBy": "21:00",
+ "note": "Заказы принимаются до 10:00 с пн по пт",
+ "sections": [
+  {
+   "title": "Супы",
+   "portion": "~330 мл",
+   "items": [
+    {
+     "id": "s1",
+     "name": "Рассольник с курицей",
+     "price": 140
+    },
+    {
+     "id": "s2",
+     "name": "Грибной крем-суп с курицей",
+     "price": 140
+    },
+    {
+     "id": "s3",
+     "name": "Сухарики",
+     "price": 15,
+     "desc": "К супу"
+    }
+   ]
+  },
+  {
+   "title": "Горячие блюда",
+   "portion": "~300 г",
+   "items": [
+    {
+     "id": "h1",
+     "name": "Курица в сливках с картофельным пюре",
+     "price": 240
+    },
+    {
+     "id": "h2",
+     "name": "Курица по-итальянски с прованскими травами с макаронами",
+     "price": 240
+    },
+    {
+     "id": "h3",
+     "name": "Мясо с ананасом по-тайски с рисом",
+     "price": 250
+    },
+    {
+     "id": "h4",
+     "name": "Котлета на углях с гречкой и соусом тар-тар",
+     "price": 240,
+     "grill": true
+    },
+    {
+     "id": "h5",
+     "name": "Стейк из филе бедра на углях с запечённым картофелем с беконом",
+     "price": 240,
+     "grill": true
+    }
+   ]
+  },
+  {
+   "title": "Премиум",
+   "portion": "По наличию",
+   "premium": true,
+   "items": [
+    {
+     "id": "p1",
+     "name": "Филе бедра с овощами-гриль, картофелем по-деревенски и соусом тар-тар",
+     "price": 380
+    },
+    {
+     "id": "p2",
+     "name": "Поке с миксом креветка + тунец",
+     "price": 450,
+     "desc": "Огурец, креветка, тунец, рис китайский, манго, авокадо, сладкий чили, ореховый соус, морская чука, водоросли нори, кунжут"
+    }
+   ]
+  },
+  {
+   "title": "Салаты",
+   "portion": "~135–145 г",
+   "items": [
+    {
+     "id": "c1",
+     "name": "Витаминный со свежим огурцом",
+     "price": 120,
+     "desc": "Капуста белокочанная, морковь, огурец, заправка"
+    },
+    {
+     "id": "c2",
+     "name": "Императорский",
+     "price": 140,
+     "desc": "Курица копчёная, помидор, пекинская капуста, сыр, сухарики, яйцо, майонез, соевый соус"
+    },
+    {
+     "id": "c3",
+     "name": "Необыкновенный",
+     "price": 140,
+     "desc": "Картофель запечённый, огурец солёный, помидор, сыр, курица запечённая, майонез"
+    }
+   ]
+  },
+  {
+   "title": "Завтрак",
+   "portion": "",
+   "items": [
+    {
+     "id": "z1",
+     "name": "Омлет с ветчиной и сыром",
+     "price": 140
+    }
+   ]
+  },
+  {
+   "title": "Напитки",
+   "portion": "~330 мл",
+   "items": [
+    {
+     "id": "d1",
+     "name": "Морс из клюквы",
+     "price": 90
+    }
+   ]
+  },
+  {
+   "title": "Выпечка",
+   "portion": "",
+   "items": [
+    {
+     "id": "b1",
+     "name": "Блины с жюльеном и сыром",
+     "price": 150,
+     "desc": "2 шт."
+    },
+    {
+     "id": "b2",
+     "name": "Блины с творогом со сгущённым молоком",
+     "price": 130,
+     "desc": "2 шт."
+    },
+    {
+     "id": "b3",
+     "name": "Блины с ветчиной и сыром",
+     "price": 130,
+     "desc": "2 шт."
+    },
+    {
+     "id": "b4",
+     "name": "Манник с какао и бананом со сгущённым молоком",
+     "price": 130
+    },
+    {
+     "id": "b5",
+     "name": "Запеканка ванильная со сгущённым молоком",
+     "price": 130
+    },
+    {
+     "id": "b6",
+     "name": "Пирожок с картошкой",
+     "price": 70
+    },
+    {
+     "id": "b7",
+     "name": "Пирожок с луком и яйцом",
+     "price": 80
+    },
+    {
+     "id": "b8",
+     "name": "Беляш",
+     "price": 80
+    },
+    {
+     "id": "b9",
+     "name": "Сосиска в тесте",
+     "price": 80
+    },
+    {
+     "id": "b10",
+     "name": "Курник",
+     "price": 90
+    }
+   ]
+  }
+ ]
+}
+</script>
+
+<div class="wrap">
+  <header class="top" id="top">
+    <div class="brand">
+      <h1>Обед <span>ПСО</span></h1>
+      <div class="day"><span id="wday">понедельник</span><b class="num" id="dmy">28.09.2026</b></div>
+    </div>
+    <div class="deadline" id="deadline"><span class="dot"></span><span id="dl-text">Заказы до 21:00</span></div>
+    <div class="who" id="who-wrap">
+      <span class="who-lbl" id="who-lbl">Заказ для</span>
+      <div class="chips" id="chips" role="radiogroup" aria-labelledby="who-lbl"></div>
+      <form class="add-row" id="add-row" hidden>
+        <input type="text" id="p-new" placeholder="Фамилия и имя" autocomplete="off" enterkeyhint="done" aria-label="Новый участник">
+        <button class="btn primary" type="submit">Добавить</button>
+        <button class="btn" type="button" id="p-cancel">Отмена</button>
+      </form>
+    </div>
+  </header>
+
+  <main>
+    <section class="view" id="v-menu" aria-label="Меню"><div id="menu-notes"></div><div id="menu-list"></div></section>
+
+    <section class="view" id="v-order" hidden aria-label="Общий заказ">
+      <h2 class="title" id="order-title">Общий заказ ПСО</h2>
+      <p class="msg" id="sync" role="status" hidden style="margin:-4px 4px 12px"></p>
+      <div id="order-body"></div>
+      <div class="card" id="push-card" hidden></div>
+      <div class="phone" id="cafe-phone">
+        <div>Кафе, приём заказов до 10:00 пн–пт<b id="phone">+7 (351) 230-66-66</b></div>
+        <button class="btn" id="copy-phone">Копировать</button>
+      </div>
+      <button class="edit-link" id="org-link" hidden>Вход для организатора</button>
+    </section>
+
+    <section class="view" id="v-team" hidden aria-label="Коллеги">
+      <h2 class="title">Коллеги</h2>
+      <div id="team-check"></div>
+      <div class="card" style="margin-top:14px">
+        <span class="lbl">Список коллег</span>
+        <div class="roster" id="roster"></div>
+        <form class="add-row" id="t-add">
+          <input type="text" id="t-new" placeholder="Фамилия и имя" autocomplete="off" enterkeyhint="done" aria-label="Новый участник">
+          <button class="btn primary" type="submit">Добавить</button>
+        </form>
+        <p class="hint">Список сохраняется на этом телефоне. Над меню выберите коллегу и отметьте его блюда.</p>
+      </div>
+      <div class="card" id="chat-in">
+        <label class="lbl" for="paste">Заказы из чата отделения</label>
+        <textarea id="paste" placeholder="Скопируйте сообщения коллег из общего чата и вставьте сюда. Можно сразу несколько."></textarea>
+        <div class="btns"><button class="btn" id="parse">Добавить в общий заказ</button></div>
+        <div class="msg" id="parse-msg" hidden></div>
+        <button class="edit-link" id="to-order" data-go="order" hidden>Открыть общий заказ →</button>
+        <p class="hint" id="nostore" hidden>Список не сохраняется после закрытия приложения. Вставляйте сообщения всех коллег разом, перед отправкой заказа.</p>
+      </div>
+      <div class="card" id="chat-out">
+        <span class="lbl">Отправить выбор в чат</span>
+        <p class="hint" style="margin-top:0">Копирует блюда выбранного участника сообщением для чата отделения.</p>
+        <div class="btns"><button class="btn" id="copy-chat">Скопировать для чата ПСО</button></div>
+      </div>
+    </section>
+
+    <section class="view" id="v-arch" hidden aria-label="Архив">
+      <h2 class="title">Архив заказов</h2>
+      <p class="msg" id="arch-msg" hidden style="margin:-4px 4px 12px"></p>
+      <div id="arch-body"></div>
+      <button class="edit-link" id="arch-reload">Обновить архив</button>
+    </section>
+  </main>
+</div>
+
+<div class="dock">
+  <div class="cart" id="cart" hidden>
+    <span class="cart-info"><span class="c1" id="cart-n"></span><span class="c2 num" id="cart-sum"></span></span>
+    <button class="ok" id="ok">К заказу</button>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-v="menu">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 4.5h3M12 4.5v2M3.8 15.6a8.2 8.2 0 0 1 16.4 0zM2 18h20l-1.9 2H4z"/></svg>Меню</button>
+    <button class="tab" role="tab" aria-selected="false" data-v="order">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg><span id="order-tab-lbl">Общий заказ</span><span class="cnt num" id="order-cnt" hidden>0</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-v="team">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="9" r="3"/><circle cx="16.5" cy="9" r="3"/><path d="M2.5 19c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5M13 15c1-.4 2.2-.6 3.5-.5 2.5 0 4.7 1.5 5.5 4.5"/></svg>Коллеги</button>
+    <button class="tab" role="tab" aria-selected="false" data-v="arch" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="5" rx="1.5"/><path d="M5 9v9.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V9M10 13h4"/></svg>Архив</button>
+  </nav>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script id="order-app">
+(function(){
+const MENU = JSON.parse(document.getElementById('menu-data').textContent);
+/* общий заказ для всех телефонов: адрес веб-приложения Google Apps Script (apps-script/Code.gs); пусто — заказы хранятся только на этом телефоне */
+const ORDERS_API = 'https://script.google.com/macros/s/AKfycbzUeyfisU5w2-v-ORh9zA5wCbHE87eA9ezpwGfORzkTuRYOpL4KvUkQoFtxa7_kDI1Z/exec';
+const WD =['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+const WDs = ['вс','пн','вт','ср','чт','пт','сб'];
+const WDacc = ['воскресенье','понедельник','вторник','среду','четверг','пятницу','субботу'];  /* «на среду» */
+const pad = n=>String(n).padStart(2,'0');
+const [Y,M,D] = MENU.date.split('-').map(Number);
+const menuDate = new Date(Y, M-1, D);
+const ddmm = pad(D)+'.'+pad(M), dmy = ddmm+'.'+Y;
+const cutoffTime = MENU.collectBy || '21:00';
+const cutoffAt = Date.parse(MENU.date+'T'+cutoffTime+':00+05:00') - 86400000;
+const todayISO = ()=>new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Yekaterinburg',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+const CAFE = (MENU.cafe||'Кафе').split(' · ')[0];
+const byId = {}, ORDER = [];
+MENU.sections.forEach(s=>s.items.forEach(i=>{byId[i.id]=Object.assign({section:s.title},i);ORDER.push(i.id)}));
+
+const $ = id=>document.getElementById(id);
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const rub = n=>n.toLocaleString('ru-RU')+' ₽';
+function plural(n,a,b,c){n=Math.abs(n)%100;const n1=n%10;if(n>10&&n<20)return c;if(n1>1&&n1<5)return b;if(n1===1)return a;return c}
+const peopleWord = k=>k+' '+plural(k,'человек','человека','человек');
+const itemsWord = k=>k+' '+plural(k,'позиция','позиции','позиций');
+const CHECK = '<svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3.2 3L13 4.5" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+/* ---------- хранение (на этом телефоне) ---------- */
+let canStore=true;try{localStorage.setItem('pso:t','1');localStorage.removeItem('pso:t')}catch(e){canStore=false}
+const store = {
+  get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+const K = {roster:'pso:roster', active:'pso:active:'+MENU.date, orders:'pso:orders:'+MENU.date};
+const cleanName = s=>String(s||'').replace(/\s+/g,' ').trim().slice(0,60);
+
+let roster = store.get(K.roster,null);
+if(!Array.isArray(roster)){
+  roster=[];
+  const old=cleanName((store.get('pso:who',{})||{}).name||store.get('pso:name',''));
+  if(old) roster.push(old);
+}
+roster = roster.map(cleanName).filter((n,i,a)=>n&&a.findIndex(x=>x.toLowerCase()===n.toLowerCase())===i);
+function addToRoster(nm){
+  nm=cleanName(nm); if(!nm) return '';
+  const f=roster.find(r=>r.toLowerCase()===nm.toLowerCase());
+  if(f) return f;
+  const o=Object.keys(orders).find(k=>k.toLowerCase()===nm.toLowerCase());
+  if(o) nm=o;
+  roster.push(nm); return nm;
+}
+let orders = store.get(K.orders,null);
+if(!orders||typeof orders!=='object'||Array.isArray(orders)){
+  orders={};
+  const oldSel=store.get('pso:sel:'+MENU.date,{}), oldGroup=store.get('pso:group:'+MENU.date,{})||{};
+  if(oldSel&&Object.keys(oldSel).length){orders[roster[0]||addToRoster('Мой заказ')]=oldSel}
+  Object.keys(oldGroup).forEach(nm=>{const c=addToRoster(nm);if(c&&oldGroup[nm]&&oldGroup[nm].items)orders[c]=oldGroup[nm].items});
+}
+Object.keys(orders).forEach(nm=>{
+  const it=orders[nm]||{};
+  Object.keys(it).forEach(id=>{if(!byId[id]||!(it[id]>0))delete it[id]});
+  if(!Object.keys(it).length) delete orders[nm];
+});
+let active = store.get(K.active,'');
+if(!roster.includes(active)) active=roster[0]||'';
+const saveRoster=()=>store.set(K.roster,roster), saveOrders=()=>store.set(K.orders,orders), saveActive=()=>store.set(K.active,active);
+saveRoster(); saveOrders(); saveActive();
+/* участники, чьи изменения общая таблица ещё не подтвердила; при первом запуске с общим заказом сюда попадает всё, что уже есть на телефоне */
+const K_DIRTY = 'pso:dirty:'+MENU.date;
+const K_MISSED = 'pso:missed:'+MENU.date;
+let missed=store.get(K_MISSED,[]);
+const dirty = new Set((d=>ORDERS_API?(Array.isArray(d)?d:Object.keys(orders)):[])(store.get(K_DIRTY,null)));
+const saveDirty = ()=>{if(ORDERS_API)store.set(K_DIRTY,[...dirty])};
+/* код организатора хранится только на его телефоне: с ним видны заказы всех коллег и общая сумма */
+let adminKey = ORDERS_API ? String(store.get('pso:admin','')||'') : '';
+const colleague = ()=>!!ORDERS_API&&!adminKey;
+
+$('wday').textContent = WD[menuDate.getDay()];
+$('dmy').textContent = dmy;
+$('phone').textContent = MENU.phone;
+if(!canStore) $('nostore').hidden = false;
+
+/* ---------- срок: заказы до 21:00 накануне ---------- */
+let serverClosed=false;
+function isClosed(){return serverClosed || Date.now()>=cutoffAt}
+const locked = ()=>colleague()&&isClosed();
+const lockMsg = ()=>'Приём заказов закрыт в '+deadlineText()+'. Изменить заказ можно только через организатора.';
+let wasClosed=null;
+function tickDeadline(){
+  const left=cutoffAt-Date.now(), el=$('deadline');
+  const c=isClosed(); if(c!==wasClosed){const first=wasClosed===null;wasClosed=c;if(!first){renderMenu();renderNotes();refresh();showSync();if(current==='arch')renderArchive()}}
+  if(c){$('dl-text').textContent='Сбор закрыт · '+deadlineText();el.classList.add('closed');return}
+  el.classList.remove('closed');
+  const hrs=Math.floor(left/36e5), mins=Math.floor(left%36e5/6e4);
+  const rest = hrs>=24 ? '' : ' · ещё <strong>'+(hrs?hrs+' ч ':'')+mins+' мин</strong>';
+  $('dl-text').innerHTML='Заказы до <strong>'+esc(deadlineText())+'</strong>'+rest;
+}
+tickDeadline(); setInterval(tickDeadline,30000);
+const untilCutoff=cutoffAt-Date.now();
+if(untilCutoff>0&&untilCutoff<2147483647)setTimeout(tickDeadline,untilCutoff);
+
+/* ---------- модель заказа ---------- */
+const sortedIds = items=>ORDER.filter(id=>items[id]>0);
+function totals(items){let n=0,s=0;for(const id in items){if(!byId[id])continue;n+=items[id];s+=items[id]*byId[id].price}return{n,s}}
+const curSel = ()=>orders[active]||{};
+function people(){
+  const names=roster.filter(nm=>orders[nm]&&totals(orders[nm]).n);
+  Object.keys(orders).forEach(nm=>{if(!names.includes(nm)&&totals(orders[nm]).n)names.push(nm)});
+  return names.map(nm=>({name:nm,items:orders[nm]}));
+}
+function aggregate(list){
+  const agg={};let n=0,s=0;
+  list.forEach(p=>{for(const id in p.items){if(!byId[id])continue;const q=p.items[id];agg[id]=(agg[id]||0)+q;n+=q;s+=q*byId[id].price}});
+  return {agg,n,s};
+}
+const aggRows = agg=>ORDER.filter(id=>agg[id]).map(id=>byId[id]);
+const personLines = p=>sortedIds(p.items).map(id=>({name:byId[id].name,q:p.items[id],sum:p.items[id]*byId[id].price}));
+
+/* ---------- выбор участника ---------- */
+function renderChips(){
+  const box=$('chips'), sl=box.scrollLeft;
+  box.innerHTML = roster.map(nm=>{
+    const c=totals(orders[nm]||{}).n;
+    return `<button class="chip" role="radio" aria-checked="${nm===active}" data-p="${esc(nm)}">${esc(nm)}${c?`<span class="chip-n num">${c}</span>`:''}</button>`;
+  }).join('') + `<button class="chip add" id="p-open">+ Участник</button>`;
+  box.scrollLeft=sl;
+  $('who-lbl').textContent = roster.length ? 'Заказ для' : 'Впишите свою фамилию и имя';
+  $('who-lbl').classList.toggle('opt',roster.length>0);
+}
+function setActive(nm){
+  active=nm; saveActive(); renderChips(); syncMenu(); refresh(); chipInView();
+}
+function chipInView(){   /* выбранное имя целиком в ленте; листаем только ленту, не весь экран */
+  const b=$('chips'), el=b.querySelector('.chip[aria-checked="true"]'); if(!el) return;
+  const l=el.offsetLeft-b.offsetLeft;
+  if(l<b.scrollLeft) b.scrollLeft=l-4; else if(l+el.offsetWidth>b.scrollLeft+b.clientWidth) b.scrollLeft=l+el.offsetWidth-b.clientWidth+4;
+}
+function openAdd(focus){if($('add-row').hidden)$('p-new').value='';$('add-row').hidden=false;if(focus)$('p-new').focus()}
+$('chips').addEventListener('click',e=>{
+  if(e.target.closest('#p-open')){openAdd(true);return}
+  const c=e.target.closest('[data-p]'); if(c) setActive(c.dataset.p);
+});
+$('p-cancel').addEventListener('click',()=>{$('add-row').hidden=true});
+function addPerson(raw){
+  const typed=cleanName(raw), isNew=!!typed&&!roster.some(r=>r.toLowerCase()===typed.toLowerCase());
+  const nm=addToRoster(typed);
+  if(!nm){$('p-new').focus();return ''}
+  saveRoster(); $('add-row').hidden=true; $('p-new').blur(); setActive(nm); toast('Отмечаете блюда для: '+nm);
+  if(ORDERS_API&&isNew&&colleague()&&!orders[nm]) checkName(nm);
+  return nm;
+}
+$('add-row').addEventListener('submit',e=>{e.preventDefault();addPerson($('p-new').value)});
+
+/* новое имя на этом телефоне: вдруг на него уже есть заказ (другой телефон, Safari и значок на экране «Домой» — разные хранилища) */
+let checking='';
+async function checkName(nm){
+  checking=nm;
+  let srv=null;
+  try{srv=await api({},[nm])}catch(e){}
+  checking='';
+  if(!srv||!roster.includes(nm)||dirty.has(nm)) return;
+  const k=Object.keys(srv).find(x=>x.toLowerCase()===nm.toLowerCase()), it=k&&srv[k];
+  const ids=it?Object.keys(it).filter(id=>byId[id]&&it[id]>0):[];
+  if(!ids.length) return;
+  const w=document.createElement('div'); w.className='sheet';
+  w.innerHTML=`<div class="card"><span class="lbl">На это имя уже есть заказ</span>
+    <p style="margin:0 0 8px">«${esc(nm)}» на ${WDacc[menuDate.getDay()]}, ${ddmm}:</p>
+    ${ids.map(id=>`<div class="pk"><span>${esc(byId[id].name)} × ${it[id]}</span><span class="num">${rub(it[id]*byId[id].price)}</span></div>`).join('')}
+    <p class="hint">Это ваш заказ, сделанный раньше (с другого телефона или из браузера)? Если это другой человек — уберите имя и впишите фамилию и имя полностью.</p>
+    <div class="btn-row" style="margin-top:16px"><button class="btn" data-name="no">Это не я</button><button class="btn primary" data-name="yes">Да, это мой</button></div></div>`;
+  w.addEventListener('click',e=>{
+    const b=e.target.closest('[data-name]'); if(!b) return;
+    w.remove();
+    if(b.dataset.name==='yes'){applyServer(srv,[nm]);toast('Ваш заказ загружен');return}
+    roster=roster.filter(r=>r!==nm); delete orders[nm]; dirty.delete(nm); saveDirty();
+    active=roster[0]||''; saveRoster(); saveOrders(); saveActive(); renderChips(); syncMenu(); refresh();
+    openAdd(true); $('p-new').value=nm+' '; toast('Допишите фамилию, чтобы отличаться');
+  });
+  document.body.appendChild(w);
+}
+
+/* ---------- меню ---------- */
+function renderMenu(){
+  const sel=curSel();
+  const stale = MENU.date < todayISO() ? `<div class="stale">Это меню на <b>${WDs[menuDate.getDay()]} ${ddmm}</b>. Новое меню появится здесь после обновления.</div>` : '';
+  const nav=MENU.sections.length>1 ? '<nav class="menu-nav" aria-label="Разделы меню">'+MENU.sections.map((s,k)=>`<a href="#section-${k}">${esc(s.title)}</a>`).join('')+'</nav>' : '';
+  $('menu-list').classList.toggle('menu-locked',locked());
+  $('menu-list').innerHTML = stale + nav + MENU.sections.map((s,k)=>`
+    <section class="sec${s.premium?' premium':''}">
+      <header class="sec-h"><h2 id="section-${k}" tabindex="-1">${esc(s.title)}</h2>${s.portion?`<span class="portion">${esc(s.portion)}</span>`:''}</header>
+      <ul class="list">${s.items.map(i=>`
+        <li>
+          <button class="item" role="checkbox" ${locked()?'disabled':''} aria-checked="${sel[i.id]?'true':'false'}" data-id="${i.id}">
+            <span class="tick">${CHECK}</span>
+            <span><span class="nm">${esc(i.name)}${i.new?'<span class="badge">НОВИНКА</span>':''}${i.grill?'<span class="grill">гриль</span>':''}</span>${i.desc?`<span class="ds">${esc(i.desc)}</span>`:''}</span>
+            <span class="pr num">${i.price}<small>₽</small></span>
+          </button>
+          <div class="qty" data-q="${i.id}" ${sel[i.id]?'':'hidden'}>
+            <span class="step"><button data-dec="${i.id}" ${locked()?'disabled':''} aria-label="Убрать порцию: ${esc(i.name)}">−</button><output class="num">${sel[i.id]||1}</output><button data-inc="${i.id}" ${locked()?'disabled':''} aria-label="Добавить порцию: ${esc(i.name)}">+</button></span>
+            <span class="sum num">${rub((sel[i.id]||1)*i.price)}</span>
+          </div>
+        </li>`).join('')}
+      </ul>
+    </section>`).join('') +
+    (locked()?'':`<p class="hint" style="margin:22px 4px 0">Отметьте блюда. Количество порций можно изменить кнопками «+» и «−». Статус сохранения виден во вкладке «${colleague()?'Мой заказ':'Заказы'}».</p>`);
+}
+function updateItem(id){
+  const b=document.querySelector(`.item[data-id="${id}"]`), q=document.querySelector(`[data-q="${id}"]`);
+  if(!b)return;
+  const sel=curSel();
+  b.setAttribute('aria-checked', sel[id]?'true':'false');
+  q.hidden=!sel[id];
+  if(sel[id]){q.querySelector('output').textContent=sel[id];q.querySelector('.sum').textContent=rub(sel[id]*byId[id].price)}
+}
+const syncMenu = ()=>ORDER.forEach(updateItem);
+$('v-menu').addEventListener('click',e=>{
+  const it=e.target.closest('.item'), inc=e.target.closest('[data-inc]'), dec=e.target.closest('[data-dec]');
+  if(!it&&!inc&&!dec) return;
+  if(locked()){toast(lockMsg());return}
+  if(!active){
+    if(!$('add-row').hidden&&cleanName($('p-new').value)){if(addPerson($('p-new').value))toast('Добавлено. Теперь отметьте блюда');return}
+    openAdd(true);toast('Сначала впишите фамилию и имя');return;
+  }
+  if(checking&&checking===active){toast('Проверяю имя…');return}
+  const sel=orders[active]||(orders[active]={});
+  let id;
+  if(it){id=it.dataset.id; if(sel[id]) delete sel[id]; else sel[id]=1;}
+  else if(inc){id=inc.dataset.inc; sel[id]=Math.min(20,(sel[id]||0)+1);}
+  else {id=dec.dataset.dec; sel[id]=(sel[id]||1)-1; if(sel[id]<=0) delete sel[id];}
+  if(!Object.keys(sel).length) delete orders[active];
+  saveOrders(); changed(active); updateItem(id); renderChips(); chipInView(); refresh(); markSeen();
+});
+
+/* ---------- общий заказ ---------- */
+function summaryHTML(list,n,s){
+  const col=colleague();
+  return `<div class="sum-card"><span><span class="sum-lbl">${col?'Итого':'Итого общего заказа'}</span><span class="sum-sub">${n?peopleWord(list.length)+' · '+itemsWord(n):col?'вы пока ничего не выбрали':'пока никто ничего не выбрал'}</span></span><b class="sum-big num">${rub(s)}</b></div>`;
+}
+function checkHTML(list,agg,n,s){
+  return `
+    <article class="paper" aria-label="Чек общего заказа">
+      <div class="p-eyebrow">Кафе «${esc(CAFE)}» · заказ на доставку</div>
+      <h3 class="p-title">Заказ ПСО на ${WDacc[menuDate.getDay()]}</h3>
+      <div class="p-date num">${dmy}</div>
+      <div class="p-people">${list.map(p=>`
+        <section class="p-person">
+          <div class="p-ph"><span>${esc(p.name)}</span><span class="num">${rub(totals(p.items).s)}</span></div>
+          ${personLines(p).map(l=>`<div class="p-line"><span>${esc(l.name)} × ${l.q}</span><span class="num">${rub(l.sum)}</span></div>`).join('')}
+          ${locked()?'':`<div class="p-act"><button class="p-edit" data-edit="${esc(p.name)}">изменить</button><button class="p-drop" data-drop="${esc(p.name)}">убрать</button></div>`}
+        </section>`).join('')}
+      </div>
+      <div class="p-total"><span><b>Итого</b>${peopleWord(list.length)} · ${itemsWord(n)}</span><b class="num">${rub(s)}</b></div>
+      ${list.length>1?`<div class="p-kitchen"><h4>Всего по блюдам</h4>${aggRows(agg).map(i=>`<div class="pk"><span>${esc(i.name)}</span><span class="num">${agg[i.id]} шт · ${rub(agg[i.id]*i.price)}</span></div>`).join('')}</div>`:''}
+    </article>`;
+}
+const rosterChips = ()=>roster.map(nm=>`<span class="rchip">${esc(nm)}<button class="x" data-rm="${esc(nm)}" aria-label="Убрать ${esc(nm)} из списка">×</button></span>`).join('');
+function myPeopleHTML(){
+  return colleague()&&roster.length ? `<div class="card" style="margin-top:14px"><span class="lbl">Заказывают с этого телефона</span><div class="roster">${rosterChips()}</div><p class="hint">Лишнее имя или опечатку уберите крестиком.</p></div>` : '';
+}
+function renderOrder(){
+  const list=people(), {agg,n,s}=aggregate(list), col=colleague();
+  if(!n){
+    $('order-body').innerHTML=summaryHTML(list,n,s)+`<div class="card" style="margin-top:14px"><div class="empty"><p>${col?(isClosed()?'Приём заказов на этот день закрыт.':'Отметьте блюда в меню, и здесь появится ваш заказ.'):'Отметьте блюда в меню, и здесь появится чек со всеми коллегами и итоговой суммой.'}</p><button class="btn primary" data-go="menu">Открыть меню</button></div></div>`+myPeopleHTML();
+    return;
+  }
+  /* коллеге — только его чек; файл для кафе, копирование и очистка — только организатору */
+  $('order-body').innerHTML=summaryHTML(list,n,s)+(col?'':`
+    <div class="btns">
+      <button class="btn primary" id="copy-order">Скопировать для кафе</button>
+      <div class="btn-row">
+        <button class="btn" id="save-txt">Текстовый файл</button>
+        <button class="btn" id="save-png">Сохранить картинку</button>
+      </div>
+      ${ORDERS_API?'':'<button class="btn ghost danger" id="clear-all">Очистить весь заказ</button>'}
+    </div>`)+checkHTML(list,agg,n,s)+myPeopleHTML();
+}
+
+/* текст для кафе (файл и «Скопировать»): только блюда, количество, суммы и итог — без фамилий */
+function orderText(){
+  const {agg,n,s}=aggregate(people()), L=[];
+  L.push('ЗАКАЗ ПСО — кафе «'+CAFE+'»');
+  L.push('На '+WDacc[menuDate.getDay()]+', '+dmy);
+  L.push('');
+  aggRows(agg).forEach((i,k)=>L.push((k+1)+'. '+i.name+' × '+agg[i.id]+' — '+rub(agg[i.id]*i.price)));
+  L.push('');
+  L.push('ИТОГО: '+rub(s)+' ('+itemsWord(n)+')');
+  return L.join('\n');
+}
+
+/* картинка для кафе: те же блюда, суммы и итог — без фамилий */
+async function orderCanvas(){
+  const FB='"Onest",-apple-system,"Segoe UI",Roboto,sans-serif', FD='"Unbounded","Onest",-apple-system,sans-serif';
+  try{await Promise.all(['400 32px Onest','600 32px Onest','700 38px Onest','600 54px Unbounded','500 44px Unbounded','600 38px Unbounded'].map(f=>document.fonts.load(f)))}catch(e){}
+  const C={bg:'#F7F8F5',ink:'#1E2523',muted:'#5F6A66',line:'#D3DAD6',accent:'#4B6C63'};
+  const W=1080, P=72, {agg,n,s}=aggregate(people()), rows=aggRows(agg);
+  const cv=document.createElement('canvas'), x=cv.getContext('2d');
+  const ops=[]; let y=P+10;
+  const T=(t,font,color,xx,yy,align)=>ops.push({t,font,color,x:xx,y:yy,align:align||'left'});
+  const R=(yy,color,h)=>ops.push({rule:1,y:yy,color,h});
+  function wrap(t,font,maxW){x.font=font;const out=[];let cur='';String(t).split(/\s+/).forEach(w=>{const tt=cur?cur+' '+w:w;if(cur&&x.measureText(tt).width>maxW){out.push(cur);cur=w}else cur=tt});if(cur)out.push(cur);return out.length?out:['']}
+  T(('Кафе «'+CAFE+'» · заказ на доставку').toUpperCase(),'600 26px '+FB,C.muted,P,y+26); y+=26+30;
+  wrap('Заказ ПСО на '+WDacc[menuDate.getDay()],'600 54px '+FD,W-P*2).forEach(ln=>{T(ln,'600 54px '+FD,C.ink,P,y+54);y+=54+14});
+  y+=4; T(dmy,'500 44px '+FD,C.accent,P,y+44); y+=44+40;
+  R(y,C.ink,4); y+=8;
+  rows.forEach((i,k)=>{
+    y+=26;
+    const ll=wrap(i.name+' × '+agg[i.id],'400 34px '+FB,W-P*2-230);
+    ll.forEach((ln,j)=>T(ln,'400 34px '+FB,C.ink,P,y+34+j*46));
+    T(rub(agg[i.id]*i.price),'600 34px '+FB,C.ink,W-P,y+34,'right');
+    y+=34+(ll.length-1)*46+18;
+    if(k<rows.length-1) R(y,C.line,2);
+  });
+  y+=12; R(y,C.ink,4); y+=24;
+  T('Итого','700 38px '+FB,C.ink,P,y+42);
+  T(itemsWord(n),'400 30px '+FB,C.muted,P,y+42+44);
+  T(rub(s),'600 64px '+FD,C.ink,W-P,y+62,'right');
+  y+=42+44+34;
+  y+=P-30;
+  cv.width=W; cv.height=Math.ceil(y);
+  x.fillStyle=C.bg; x.fillRect(0,0,W,cv.height);
+  x.fillStyle=C.accent; x.fillRect(0,0,W,14);
+  x.textBaseline='alphabetic';
+  ops.forEach(o=>{if(o.rule){x.fillStyle=o.color;x.fillRect(P,o.y,W-P*2,o.h);return}x.font=o.font;x.fillStyle=o.color;x.textAlign=o.align;x.fillText(o.t,o.x,o.y)});
+  return cv;
+}
+
+/* сохранение файла: в просмотрщике Claude — его окно сохранения, иначе меню «Поделиться» телефона, иначе показать на экране */
+let dlP=null;
+function getDownloads(){
+  if(!dlP) dlP = (window.claude && typeof window.claude.use==='function') ? Promise.resolve(window.claude.use('downloads')).catch(()=>null) : Promise.resolve(null);
+  return dlP;
+}
+async function offerFile(filename,data,mime,fallback){
+  const dl=await getDownloads();
+  if(dl){
+    try{await dl.save({filename,data});toast('Файл готов');return}
+    catch(err){
+      if(err&&err.code==='declined')return;
+      if(err&&err.code==='rate_limited'){toast('Подождите секунду и нажмите ещё раз');return}
+    }
+  }
+  try{
+    const file=new File([data],filename,{type:mime});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file]});return}
+  }catch(err){if(err&&err.name==='AbortError')return}
+  fallback();
+}
+const fileBase = ()=>'Заказ_ПСО_'+dmy;
+
+/* действия в чеке (на обеих вкладках): изменить блюда участника или убрать его заказ */
+let editFor=null, editPrev='', editTemp='';
+async function startEdit(nm){
+  if(locked()){toast(lockMsg());return}
+  if(ORDERS_API&&(busy||dirty.size||Date.now()-synced>15000)) await syncNow();
+  if(!colleague()&&nm!==active){
+    if(editFor===null) editPrev=active;
+    editFor=nm;
+    if(!roster.includes(nm)){roster.push(nm);editTemp=nm}
+  }
+  go('menu'); setActive(nm); renderNotes();
+}
+function finishEdit(){
+  if(editFor===null) return;
+  const back=editPrev, tmp=editTemp; editFor=null; editPrev=''; editTemp='';
+  if(tmp){roster=roster.filter(r=>r!==tmp);saveRoster()}
+  active=roster.includes(back)?back:(roster[0]||''); saveActive();
+  renderChips(); syncMenu(); renderNotes();
+}
+document.addEventListener('click',e=>{
+  const ed=e.target.closest('[data-edit]');
+  if(ed){startEdit(ed.dataset.edit);return}
+  const dr=e.target.closest('[data-drop]');
+  if(dr){
+    if(locked()){toast(lockMsg());return}
+    const nm=dr.dataset.drop;
+    if(!dr.dataset.sure){dr.dataset.sure='1';dr.textContent='убрать заказ?';setTimeout(()=>{if(dr.isConnected){delete dr.dataset.sure;dr.textContent='убрать'}},3000);return}
+    delete orders[nm]; saveOrders(); changed(nm); syncMenu(); renderChips(); refresh(); toast('Заказ убран: '+nm);
+  }
+});
+
+/* заказы на телефоне организатора могли устареть: перед файлом для кафе обновляем их из таблицы */
+async function readyForCafe(){
+  if(ORDERS_API){
+    toast('Сверяю заказ с таблицей…');
+    await syncNow();
+    if(colleague())return false;
+    if(failed||dirty.size){toast('Не удалось сверить заказ с таблицей. Проверьте связь и повторите.');return false}
+  }
+  if(!people().length){toast('На эту дату пока нет заказов');return false}
+  return true;
+}
+/* Safari требует начать запись в буфер при нажатии. Сам текст будет готов после ответа таблицы. */
+async function copyFresh(getText){
+  const pending=getText();
+  try{
+    if(navigator.clipboard?.write && typeof ClipboardItem!=='undefined'){
+      const blob=pending.then(t=>{if(!t)throw new Error('Нет подтверждённого заказа');return new Blob([t],{type:'text/plain'})});
+      blob.catch(()=>{});
+      await navigator.clipboard.write([new ClipboardItem({'text/plain':blob})]);
+      toast('Заказ для кафе скопирован');return;
+    }
+  }catch(e){}
+  const t=await pending;
+  if(t)copy(t,'Заказ для кафе скопирован');
+}
+$('v-order').addEventListener('click',async e=>{
+  if(e.target.closest('#copy-phone')){copy(MENU.phone,'Номер скопирован');return}
+  if(e.target.closest('#copy-order')){await copyFresh(async()=>await readyForCafe()?orderText():null);return}
+  if(e.target.closest('#save-txt')){if(!(await readyForCafe()))return;const t=orderText();offerFile(fileBase()+'.txt',t,'text/plain',()=>showText(t,'Скопируйте текст заказа'));return}
+  const png=e.target.closest('#save-png');
+  if(png){
+    if(png.dataset.busy)return;
+    if(!(await readyForCafe()))return;
+    png.dataset.busy='1';
+    try{
+      const cv=await orderCanvas();
+      const blob=await new Promise(r=>cv.toBlob(r,'image/png'));
+      await offerFile(fileBase()+'.png',blob,'image/png',()=>showImage(cv.toDataURL('image/png')));
+    }finally{delete png.dataset.busy}
+    return;
+  }
+  const c=e.target.closest('#clear-all');
+  if(c){
+    if(c.dataset.sure){if(ORDERS_API){clearShared();return}orders={};saveOrders();syncMenu();renderChips();refresh();toast('Заказ очищен');return}
+    c.dataset.sure='1';c.textContent='Нажмите ещё раз, чтобы очистить весь заказ';
+    setTimeout(()=>{if(c.isConnected){delete c.dataset.sure;c.textContent='Очистить весь заказ'}},3000);
+  }
+});
+
+/* ---------- участники ---------- */
+function renderTeam(){
+  const list=people(), {agg,n,s}=aggregate(list);
+  $('team-check').innerHTML = summaryHTML(list,n,s) + (n ? checkHTML(list,agg,n,s) : '');
+  $('roster').innerHTML = roster.length ? rosterChips()
+    : `<p class="hint" style="margin:0">Список пока пуст. Добавьте участников ниже.</p>`;
+}
+$('t-add').addEventListener('submit',e=>{
+  e.preventDefault();
+  const nm=addToRoster($('t-new').value);
+  if(!nm){$('t-new').focus();return}
+  saveRoster(); $('t-new').value='';
+  if(!active){active=nm;saveActive();syncMenu()}
+  renderTeam(); renderChips(); toast('Добавлен: '+nm);
+});
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-rm]'); if(!b) return;
+  const chip=b.closest('.rchip'), nm=b.dataset.rm;
+  /* организатор убирает только имя из своего списка; коллега — своего участника вместе с его заказом */
+  const drop=!!orders[nm]&&(!ORDERS_API||colleague());
+  if(drop&&locked()){toast(lockMsg());return}
+  if(!chip.classList.contains('sure')){
+    chip.classList.add('sure'); b.textContent=drop?'Убрать с заказом?':'Убрать?';
+    setTimeout(()=>{if(chip.isConnected){chip.classList.remove('sure');b.textContent='×'}},3000);
+    return;
+  }
+  roster=roster.filter(r=>r!==nm); if(drop){delete orders[nm];changed(nm)}
+  if(active===nm) active=roster[0]||'';
+  saveRoster(); saveOrders(); saveActive();
+  renderTeam(); renderChips(); syncMenu(); refresh(); toast(drop?'Убран вместе с заказом: '+nm:orders[nm]?'Убран из списка, заказ остался: '+nm:'Убран: '+nm);
+});
+function chatMessage(){
+  const sel=curSel(), ids=sortedIds(sel), {s}=totals(sel);
+  return 'Обед ПСО · '+WDs[menuDate.getDay()]+' '+ddmm+'\n'+active+':\n'+
+    ids.map(id=>'• '+byId[id].name+' ×'+sel[id]+' — '+rub(sel[id]*byId[id].price)).join('\n')+
+    '\nИтого: '+rub(s)+'\n#ПСО '+ddmm+' '+active+': '+ids.map(id=>id+'x'+sel[id]).join(' ');
+}
+function parseText(txt){
+  const re=/#ПСО\s+(\d{1,2}\.\d{1,2})\s+([^:\n]+?)\s*:\s*([^\n]*)/gi;
+  let m, added=[], stale=0;
+  while((m=re.exec(txt))){
+    const [dd,mm]=m[1].split('.');
+    if(pad(dd)+'.'+pad(mm)!==ddmm){stale++;continue}
+    const items={};let ok=false;
+    (m[3].match(/[a-z]+\d+\s*[x×х]\s*\d+/gi)||[]).forEach(t=>{
+      const p=t.match(/([a-z]+\d+)\s*[x×х]\s*(\d+)/i), id=p[1].toLowerCase(), q=+p[2];
+      if(byId[id]&&q>0){items[id]=(items[id]||0)+q;ok=true}
+    });
+    if(!ok)continue;
+    const nm=addToRoster(m[2]); if(!nm)continue;
+    orders[nm]=items; if(!added.includes(nm))added.push(nm);
+  }
+  return {added,stale};
+}
+function showMsg(t,warn){const m=$('parse-msg');m.hidden=false;m.textContent=t;m.classList.toggle('warn',!!warn)}
+$('v-team').addEventListener('click',e=>{
+  if(e.target.closest('#parse')){
+    $('to-order').hidden=true;
+    const txt=$('paste').value;
+    if(!txt.trim()){showMsg('Вставьте текст сообщений из чата.',true);return}
+    const r=parseText(txt);
+    if(!r.added.length){showMsg(r.stale?'Эти заказы на другой день. Нужны заказы на '+ddmm+'.':'Не нашла строк «#ПСО». Попросите коллег копировать заказ кнопкой в приложении.',true);return}
+    saveRoster(); saveOrders(); r.added.forEach(changed); $('paste').value='';
+    showMsg('Добавлено: '+r.added.join(', ')+(r.stale?'. Пропущено на другой день: '+r.stale:''),false);
+    $('to-order').hidden=false;
+    if(!active){active=r.added[0];saveActive()}
+    renderTeam(); renderChips(); syncMenu(); refresh(); return;
+  }
+  if(e.target.closest('#copy-chat')){
+    if(!active){toast('Сначала выберите участника');return}
+    if(!totals(curSel()).n){toast('Отметьте блюда в меню');return}
+    copy(chatMessage(),'Скопировано. Вставьте в чат отделения');
+  }
+});
+
+/* ---------- вспомогательное ---------- */
+function copy(text,ok){
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(()=>toast(ok),()=>showText(text,'Выделите текст и скопируйте'));
+  }else showText(text,'Выделите текст и скопируйте');
+}
+let tt;function toast(t){const el=$('toast');el.textContent=t;el.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>el.classList.remove('show'),2200)}
+function sheet(inner){
+  const w=document.createElement('div');w.className='sheet';
+  w.innerHTML=`<div class="card">${inner}<div class="btns"><button class="btn primary" data-close>Готово</button></div></div>`;
+  w.addEventListener('click',e=>{if(e.target===w||e.target.closest('[data-close]'))w.remove()});
+  document.body.appendChild(w);return w;
+}
+function showText(text,title){
+  const w=sheet(`<label class="lbl" for="sheet-t">${esc(title)}</label><textarea id="sheet-t" readonly></textarea>`);
+  const ta=w.querySelector('textarea');ta.value=text;ta.focus();ta.select();
+}
+function showImage(src){
+  const w=sheet(`<span class="lbl">Нажмите на картинку и удерживайте, чтобы сохранить</span><img alt="Заказ для кафе">`);
+  w.querySelector('img').src=src;
+}
+
+/* ---------- общий заказ: все телефоны сохраняют заказы в одну Google Таблицу ---------- */
+let busy=false, again=false, failed=false, warnedUnsent=false, synced=0, lastTry=0, saveTimer=0, gen=0, waiters=[];
+const hmOf = t=>{const d=new Date(t);return pad(d.getHours())+':'+pad(d.getMinutes())};
+/* дождаться свежих данных из таблицы */
+function syncNow(){return new Promise(r=>{if(!ORDERS_API)return r();waiters.push(r);syncOrders()})}
+function changed(nm){
+  if(!ORDERS_API) return;
+  dirty.add(nm); saveDirty();
+  showSync();
+  clearTimeout(saveTimer); saveTimer=setTimeout(syncOrders,cutoffAt-Date.now()<5000?0:1000);
+}
+/* участники этого телефона: коллеге таблица отдаёт заказы только по ним */
+const myNames = ()=>[...new Set(roster.concat(Object.keys(orders),[...dirty]))];
+/* все запросы — POST без своих заголовков: Apps Script не отвечает на предварительные CORS-запросы */
+async function post(body){
+  const controller=new AbortController(), timeout=setTimeout(()=>controller.abort(),20000);
+  try{
+    const r=await fetch(ORDERS_API,{method:'POST',signal:controller.signal,body:JSON.stringify(Object.assign({date:MENU.date},body))});
+    if(!r.ok)throw new Error('http');
+    return await r.json();
+  }finally{clearTimeout(timeout)}
+}
+async function api(body,scope){
+  const requestKey=adminKey;
+  const j=await post(Object.assign(requestKey?{key:requestKey}:{names:scope||[]},body));
+  if(j?.error==='closed')throw new Error('closed');
+  if(j&&j.error==='key'&&requestKey===adminKey&&adminKey){leaveOrganizer('Код организатора изменился — войдите снова');throw new Error('key')}
+  if(!j||!j.ok||!j.orders||typeof j.orders!=='object') throw new Error('bad reply');
+  return j.orders;
+}
+function payload(nm){
+  const items=orders[nm]||{};
+  return {name:nm, items, sum:totals(items).s, text:personLines({name:nm,items}).map(l=>l.name+' × '+l.q).join('; ')};
+}
+async function syncOrders(){
+  if(!ORDERS_API) return;
+  if(busy){again=true;return}
+  busy=true; again=false; lastTry=Date.now(); clearTimeout(saveTimer);
+  const g=gen, names=[...dirty], sent={}, scope=adminKey?null:myNames(), readOnly=locked();
+  names.forEach(nm=>sent[nm]=JSON.stringify(orders[nm]||{}));
+  try{
+    const srv=await api(names.length&&!readOnly?{set:names.map(payload)}:{},scope);
+    if(g===gen){
+      if(readOnly&&names.length){
+        const remote=new Map(Object.entries(srv).map(([nm,it])=>[nm.toLowerCase(),it]));
+        const rejected=names.filter(nm=>canon({x:orders[nm]||{}})!==canon({x:remote.get(nm.toLowerCase())||{}}));
+        if(rejected.length){missed=[...new Set(missed.concat(rejected))];store.set(K_MISSED,missed)}
+      }
+      names.forEach(nm=>{if(JSON.stringify(orders[nm]||{})===sent[nm])dirty.delete(nm)});
+      saveDirty(); applyServer(srv,scope);
+      if(readOnly&&names.length){renderNotes();if(missed.length)toast('Последние изменения не приняты. Проверьте «Мой заказ».')}
+      if(!readOnly&&names.includes(active)&&current==='menu'&&!dirty.has(active)) toast('Заказ сохранён');
+    }else again=true;
+    failed=false; warnedUnsent=false; synced=Date.now();
+  }catch(e){
+    if(e.message==='closed'){serverClosed=true;tickDeadline();again=true}
+    else if(e.message==='key') again=true;
+    else{
+      if(names.length&&!warnedUnsent){warnedUnsent=true;toast('Нет связи — заказ пока НЕ отправлен. Не закрывайте приложение, пока не появится интернет')}
+      failed=true;
+    }
+  }
+  busy=false; showSync();
+  if(again) syncOrders(); else waiters.splice(0).forEach(f=>f());
+}
+/* уходят из приложения с неотправленным заказом — пробуем отправить «вдогонку» (подтвердит следующая синхронизация) */
+function flushOnHide(){
+  if(!ORDERS_API||!dirty.size||busy||locked()) return;
+  try{fetch(ORDERS_API,{method:'POST',keepalive:true,body:JSON.stringify(Object.assign({date:MENU.date},adminKey?{key:adminKey}:{names:myNames()},{set:[...dirty].map(payload)}))}).catch(()=>{})}catch(e){}
+}
+/* таблица — главный источник; сильнее неё только изменения с этого телефона, которые ещё не сохранены */
+const canon=o=>JSON.stringify(Object.keys(o).sort().map(nm=>[nm,Object.keys(o[nm]).sort().map(id=>[id,o[nm][id]])]));
+function applyServer(srv,scope){
+  const got=Object.create(null);
+  Object.keys(srv).forEach(k=>{
+    const nm=cleanName(k), src=srv[k], it={};
+    if(!nm||nm==='__proto__'||!src||typeof src!=='object') return;
+    Object.keys(src).forEach(id=>{const q=Math.min(20,Math.floor(+src[id]));if(ORDER.includes(id)&&q>0)it[id]=q});
+    if(Object.keys(it).length) got[nm.toLowerCase()]=[nm,it];
+  });
+  let next={};
+  if(scope){   /* коллеге таблица вернула только его участников: обновляем только их */
+    next=Object.assign({},orders);
+    scope.forEach(nm=>{const g=got[nm.toLowerCase()];if(g)next[nm]=g[1];else delete next[nm]});
+  }else Object.keys(got).forEach(k=>next[got[k][0]]=got[k][1]);
+  dirty.forEach(nm=>{if(orders[nm])next[nm]=orders[nm];else delete next[nm]});
+  if(canon(next)===canon(orders)) return;
+  orders=next; saveOrders(); syncMenu(); renderChips(); refresh();
+}
+async function clearShared(){
+  gen++;
+  try{await api({clear:true},null)}
+  catch(e){if(e.message!=='key')toast('Нет связи — заказ не очищен');return}
+  dirty.clear(); saveDirty(); orders={}; saveOrders(); syncMenu(); renderChips(); refresh(); toast('Заказ очищен');
+}
+function showSync(){
+  const el=$('sync');
+  el.hidden=!ORDERS_API; if(!ORDERS_API) return;
+  const hm=hmOf(synced), col=colleague(), unsent=failed&&dirty.size>0;
+  const late=col&&missed.length>0;
+  el.classList.toggle('warn',failed||late);
+  el.textContent = unsent&&col ? 'Нет связи. Сохранение изменений в общей таблице пока не подтверждено.'
+    : failed ? 'Нет связи. Показано то, что сохранено на этом телефоне.'
+    : late ? 'К 21:00 таблица не подтвердила последние изменения: '+missed.join(', ')+'. Здесь показан принятый заказ. Для исправления свяжитесь с организатором.'
+    : !synced ? 'Загружаю заказы…'
+    : !col ? 'Заказы всех коллег · обновлено в '+hm
+    : dirty.size ? 'Сохраняю заказ…'
+    : isClosed() ? (Object.keys(orders).length ? 'Приём закрыт. Заказ передан организатору · '+hm : 'Приём заказов на этот день закрыт')
+    : Object.keys(orders).length ? 'Заказ сохранён и передан организатору · '+hm
+    : 'Обновлено в '+hm;
+  $('cart').classList.toggle('unsent',unsent);
+  cartText();
+}
+
+/* ---------- кто пользуется: коллега видит только свой заказ, организатор — все заказы и общую сумму ---------- */
+function applyRole(){
+  const col=colleague(), link=$('org-link');
+  document.querySelector('.tab[data-v="team"]').hidden=col;
+  document.querySelector('.tab[data-v="arch"]').hidden=col||!ORDERS_API;
+  const nTabs=col?2:ORDERS_API?4:3;
+  document.querySelector('.tabs').style.gridTemplateColumns='repeat('+nTabs+',1fr)';
+  document.querySelector('.tabs').classList.toggle('four',nTabs===4);
+  $('order-tab-lbl').textContent=col?'Мой заказ':nTabs===4?'Заказы':'Общий заказ';
+  $('order-title').textContent=col?'Мой заказ':'Общий заказ ПСО';
+  $('v-order').setAttribute('aria-label',col?'Мой заказ':'Общий заказ');
+  $('cafe-phone').hidden=col;
+  link.hidden=!ORDERS_API; delete link.dataset.sure;
+  link.textContent=col?'Вход для организатора':'Выйти из режима организатора';
+  if(col){arch=null;$('arch-body').innerHTML='';archMsg('')}
+  renderMenu(); renderNotes();
+  if(col&&(current==='team'||current==='arch')) go('menu');
+  renderPush();
+}
+function leaveOrganizer(msg){
+  gen++; adminKey=''; store.set('pso:admin','');
+  /* на телефоне остаются только свои участники */
+  Object.keys(orders).forEach(nm=>{if(!roster.includes(nm)&&!dirty.has(nm))delete orders[nm]});
+  saveOrders(); applyRole(); syncMenu(); renderChips(); refresh(); showSync(); toast(msg); resubscribe();
+}
+function orgLogin(){
+  const w=document.createElement('div'); w.className='sheet';
+  w.innerHTML=`<form class="card"><label class="lbl" for="org-code">Код организатора</label>
+    <input type="text" id="org-code" inputmode="numeric" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done">
+    <p class="hint">Код — в Google Таблице организатора, на листе «Настройки».</p>
+    <div class="msg warn" id="org-msg" hidden></div>
+    <div class="btn-row" style="margin-top:16px"><button class="btn" type="button" data-close>Отмена</button><button class="btn primary" type="submit">Войти</button></div></form>`;
+  const inp=w.querySelector('#org-code'), msg=w.querySelector('#org-msg');
+  const say=t=>{msg.hidden=false;msg.textContent=t};
+  w.addEventListener('click',e=>{if(e.target===w||e.target.closest('[data-close]'))w.remove()});
+  w.querySelector('form').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const code=inp.value.trim(); if(!code){inp.focus();return}
+    msg.hidden=true;
+    const sb=w.querySelector('button[type=submit]'); if(sb.disabled) return;
+    sb.disabled=true; sb.textContent='Проверяю…';
+    let j=null; try{j=await post({key:code})}catch(err){}
+    sb.disabled=false; sb.textContent='Войти';
+    if(j&&j.error==='wait'){say('Слишком много неверных попыток. Подождите 10 минут.');return}
+    if(j&&j.error==='key'){say('Неверный код');inp.select();return}
+    if(!j||!j.ok||!j.admin||!j.orders){say('Нет связи. Попробуйте ещё раз.');return}
+    gen++; adminKey=code; store.set('pso:admin',code); w.remove();
+    failed=false; synced=Date.now();
+    applyRole(); applyServer(j.orders,null); go('order'); showSync(); toast('Режим организатора включён'); resubscribe();
+    if(dirty.size) syncOrders();
+  });
+  document.body.appendChild(w); inp.focus();
+}
+$('org-link').addEventListener('click',e=>{
+  const b=e.currentTarget;
+  if(colleague()){orgLogin();return}
+  if(!b.dataset.sure){
+    b.dataset.sure='1'; b.textContent='Нажмите ещё раз, чтобы выйти';
+    setTimeout(()=>{if(b.dataset.sure){delete b.dataset.sure;b.textContent='Выйти из режима организатора'}},3000);
+    return;
+  }
+  leaveOrganizer('Вы вышли из режима организатора'); syncOrders();
+});
+
+/* ---------- новое меню: заметка в приложении, значок на иконке ---------- */
+const K_SEEN='pso:menuSeen';
+const seenMenu=String(store.get(K_SEEN,'')||'');
+let newMenu=!!seenMenu&&seenMenu<MENU.date&&MENU.date>=todayISO(), freshMenu='';
+if(!seenMenu||seenMenu>MENU.date) store.set(K_SEEN,MENU.date);
+function markSeen(){if(newMenu){newMenu=false;renderNotes()}store.set(K_SEEN,MENU.date)}
+function deadlineText(){
+  const dl=new Date(Y,M-1,D-1);
+  return cutoffTime+' по Челябинску, '+WDs[dl.getDay()]+' '+pad(dl.getDate())+'.'+pad(dl.getMonth()+1);
+}
+/* приложение открыли — снять значок с иконки и уже показанные уведомления о меню */
+function clearBadge(){
+  try{if(navigator.clearAppBadge)navigator.clearAppBadge().catch(()=>{})}catch(e){}
+  if(swReg&&swReg.getNotifications) swReg.getNotifications().then(l=>l.forEach(n=>{if(n.tag==='menu'||n.tag==='summary')n.close()})).catch(()=>{});
+}
+/* приложение открыто долго: раз в 5 минут смотрим, не вышло ли новое меню */
+let checkingMenu=false, lastMenuCheck=0;
+const versionOf=doc=>['menu-data','order-app'].map(id=>doc.getElementById(id)?.textContent||'').join('\u0000');
+const ownVersion=versionOf(document);
+async function checkFresh(onReturn=false){
+  if(document.visibilityState!=='visible'||checkingMenu)return;
+  if(onReturn&&Date.now()-lastMenuCheck<10000&&!freshMenu)return;
+  checkingMenu=true; lastMenuCheck=Date.now();
+  try{
+    const response=await fetch(location.pathname,{cache:'no-store'});
+    if(!response.ok)return;
+    const doc=new DOMParser().parseFromString(await response.text(),'text/html');
+    const data=JSON.parse(doc.getElementById('menu-data').textContent);
+    if(data.date<MENU.date||!Array.isArray(data.sections)||versionOf(doc)===ownVersion)return;
+    freshMenu=data.date;renderNotes();
+    if(onReturn&&!dirty.size&&!document.querySelector('.sheet')&&($('add-row').hidden||!$('p-new').value.trim()))location.reload();
+  }catch(e){}finally{checkingMenu=false}
+}
+async function reloadMenu(){
+  if(dirty.size)await syncNow();
+  if(dirty.size){toast('Сначала нужно сохранить заказ. Проверьте связь и повторите.');return}
+  location.reload();
+}
+
+/* ---------- уведомления о новом меню (Web Push через Google Таблицу организатора) ---------- */
+const isIOS=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const standalone=navigator.standalone===true||!!(window.matchMedia&&matchMedia('(display-mode: standalone)').matches);
+const pushOK=!!(ORDERS_API&&'serviceWorker' in navigator&&'PushManager' in window&&'Notification' in window);
+const K_ASK='pso:pushAsk', K_PSYNC='pso:pushSync2';
+/* подписка телефона; с кодом организатора таблица присылает сюда и вечернюю сводку заказов */
+const subReq=()=>Object.assign({action:'subscribe',sub:pushSub.toJSON()},adminKey?{key:adminKey}:{});
+/* вошли или вышли из режима организатора — сообщить таблице, нужна ли этому телефону сводка */
+/* отметку «сверено» ставим, только когда таблица подтвердила роль (старый скрипт код не читает — тогда спросим снова) */
+const subOk=j=>!!(j&&j.ok&&(!adminKey||j.org===true));
+/* ответ таблицы на подписку: запомнить, подтверждена ли сводка организатора (старый скрипт поля org не знает) */
+function afterSub(j){
+  if(subOk(j)) store.set(K_PSYNC,todayISO());
+  if(j&&j.ok&&j.org!==null){store.set('pso:pushOrg',j.org===true);renderPush()}
+}
+/* отметку «сверено» сбрасываем до запроса: если он не дойдёт, телефон переспросит при следующем открытии */
+function resubscribe(){if(pushSub&&pushState==='on'){store.set(K_PSYNC,'');post(subReq()).then(afterSub).catch(()=>{})}}
+/* состояние: none — не показываем; install — iPhone без значка на экране «Домой»; off, busy, on, denied */
+let swReg=null, pushSub=null, pushKey=String(store.get('pso:pushKey','')||''), pushState='none';
+const b64uBytes=s=>{s=s.replace(/-/g,'+').replace(/_/g,'/');const b=atob(s+'==='.slice((s.length+3)%4));return Uint8Array.from(b,c=>c.charCodeAt(0))};
+async function getPushKey(){
+  if(pushKey) return pushKey;
+  try{const j=await post({action:'push-key'});if(j&&j.ok&&typeof j.key==='string'&&j.key){pushKey=j.key;store.set('pso:pushKey',pushKey)}}catch(e){}
+  return pushKey;
+}
+async function initPush(){
+  if(!ORDERS_API) return;
+  /* iPhone в Safari: подсказать про экран «Домой», но только если скрипт в таблице уже умеет уведомлять */
+  if(!pushOK){if(isIOS&&!standalone&&await getPushKey())pushState='install';renderPush();return}
+  try{swReg=await navigator.serviceWorker.register('sw.js');pushSub=await swReg.pushManager.getSubscription()}
+  catch(e){renderPush();return}
+  clearBadge();
+  /* старая версия скрипта в таблице ключа не отдаёт — тогда уведомлений просто нет */
+  if(!(await getPushKey())){renderPush();return}
+  if(Notification.permission==='denied') pushState='denied';
+  else if(pushSub&&Notification.permission==='granted'){
+    pushState='on';
+    /* раз в день напоминаем таблице об этом телефоне: вдруг его строку удалили */
+    if(store.get(K_PSYNC,'')!==todayISO()) post(subReq()).then(afterSub).catch(()=>{});
+  }
+  else pushState='off';
+  renderPush();
+}
+async function enablePush(){
+  if(pushState==='busy') return;
+  /* разрешение спрашиваем сразу по нажатию: иначе iPhone не покажет запрос */
+  let perm=Notification.permission;
+  try{perm=await Notification.requestPermission()}catch(e){}
+  if(perm!=='granted'){pushState=perm==='denied'?'denied':'off';renderPush();if(perm!=='denied')toast('Уведомления не включены');return}
+  pushState='busy'; renderPush();
+  try{
+    const key=await getPushKey(); if(!key) throw new Error('key');
+    if(!swReg) swReg=await navigator.serviceWorker.register('sw.js');
+    await navigator.serviceWorker.ready;
+    pushSub=await swReg.pushManager.getSubscription()||await swReg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64uBytes(key)});
+    const j=await post(subReq());
+    if(!j||!j.ok) throw new Error(j&&j.error||'reply');
+    pushState='on'; afterSub(j); store.set(K_ASK,todayISO());
+    toast('Уведомления включены');
+  }catch(e){
+    pushState=Notification.permission==='denied'?'denied':'off';
+    toast('Не получилось включить. Проверьте интернет и попробуйте ещё раз');
+  }
+  renderPush();
+}
+async function disablePush(){
+  const ep=pushSub&&pushSub.endpoint;
+  try{if(pushSub)await pushSub.unsubscribe()}catch(e){}
+  if(ep) post({action:'unsubscribe',endpoint:ep}).catch(()=>{});
+  pushSub=null; pushState='off'; store.set(K_ASK,todayISO()); renderPush(); toast('Уведомления выключены');
+}
+async function testPush(btn){
+  if(!pushSub||btn.dataset.busy) return;
+  btn.dataset.busy='1';
+  try{
+    let j=await post({action:'push-test',endpoint:pushSub.endpoint});
+    if(j&&j.error==='unknown'){afterSub(await post(subReq()));toast('Телефон заново записан. Нажмите «Проверить» через 20 секунд');return}
+    if(j&&j.ok) toast('Отправлено — уведомление придёт через несколько секунд');
+    else if(j&&j.error==='wait') toast('Подождите 20 секунд и нажмите ещё раз');
+    else toast('Служба уведомлений не приняла сообщение'+(j&&j.status?' (код '+j.status+')':''));
+  }catch(e){toast('Нет связи')}
+  finally{delete btn.dataset.busy}
+}
+async function notifyAll(btn){
+  if(btn.dataset.busy) return;
+  btn.dataset.busy='1';
+  try{
+    const j=await post({action:'notify'});
+    if(!j||!j.ok) toast(j&&j.error==='menu'?'Не удалось прочитать меню на сайте':'Не получилось. Попробуйте позже');
+    else if(j.sent) toast('Уведомление о новом меню отправлено: '+j.sent+' '+plural(j.sent,'телефон','телефона','телефонов'));
+    else toast('О меню на '+j.date.slice(8)+'.'+j.date.slice(5,7)+' уже сообщили всем');
+  }catch(e){toast('Нет связи')}
+  finally{delete btn.dataset.busy}
+}
+async function summaryNow(btn){
+  if(btn.dataset.busy) return;
+  btn.dataset.busy='1';
+  try{
+    const req=()=>post({action:'summary',key:adminKey,endpoint:pushSub?pushSub.endpoint:''});
+    let j=await req();
+    if(j&&j.ok&&!j.total&&pushSub){afterSub(await post(subReq()));j=await req()}
+    if(j&&j.error==='key'){leaveOrganizer('Код организатора изменился — войдите снова');return}
+    if(!j||!j.ok) toast(j&&j.error==='action'?'Сводка заработает после обновления скрипта в таблице':'Не получилось. Попробуйте позже');
+    else if(j.sent) toast('Сводка отправлена — придёт через несколько секунд');
+    else toast(j.text||'Нет телефонов организатора с уведомлениями');
+  }catch(e){toast('Нет связи')}
+  finally{delete btn.dataset.busy}
+}
+function renderPush(){
+  const card=$('push-card'), org=!colleague(), orgOk=org&&store.get('pso:pushOrg',false)===true;
+  const sumLine=!org?'':orgOk?' Около 21:00 придёт сводка: сколько человек заказало и на какую сумму.':pushState==='on'?' Сводка заказов в 21:00 заработает после обновления скрипта в таблице.':' А вам как организатору около 21:00 придёт сводка: сколько человек заказало и на какую сумму.';
+  const deny=isIOS?'Разрешите их: «Настройки» телефона → «Уведомления» → «Обед ПСО».':'Разрешите их в настройках браузера: значок слева от адреса → «Уведомления».';
+  const body={
+    install:`<p class="hint" style="margin:0">На iPhone уведомления работают, когда приложение добавлено на экран «Домой»: в Safari нажмите «Поделиться» <b>⬆︎</b> → <b>«На экран „Домой“»</b>, откройте «Обед ПСО» со значка и включите их здесь.</p>`,
+    off:`<p class="hint" style="margin:0">Телефон сообщит, когда появится меню на следующий день.${sumLine}</p><div class="btns"><button class="btn primary" data-push="on">Включить уведомления</button></div>`,
+    busy:`<p class="hint" style="margin:0">Включаю…</p>`,
+    on:`<p class="hint" style="margin:0">Телефон сообщит, когда появится новое меню.${sumLine}</p><div class="btn-row" style="margin-top:14px"><button class="btn" data-push="test">Проверить</button><button class="btn" data-push="off">Выключить</button></div>`,
+    denied:`<p class="hint" style="margin:0">Уведомления для «Обед ПСО» запрещены в настройках. ${deny}</p>`
+  }[pushState];
+  card.hidden=!body&&!(org&&pushKey);
+  card.innerHTML=(body?`<span class="lbl">${pushState==='on'?'🔔 Уведомления включены':pushState==='denied'?'🔕 Уведомления выключены':'🔔 Уведомления о новом меню'}</span>${body}`:'')+
+    (org&&pushKey?`<div class="btns">${pushState==='on'?'<button class="btn" data-push="sum">Прислать сводку сейчас</button>':''}<button class="btn ghost" data-push="all">Сообщить всем о новом меню</button></div>`:'');
+  renderNotes();
+}
+
+/* заметки над меню: новое меню, предложение включить уведомления, новое меню вышло, пока приложение открыто */
+function renderNotes(){
+  const box=$('menu-notes'), N=[];
+  if(editFor!==null) N.push(`<div class="note edit"><span class="note-txt">✏️ Вы меняете заказ: <b>${esc(editFor)}</b></span><button class="btn primary sm" data-go="order">Готово</button></div>`);
+  if(locked()&&MENU.date>=todayISO()) N.push(`<div class="note lock"><span class="note-txt">🔒 ${esc(lockMsg())}</span></div>`);
+  if(colleague()&&missed.length) N.push('<div class="note lock">Часть изменений не вошла в заказ. Подробности во вкладке «Мой заказ».</div>');
+  if(freshMenu) N.push(`<div class="note new"><span class="note-txt">${freshMenu>MENU.date?'Опубликовано новое меню.':'Доступна обновлённая версия.'}</span><button class="btn primary sm" data-reload>Обновить</button></div>`);
+  else if(newMenu) N.push(`<div class="note new"><span class="note-txt"><b>Новое меню</b> на ${WDacc[menuDate.getDay()]}, ${ddmm}.${isClosed()?'':' Отметьте блюда до '+esc(deadlineText())+'.'}</span><button class="note-x" data-note="new" aria-label="Скрыть">×</button></div>`);
+  const asked=String(store.get(K_ASK,'')||''), askAgain=!asked||(Date.now()-new Date(asked).getTime())>14*864e5;
+  if(askAgain&&pushState==='off') N.push(`<div class="note"><span class="note-txt">🔔 Сообщать, когда появится новое меню?</span><span class="note-btns"><button class="btn primary sm" data-push="on">Включить</button><button class="btn ghost sm" data-note="ask">Не сейчас</button></span></div>`);
+  if(askAgain&&pushState==='install') N.push(`<div class="note"><span class="note-txt">🔔 Чтобы телефон сообщал о новом меню, добавьте приложение на экран «Домой»: «Поделиться» <b>⬆︎</b> → <b>«На экран „Домой“»</b>.</span><button class="note-x" data-note="ask" aria-label="Скрыть">×</button></div>`);
+  box.innerHTML=N.join('');
+}
+document.addEventListener('click',e=>{
+  const p=e.target.closest('[data-push]');
+  if(p){const a=p.dataset.push;if(a==='on')enablePush();else if(a==='off')disablePush();else if(a==='test')testPush(p);else if(a==='all')notifyAll(p);else if(a==='sum')summaryNow(p);return}
+  const n=e.target.closest('[data-note]');
+  if(n){if(n.dataset.note==='new')markSeen();else{store.set(K_ASK,todayISO());renderNotes()}return}
+  if(e.target.closest('[data-reload]')) reloadMenu();
+});
+
+/* ---------- архив заказов: только организатору ---------- */
+const MONTHS=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const MONTHSgen=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+let arch=null, archAt=0, archRequest=null;
+function archMsg(t,warn){const m=$('arch-msg');m.hidden=!t;m.textContent=t||'';m.classList.toggle('warn',!!warn)}
+function loadArchive(force){
+  if(!ORDERS_API||colleague())return Promise.resolve(false);
+  if(archRequest)return archRequest;
+  if(!force&&arch&&Date.now()-archAt<60000){renderArchive();return Promise.resolve(true)}
+  archRequest=fetchArchive(gen).finally(()=>{archRequest=null});
+  return archRequest;
+}
+async function fetchArchive(role){
+  archMsg('Обновляю архив…');
+  try{
+    const j=await post({action:'archive',key:adminKey});
+    if(role!==gen||colleague())return false;
+    if(j&&j.error==='key'){leaveOrganizer('Код организатора изменился — войдите снова');return}
+    if(j&&j.error==='wait'){archMsg('С чужих устройств вводили неверный код. Архив откроется через 10 минут.',true);return}
+    if(!j||!j.ok) throw new Error('reply');
+    if(!Array.isArray(j.days)){arch=null;$('arch-body').innerHTML='';archMsg('Архив заработает после обновления скрипта в Google Таблице.',true);return}
+    arch=j.days; archAt=Date.now(); archMsg(''); renderArchive();return true;
+  }catch(e){archMsg(arch?'Нет связи. Показан архив, загруженный раньше.':'Нет связи. Попробуйте ещё раз.',true)}
+}
+/* блюда участника хранятся в таблице текстом «Суп × 1; Котлета × 2» */
+const archLines=t=>String(t||'').split(/;\s*/).map(s=>s.trim()).filter(Boolean).map(s=>{const m=s.match(/^(.*\S)\s*[×x]\s*(\d+)$/);return m?{name:m[1],q:+m[2]}:{name:s,q:0}});
+function archDay(d){const [y,m,dd]=d.split('-').map(Number);return new Date(y,m-1,dd)}
+const archLabel=d=>{const t=archDay(d);return WDs[t.getDay()]+' '+pad(t.getDate())+'.'+pad(t.getMonth()+1)};
+function archMonths(){
+  const out=[];
+  (arch||[]).forEach(day=>{const k=day.date.slice(0,7);let m=out.find(x=>x.k===k);if(!m)out.push(m={k,days:[]});m.days.push(day)});
+  return out;
+}
+function monthPeople(m){
+  const by={};
+  m.days.forEach(d=>d.people.forEach(p=>{const k=p.name.toLowerCase();(by[k]=by[k]||{name:p.name,sum:0,days:0});by[k].sum+=p.sum;by[k].days++}));
+  return Object.keys(by).map(k=>by[k]).sort((a,b)=>a.name.localeCompare(b.name,'ru'));
+}
+function renderArchive(){
+  const body=$('arch-body');
+  if(!arch){body.innerHTML='';return}
+  if(!arch.length){body.innerHTML=`<div class="card"><div class="empty"><p>Пока пусто. Здесь появятся заказы по дням, когда коллеги начнут заказывать.</p></div></div>`;return}
+  const expanded=new Set(Array.from(body.querySelectorAll('details[open][data-date]'),el=>el.dataset.date));
+  body.innerHTML=archMonths().map(m=>{
+    const [y,mm]=m.k.split('-').map(Number), total=m.days.reduce((s,d)=>s+d.sum,0), mp=monthPeople(m);
+    return `<section class="arch-month">
+      <header class="arch-mh"><h3>${MONTHS[mm-1]} ${y}</h3><span class="num">${m.days.length} ${plural(m.days.length,'день','дня','дней')} · ${rub(total)}</span></header>
+      <div class="list">${m.days.map(d=>{
+        const dishes={};
+        d.people.forEach(p=>archLines(p.text).forEach(l=>{if(l.q)dishes[l.name]=(dishes[l.name]||0)+l.q}));
+        const dn=Object.keys(dishes);
+        return `<details class="arch-day" data-date="${esc(d.date)}" ${expanded.has(d.date)?'open':''}>
+          <summary><span>${archLabel(d.date)}${d.date===MENU.date&&!isClosed()?' <span class="cur">идёт сбор</span>':''}</span><span class="ad-s num">${d.people.length} чел. · ${rub(d.sum)}</span></summary>
+          <div class="ad-body">
+            ${d.people.map(p=>`<div class="ap"><div class="ap-h"><b>${esc(p.name)}</b><span class="num">${rub(p.sum)}</span></div>${archLines(p.text).map(l=>`<div class="ap-l">${esc(l.name)}${l.q?' × '+l.q:''}</div>`).join('')}</div>`).join('')}
+            ${dn.length?`<div class="p-kitchen"><h4>Всего по блюдам</h4>${dn.map(n=>`<div class="pk"><span>${esc(n)}</span><span class="num">${dishes[n]} шт</span></div>`).join('')}</div>`:''}
+            <div class="btns"><button class="btn sm" data-copy-day="${d.date}">Скопировать суммы по коллегам</button>${dn.length?`<button class="btn sm" data-copy-cafe="${d.date}">Скопировать для кафе</button>`:''}</div>
+          </div>
+        </details>`}).join('')}
+      </div>
+      <details class="arch-sum card">
+        <summary>По коллегам за месяц</summary>
+        <div class="ad-body" style="padding:6px 0 0">
+          ${mp.map(p=>`<div class="pk"><span>${esc(p.name)} <span class="ad-s">· ${p.days} ${plural(p.days,'день','дня','дней')}</span></span><span class="num">${rub(p.sum)}</span></div>`).join('')}
+          <div class="btns"><button class="btn sm" data-copy-month="${m.k}">Скопировать</button></div>
+        </div>
+      </details>
+    </section>`}).join('');
+}
+$('v-arch').addEventListener('click',e=>{
+  if(e.target.closest('#arch-reload')){loadArchive(true);return}
+  const cd=e.target.closest('[data-copy-day]');
+  if(cd){
+    const d=(arch||[]).find(x=>x.date===cd.dataset.copyDay); if(!d) return;
+    const t=archDay(d.date);
+    copy(['Обед ПСО · '+WD[t.getDay()]+', '+t.getDate()+' '+MONTHSgen[t.getMonth()]+' '+t.getFullYear()]
+      .concat(d.people.map(p=>p.name+' — '+rub(p.sum)),['Итого: '+rub(d.sum)+' ('+peopleWord(d.people.length)+')']).join('\n'),'Суммы скопированы');
+    return;
+  }
+  const cc=e.target.closest('[data-copy-cafe]');
+  if(cc){
+    const date=cc.dataset.copyCafe;
+    copyFresh(async()=>{
+      if(!await loadArchive(true))return null;
+      const d=arch.find(day=>day.date===date);
+      if(!d){toast('В архиве больше нет заказов на этот день');return null}
+      const t=archDay(d.date), dishes=new Map();
+      for(const person of d.people){
+        const lines=archLines(person.text);
+        if(!lines.length||lines.some(line=>!line.q)){toast('В архиве есть неполная запись. Сверьте блюда в таблице.');return null}
+        for(const line of lines)dishes.set(line.name,(dishes.get(line.name)||0)+line.q);
+      }
+      return ['ЗАКАЗ ПСО — кафе «'+CAFE+'»','На '+WDacc[t.getDay()]+', '+pad(t.getDate())+'.'+pad(t.getMonth()+1)+'.'+t.getFullYear(),'']
+        .concat(Array.from(dishes,([name,q],i)=>(i+1)+'. '+name+' × '+q),['','ИТОГО: '+rub(d.sum)]).join('\n');
+    });
+    return;
+  }
+  const cm=e.target.closest('[data-copy-month]');
+  if(cm){
+    const m=archMonths().find(x=>x.k===cm.dataset.copyMonth); if(!m) return;
+    const [y,mm]=m.k.split('-').map(Number), mp=monthPeople(m);
+    copy(['Обед ПСО · '+MONTHS[mm-1].toLowerCase()+' '+y]
+      .concat(mp.map(p=>p.name+' — '+rub(p.sum)+' ('+p.days+' '+plural(p.days,'день','дня','дней')+')'),['Итого: '+rub(m.days.reduce((s,d)=>s+d.sum,0))]).join('\n'),'Суммы за месяц скопированы');
+  }
+});
+
+/* ---------- вкладки ---------- */
+let current='menu';
+function cartText(){
+  const my=totals(curSel()), unsent=ORDERS_API&&failed&&dirty.size>0;
+  $('cart-n').textContent = (unsent?'⚠ Не отправлено · ':'')+(active ? active+': '+itemsWord(my.n)+' · '+rub(my.s) : 'Участник не выбран');
+}
+function refresh(){
+  const my=totals(curSel()), list=people(), all=aggregate(list);
+  cartText();
+  $('cart-sum').textContent = 'ИТОГО '+rub(all.s);
+  $('cart').hidden = !(all.n>0 && current==='menu');
+  $('order-cnt').hidden = !list.length; $('order-cnt').textContent = list.length;
+  $('who-wrap').hidden = current!=='menu';
+  if(current==='order') renderOrder();
+  if(current==='team') renderTeam();
+}
+function go(v){
+  if(v!=='menu'&&editFor!==null) finishEdit();
+  if((v==='team'||v==='arch')&&colleague()) v='menu';
+  if(v==='arch'&&!ORDERS_API) v='menu';
+  current=v;
+  document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.v===v));
+  ['menu','order','team','arch'].forEach(k=>$('v-'+k).hidden=k!==v);
+  refresh(); window.scrollTo({top:0});
+  if(v==='order') getDownloads();
+  if(ORDERS_API&&v!=='menu'&&v!=='arch'&&Date.now()-lastTry>10000) syncOrders();
+  if(v==='arch') loadArchive(false);
+  try{sessionStorage.setItem('pso:tab',v)}catch(e){}
+}
+document.querySelector('.tabs').addEventListener('click',e=>{const t=e.target.closest('.tab');if(t)go(t.dataset.v)});
+$('cart').addEventListener('click',()=>go('order'));   /* нажимается вся плашка «ИТОГО», не только ОК */
+document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g)go(g.dataset.go)});
+
+renderChips(); renderMenu();
+if(!roster.length) openAdd(false);
+let start='menu';try{start=sessionStorage.getItem('pso:tab')||'menu'}catch(e){}
+if(!['menu','order','team','arch'].includes(start)) start='menu';
+applyRole();
+go(start);
+showSync();
+if(ORDERS_API){
+  saveDirty(); if(!busy) syncOrders();
+  setInterval(()=>{if(document.visibilityState==='visible')syncOrders()},60000);
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')syncOrders()});
+  addEventListener('online',()=>syncOrders());
+}
+if(ORDERS_API){$('chat-in').hidden=true;$('chat-out').hidden=true}
+renderNotes(); initPush(); checkFresh();
+setInterval(checkFresh,5*60000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flushOnHide()});
+addEventListener('pagehide',flushOnHide);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){tickDeadline();clearBadge();checkFresh(true)}});
+})();
+</script>
+
+</body></html>
