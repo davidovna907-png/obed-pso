@@ -26,13 +26,14 @@ textarea{width:100%;height:50vh;margin-top:12px;background:var(--surface-2);colo
 <body>
 <main>
   <h1>Подключение общего заказа</h1>
-  <p>Чтобы общая таблица тоже закрывала приём в 21:00 по Челябинску, один раз обновите скрипт в таблице заказов.</p>
+  <p>Для публикации меню по фото один раз обновите скрипт в таблице «Обед ПСО- заказ».</p>
   <button class="copy" id="copy" disabled>Загружаю код…</button>
   <div class="status" id="status" role="status"></div>
   <ol>
     <li>Скопируйте код кнопкой выше. Откройте свою Google Таблицу заказов и выберите «Расширения» → «Apps Script».</li>
     <li>Откройте существующий файл скрипта, замените его содержимое скопированным кодом и сохраните проект.</li>
     <li>Выберите «Начать развёртывание» → «Управление развёртываниями». В действующем веб-приложении нажмите карандаш, выберите «Новая версия» и нажмите «Развернуть».</li>
+    <li>В приложении откройте «Заказы» в режиме организатора, затем «Меню по фото». При подключении появится надпись «Таблица готова к публикации меню».</li>
   </ol>
   <details>
     <summary>Показать код</summary>
@@ -46,7 +47,7 @@ let code = '';
 const say = (t, cls) => { st.textContent = t; st.className = 'status ' + (cls || ''); };
 fetch('apps-script/Code.gs', { cache: 'no-store' })
   .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
-  .then(t => { code = t; ta.value = t; btn.disabled = false; btn.textContent = 'Скопировать код'; })
+  .then(t => { if (!t.includes("action === 'menu-publish'")) throw new Error('version'); code = t; ta.value = t; btn.disabled = false; btn.textContent = 'Скопировать код'; })
   .catch(() => { btn.textContent = 'Код не загрузился'; say('Обновите страницу', 'err'); });
 /* запасной способ для старых браузеров: выделить текст в поле и скопировать */
 function fallback() {

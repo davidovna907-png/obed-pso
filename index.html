@@ -7,7 +7,13 @@
 <meta name="apple-mobile-web-app-title" content="Обед ПСО">
 <meta name="theme-color" content="#19191C" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#19191C" media="(prefers-color-scheme: dark)">
-</head><body>
+<style>
+#photo-editor{margin:16px 0}#photo-editor summary{cursor:pointer;padding:8px 0}
+#photo-editor form{display:grid;gap:10px}#photo-editor label{font-weight:600;margin-top:8px}
+#photo-editor select,#photo-editor input,#photo-editor textarea{font:inherit;color:inherit;background:var(--card,#29272a);border:1px solid currentColor;border-radius:10px;padding:10px;width:100%;min-width:0;box-sizing:border-box}
+#photo-preview{width:100%;max-height:55vh;object-fit:contain}
+#photo-editor .hint,#offline-status{line-height:1.5;margin:4px 0}#photo-editor [hidden]{display:none}
+</style></head><body>
 <title>Обед ПСО</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -431,6 +437,7 @@ textarea{min-height:130px;resize:vertical;font-size:16px;font-weight:400}
       <div class="day"><span id="wday">понедельник</span><b class="num" id="dmy">28.09.2026</b></div>
     </div>
     <div class="deadline" id="deadline"><span class="dot"></span><span id="dl-text">Заказы до 21:00</span></div>
+    <p class="hint" id="offline-status" role="status" hidden></p>
     <div class="who" id="who-wrap">
       <span class="who-lbl" id="who-lbl">Заказ для</span>
       <div class="chips" id="chips" role="radiogroup" aria-labelledby="who-lbl"></div>
@@ -449,11 +456,29 @@ textarea{min-height:130px;resize:vertical;font-size:16px;font-weight:400}
       <h2 class="title" id="order-title">Общий заказ ПСО</h2>
       <p class="msg" id="sync" role="status" hidden style="margin:-4px 4px 12px"></p>
       <div id="order-body"></div>
-      <div class="card" id="push-card" hidden></div>
+      <p class="hint" id="offline-ready" role="status"></p><div class="card" id="push-card" hidden></div>
       <div class="phone" id="cafe-phone">
         <div>Кафе, приём заказов до 10:00 пн–пт<b id="phone">+7 (351) 230-66-66</b></div>
         <button class="btn" id="copy-phone">Копировать</button>
       </div>
+      <details class="card" id="photo-editor" hidden>
+        <summary class="lbl">Меню по фото</summary>
+        <p class="hint" id="menu-connection" role="status"></p>
+        <form id="photo-form">
+          <label for="menu-columns">Как расположены блюда на фото?</label>
+          <select id="menu-columns"><option value="2">В две колонки</option><option value="1">В одну колонку</option></select>
+          <label for="menu-photo">Фотография меню</label>
+          <input id="menu-photo" type="file" accept="image/*">
+          <img id="photo-preview" alt="Исходное фото меню" hidden>
+          <label for="menu-date">Дата меню</label><input id="menu-date" type="date" required>
+          <label for="menu-lines">Блюда и цены</label>
+          <p class="hint">Проверьте строки по фото. Запишите каждое блюдо с ценой в конце строки. Перед названием раздела поставьте #.</p>
+          <textarea id="menu-lines" rows="8" placeholder="# Супы&#10;Рассольник с курицей 140" required></textarea>
+          <p id="photo-status" role="status" class="hint"></p>
+          <button type="submit" class="btn primary">Подтвердить и опубликовать</button>
+          <button type="button" id="cancel-publication" class="btn" hidden>Вернуть в черновики</button>
+        </form>
+      </details>
       <button class="edit-link" id="org-link" hidden>Вход для организатора</button>
     </section>
 
@@ -512,9 +537,11 @@ textarea{min-height:130px;resize:vertical;font-size:16px;font-weight:400}
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script src="menu-editor.js"></script>
 <script id="order-app">
 (function(){
-const MENU = JSON.parse(document.getElementById('menu-data').textContent);
+const embeddedMenu = JSON.parse(document.getElementById('menu-data').textContent);
+const MENU = typeof MenuEditor === 'undefined' ? embeddedMenu : MenuEditor.current(embeddedMenu);
 /* общий заказ для всех телефонов: адрес веб-приложения Google Apps Script (apps-script/Code.gs); пусто — заказы хранятся только на этом телефоне */
 const ORDERS_API = 'https://script.google.com/macros/s/AKfycbzUeyfisU5w2-v-ORh9zA5wCbHE87eA9ezpwGfORzkTuRYOpL4KvUkQoFtxa7_kDI1Z/exec';
 const WD =['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
@@ -601,13 +628,11 @@ const locked = ()=>colleague()&&isClosed();
 const lockMsg = ()=>'Приём заказов закрыт в '+deadlineText()+'. Изменить заказ можно только через организатора.';
 let wasClosed=null;
 function tickDeadline(){
-  const left=cutoffAt-Date.now(), el=$('deadline');
+  const el=$('deadline');
   const c=isClosed(); if(c!==wasClosed){const first=wasClosed===null;wasClosed=c;if(!first){renderMenu();renderNotes();refresh();showSync();if(current==='arch')renderArchive()}}
   if(c){$('dl-text').textContent='Сбор закрыт · '+deadlineText();el.classList.add('closed');return}
   el.classList.remove('closed');
-  const hrs=Math.floor(left/36e5), mins=Math.floor(left%36e5/6e4);
-  const rest = hrs>=24 ? '' : ' · ещё <strong>'+(hrs?hrs+' ч ':'')+mins+' мин</strong>';
-  $('dl-text').innerHTML='Заказы до <strong>'+esc(deadlineText())+'</strong>'+rest;
+  $('dl-text').innerHTML='Заказы до <strong>'+esc(deadlineText())+'</strong>';
 }
 tickDeadline(); setInterval(tickDeadline,30000);
 const untilCutoff=cutoffAt-Date.now();
@@ -1164,6 +1189,7 @@ function applyRole(){
   $('order-title').textContent=col?'Мой заказ':'Общий заказ ПСО';
   $('v-order').setAttribute('aria-label',col?'Мой заказ':'Общий заказ');
   $('cafe-phone').hidden=col;
+  $('photo-editor').hidden=!adminKey||typeof MenuEditor==='undefined';
   link.hidden=!ORDERS_API; delete link.dataset.sure;
   link.textContent=col?'Вход для организатора':'Выйти из режима организатора';
   if(col){arch=null;$('arch-body').innerHTML='';archMsg('')}
@@ -1223,8 +1249,7 @@ let newMenu=!!seenMenu&&seenMenu<MENU.date&&MENU.date>=todayISO(), freshMenu='';
 if(!seenMenu||seenMenu>MENU.date) store.set(K_SEEN,MENU.date);
 function markSeen(){if(newMenu){newMenu=false;renderNotes()}store.set(K_SEEN,MENU.date)}
 function deadlineText(){
-  const dl=new Date(Y,M-1,D-1);
-  return cutoffTime+' по Челябинску, '+WDs[dl.getDay()]+' '+pad(dl.getDate())+'.'+pad(dl.getMonth()+1);
+  return cutoffTime;
 }
 /* приложение открыли — снять значок с иконки и уже показанные уведомления о меню */
 function clearBadge(){
@@ -1244,9 +1269,9 @@ async function checkFresh(onReturn=false){
     if(!response.ok)return;
     const doc=new DOMParser().parseFromString(await response.text(),'text/html');
     const data=JSON.parse(doc.getElementById('menu-data').textContent);
-    if(data.date<MENU.date||!Array.isArray(data.sections)||versionOf(doc)===ownVersion)return;
-    freshMenu=data.date;renderNotes();
-    if(onReturn&&!dirty.size&&!document.querySelector('.sheet')&&($('add-row').hidden||!$('p-new').value.trim()))location.reload();
+    if(data.date<embeddedMenu.date||!Array.isArray(data.sections)||versionOf(doc)===ownVersion)return;
+    freshMenu=data.date>MENU.date?data.date:MENU.date;renderNotes();
+    if(onReturn&&safeToSwitch())location.reload();
   }catch(e){}finally{checkingMenu=false}
 }
 async function reloadMenu(){
@@ -1281,10 +1306,23 @@ async function getPushKey(){
   return pushKey;
 }
 async function initPush(){
+  if('serviceWorker' in navigator){
+    try{
+      swReg=await navigator.serviceWorker.register('sw.js');
+      const showReady=()=>{const worker=navigator.serviceWorker.controller;
+        if(worker){const channel=new MessageChannel();
+          channel.port1.onmessage=e=>{if(e.data==='offline-ready')$('offline-ready').textContent='Меню и распознавание фото доступны без интернета.';channel.port1.close()};
+          worker.postMessage('offline-status',[channel.port2]);}
+      };
+      $('offline-ready').textContent='Подготовка к работе без интернета…';
+      navigator.serviceWorker.addEventListener('controllerchange',showReady);showReady();
+      const install=swReg.installing;if(install)install.addEventListener('statechange',()=>{if(install.state==='redundant')$('offline-ready').textContent='Загрузить файлы для офлайн-работы пока не удалось. Откройте приложение при устойчивой связи.'});
+    }catch(e){$('offline-ready').textContent='Офлайн-версия пока недоступна.'}
+  }
   if(!ORDERS_API) return;
   /* iPhone в Safari: подсказать про экран «Домой», но только если скрипт в таблице уже умеет уведомлять */
   if(!pushOK){if(isIOS&&!standalone&&await getPushKey())pushState='install';renderPush();return}
-  try{swReg=await navigator.serviceWorker.register('sw.js');pushSub=await swReg.pushManager.getSubscription()}
+  try{pushSub=await swReg.pushManager.getSubscription()}
   catch(e){renderPush();return}
   clearBadge();
   /* старая версия скрипта в таблице ключа не отдаёт — тогда уведомлений просто нет */
@@ -1554,6 +1592,14 @@ if(ORDERS_API){
   addEventListener('online',()=>syncOrders());
 }
 if(ORDERS_API){$('chat-in').hidden=true;$('chat-out').hidden=true}
+const safeToSwitch=()=>!dirty.size&&!$('photo-editor').open&&!document.querySelector('.sheet')&&!$('p-new').value.trim();
+if(typeof MenuEditor !== 'undefined') MenuEditor.start({post, organizer:()=>!!adminKey, key:()=>adminKey, menu:MENU,canAdopt:()=>!dirty.size,
+  onNew(date){freshMenu=date;renderNotes();if(safeToSwitch())location.reload()}});
+function networkStatus(){
+  const el=$('offline-status');el.hidden=navigator.onLine;
+  el.textContent='Без интернета. Меню сохранено на телефоне. Для отправки откройте приложение со связью.';
+}
+networkStatus();addEventListener('offline',networkStatus);addEventListener('online',networkStatus);
 renderNotes(); initPush(); checkFresh();
 setInterval(checkFresh,5*60000);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flushOnHide()});

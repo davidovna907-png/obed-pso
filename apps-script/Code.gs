@@ -94,6 +94,8 @@ function doPost(e) {
   if (!req || typeof req !== 'object') return json_({ ok: false, error: 'json' });
   const action = String(req.action || '');
   try {
+    if (action === 'menu-current') return json_({ok:true, menu:publishedMenu_()});
+    if (action === 'menu-publish') return json_(publishMenu_(req));
     if (action === 'push-key') return json_({ ok: true, key: locked_(() => vapid_().pub) });
     if (action === 'subscribe') return json_(subscribe_(req.sub, req.key));
     if (action === 'summary') return json_((() => {
@@ -403,16 +405,65 @@ function notify_() {
 /* «На вторник 06.10 — отметьте блюда до 21:00, пн 05.10» */
 function menuMessage_(menu) {
   const p = menu.date.split('-').map(Number), day = new Date(Date.UTC(p[0], p[1] - 1, p[2]));
-  const prev = new Date(day.getTime() - 864e5), dd = d => ('0' + d.getUTCDate()).slice(-2) + '.' + ('0' + (d.getUTCMonth() + 1)).slice(-2);
+  const dd = d => ('0' + d.getUTCDate()).slice(-2) + '.' + ('0' + (d.getUTCMonth() + 1)).slice(-2);
   return {
     title: 'Обед ПСО: новое меню',
-    body: 'Меню на ' + WD_ACC[day.getUTCDay()] + ' ' + dd(day) + '. Отметьте блюда до ' + menu.collectBy + ', ' + WD_SHORT[prev.getUTCDay()] + ' ' + dd(prev) + '.',
+    body: 'Меню на ' + WD_ACC[day.getUTCDay()] + ' ' + dd(day) + '. Отметьте блюда до ' + menu.collectBy + '.',
     tag: 'menu'
   };
 }
 
 /* меню, которое сейчас опубликовано на сайте приложения: {date, collectBy} */
+function publishedMenu_() {
+  const tab = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Меню приложения');
+  if (!tab) return null;
+  const text = tab.getRange('A1').getValue();
+  return text ? JSON.parse(text) : null;
+}
+
+/* После публикации идентификаторы блюд относятся к заказам этой даты. */
+function publishMenu_(request) {
+  const auth = locked_(() => keyCheck_(request.key));
+  if (auth !== 'ok') return {ok:false,error:auth};
+  const data = request.menu;
+  if (!data || typeof data.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(data.date)) return {ok:false,error:'date'};
+  const parsedDate = new Date(data.date+'T00:00:00Z');
+  if (!Number.isFinite(parsedDate.getTime()) || parsedDate.toISOString().slice(0,10) !== data.date) return {ok:false,error:'date'};
+  if (!Array.isArray(data.sections) || !data.sections.length || data.sections.length>30) return {ok:false,error:'menu'};
+  const sections = []; let n = 0;
+  for (const section of data.sections) {
+    if (!section || typeof section.title !== 'string' || !section.title.trim() || section.title.length>80 || !Array.isArray(section.items) || !section.items.length) return {ok:false,error:'menu'};
+    const items = [];
+    for (const item of section.items) {
+      if (!item || ++n>200 || item.id !== 'm'+n || typeof item.name !== 'string' || !item.name.trim() || item.name.length>200 || !Number.isInteger(item.price) || item.price<1 || item.price>9999) return {ok:false,error:'menu'};
+      items.push({id:item.id,name:item.name.trim(),price:item.price});
+    }
+    sections.push({title:section.title.trim(),items:items});
+  }
+  const menu = {date:data.date,collectBy:'21:00',sections:sections}, text = JSON.stringify(menu);
+  if (text.length>45000) return {ok:false,error:'menu'};
+  const stored = publishedMenu_();
+  if (stored && JSON.stringify(stored) === text) return {ok:true};
+  const base = websiteMenu_();
+  if (!base) return {ok:false,error:'server'};
+  return locked_(() => {
+    const current = publishedMenu_();
+    if (current && JSON.stringify(current) === text) return {ok:true};
+    if (menu.date < daysFromToday_(0) || menu.date <= base.date || (current && menu.date <= current.date)) return {ok:false,error:'date'};
+    const book = SpreadsheetApp.getActiveSpreadsheet();
+    const tab = book.getSheetByName('Меню приложения') || book.insertSheet('Меню приложения');
+    tab.getRange('A1').setValue(text);
+    SpreadsheetApp.flush();
+    return {ok:true};
+  });
+}
+
 function liveMenu_() {
+  const saved = publishedMenu_(), base = websiteMenu_();
+  return saved && (!base || saved.date>base.date) ? saved : base;
+}
+
+function websiteMenu_() {
   let r;
   try { r = UrlFetchApp.fetch(APP_URL + '?menu=' + Date.now(), { muteHttpExceptions: true, followRedirects: true }); }
   catch (err) { return null; }   /* сеть недоступна */
