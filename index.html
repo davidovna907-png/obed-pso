@@ -1,12 +1,12 @@
 <!doctype html><html lang="ru" data-theme="dark"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon.svg?v=cloche" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=cloche">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Обед ПСО">
-<meta name="theme-color" content="#141918" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#141918" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#19191C" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#19191C" media="(prefers-color-scheme: dark)">
 </head><body>
 <title>Обед ПСО</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,22 +14,22 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@400;500;600&display=swap">
 <style>
 :root{
-  --ground:#E3E7E4; --surface:#F3F4F1; --surface-2:#EAEEEB; --paper:#FAFBF8; --ink:#1E2523; --muted:#5F6A66;
+  --info:#365A70; --info-soft:#DBE8ED; --ground:#E3E7E4; --surface:#F3F4F1; --surface-2:#EAEEEB; --paper:#FAFBF8; --ink:#1E2523; --muted:#5F6A66;
   --line:#CAD1CD; --accent:#4B6C63; --accent-ink:#F4F7F5; --accent-soft:#D3DDD8;
   --plum:#86616F; --plum-soft:#EADFE3; --warn:#9A6B2F; --shadow:0 1px 2px rgba(30,40,36,.06),0 8px 24px rgba(30,40,36,.07);
   --display:"Unbounded","Onest",system-ui,sans-serif; --body:"Onest",-apple-system,"Segoe UI",Roboto,sans-serif;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   color-scheme:dark;
-  --ground:#141918; --surface:#1D2422; --surface-2:#232B29; --paper:#202826; --ink:#E5EAE7; --muted:#9AA5A0;
-  --line:#2F3A37; --accent:#96C1B3; --accent-ink:#11201B; --accent-soft:#2A3A35;
-  --plum:#CFA4B4; --plum-soft:#3A2B31; --warn:#D9A866; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+  --info:#B1CCD8; --info-soft:#29333B; --ground:#19191C; --surface:#252428; --surface-2:#302D30; --paper:#2B282A; --ink:#F2EDE6; --muted:#BCB7B3;
+  --line:#454044; --accent:#E4AA89; --accent-ink:#30201A; --accent-soft:#40322D;
+  --plum:#D6B7CB; --plum-soft:#352B35; --warn:#E3BF83; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
 }}
 :root[data-theme="dark"]{
   color-scheme:dark;
-  --ground:#141918; --surface:#1D2422; --surface-2:#232B29; --paper:#202826; --ink:#E5EAE7; --muted:#9AA5A0;
-  --line:#2F3A37; --accent:#96C1B3; --accent-ink:#11201B; --accent-soft:#2A3A35;
-  --plum:#CFA4B4; --plum-soft:#3A2B31; --warn:#D9A866; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
+  --info:#B1CCD8; --info-soft:#29333B; --ground:#19191C; --surface:#252428; --surface-2:#302D30; --paper:#2B282A; --ink:#F2EDE6; --muted:#BCB7B3;
+  --line:#454044; --accent:#E4AA89; --accent-ink:#30201A; --accent-soft:#40322D;
+  --plum:#D6B7CB; --plum-soft:#352B35; --warn:#E3BF83; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -72,7 +72,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
 .hint{color:var(--muted);font-size:16px;margin:6px 0 0}
 .menu-nav{display:flex;gap:8px;overflow-x:auto;padding:5px 3px 8px;margin:14px -3px 0}
-.menu-nav a{flex:none;display:inline-flex;align-items:center;min-height:44px;padding:0 15px;color:var(--ink);background:var(--surface);border:1px solid #647870;border-radius:24px;text-decoration:none;font-size:15px}
+.menu-nav a{flex:none;display:inline-flex;align-items:center;min-height:44px;padding:0 15px;color:var(--ink);background:var(--surface);border:1px solid #807675;border-radius:24px;text-decoration:none;font-size:15px}
 .menu-nav a:focus-visible,.sec h2:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .sec h2{scroll-margin-top:calc(12px + env(safe-area-inset-top,0px))}
 .item:focus-visible{outline-offset:-4px}
@@ -90,8 +90,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .sec.premium .list{background:var(--plum-soft);box-shadow:none;border:1px solid color-mix(in srgb,var(--plum) 30%,transparent)}
 .sec.premium .sec-h h2{color:var(--plum)}
 .item{display:grid;grid-template-columns:34px 1fr auto;gap:14px;align-items:start;width:100%;text-align:left;padding:16px 16px 16px 14px;min-height:64px}
-.tick{width:30px;height:30px;border-radius:50%;border:2px solid #70837B;display:grid;place-items:center;margin-top:1px;transition:background .15s,border-color .15s}
+.tick{width:30px;height:30px;border-radius:50%;border:2px solid #988B86;display:grid;place-items:center;margin-top:1px;transition:background .15s,border-color .15s}
 .tick svg{width:16px;height:16px;opacity:0;transform:scale(.6);transition:.15s}
+.item[aria-checked="true"]{background:color-mix(in srgb,var(--accent) 7%,transparent)}
 .item[aria-checked="true"] .tick{background:var(--accent);border-color:var(--accent)}
 .item[aria-checked="true"] .tick svg{opacity:1;transform:none}
 .tick svg path{stroke:var(--accent-ink)}
@@ -191,7 +192,8 @@ textarea{min-height:130px;resize:vertical;font-size:16px;font-weight:400}
 .sheet img{display:block;width:100%;border-radius:12px;border:1px solid var(--line)}
 /* заметки над меню */
 .note{display:flex;align-items:center;justify-content:space-between;gap:10px 12px;flex-wrap:wrap;margin-top:16px;padding:12px 10px 12px 16px;border-radius:16px;background:var(--surface);border:1px solid var(--line);font-size:16px;line-height:1.35}
-.note.new{background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+.note.new{background:var(--info-soft);border-color:color-mix(in srgb,var(--info) 48%,var(--info-soft))}
+.note.new b{color:var(--info)}
 .note b{font-weight:700}
 .note-txt{flex:1 1 200px}
 .note-btns{display:flex;gap:8px;flex:none}
@@ -494,7 +496,7 @@ textarea{min-height:130px;resize:vertical;font-size:16px;font-weight:400}
   </div>
   <nav class="tabs" role="tablist">
     <button class="tab" role="tab" aria-selected="true" data-v="menu">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Меню</button>
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 4.5h3M12 4.5v2M3.8 15.6a8.2 8.2 0 0 1 16.4 0zM2 18h20l-1.9 2H4z"/></svg>Меню</button>
     <button class="tab" role="tab" aria-selected="false" data-v="order">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg><span id="order-tab-lbl">Общий заказ</span><span class="cnt num" id="order-cnt" hidden>0</span></button>
     <button class="tab" role="tab" aria-selected="false" data-v="team">
@@ -1381,7 +1383,7 @@ function renderNotes(){
   if(locked()&&MENU.date>=todayISO()) N.push(`<div class="note lock"><span class="note-txt">🔒 ${esc(lockMsg())}</span></div>`);
   if(colleague()&&missed.length) N.push('<div class="note lock">Часть изменений не вошла в заказ. Подробности во вкладке «Мой заказ».</div>');
   if(freshMenu) N.push(`<div class="note new"><span class="note-txt">${freshMenu>MENU.date?'Опубликовано новое меню.':'Доступна обновлённая версия.'}</span><button class="btn primary sm" data-reload>Обновить</button></div>`);
-  else if(newMenu) N.push(`<div class="note new"><span class="note-txt">🆕 <b>Новое меню</b> на ${WDacc[menuDate.getDay()]}, ${ddmm}. Отметьте блюда до ${esc(deadlineText())}.</span><button class="note-x" data-note="new" aria-label="Скрыть">×</button></div>`);
+  else if(newMenu) N.push(`<div class="note new"><span class="note-txt"><b>Новое меню</b> на ${WDacc[menuDate.getDay()]}, ${ddmm}.${isClosed()?'':' Отметьте блюда до '+esc(deadlineText())+'.'}</span><button class="note-x" data-note="new" aria-label="Скрыть">×</button></div>`);
   const asked=String(store.get(K_ASK,'')||''), askAgain=!asked||(Date.now()-new Date(asked).getTime())>14*864e5;
   if(askAgain&&pushState==='off') N.push(`<div class="note"><span class="note-txt">🔔 Сообщать, когда появится новое меню?</span><span class="note-btns"><button class="btn primary sm" data-push="on">Включить</button><button class="btn ghost sm" data-note="ask">Не сейчас</button></span></div>`);
   if(askAgain&&pushState==='install') N.push(`<div class="note"><span class="note-txt">🔔 Чтобы телефон сообщал о новом меню, добавьте приложение на экран «Домой»: «Поделиться» <b>⬆︎</b> → <b>«На экран „Домой“»</b>.</span><button class="note-x" data-note="ask" aria-label="Скрыть">×</button></div>`);
