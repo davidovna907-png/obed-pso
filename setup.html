@@ -43,11 +43,20 @@ textarea{width:100%;height:50vh;margin-top:12px;background:var(--surface-2);colo
 <script>
 /* код берём из того же репозитория, чтобы на странице всегда была актуальная версия */
 const btn = document.getElementById('copy'), st = document.getElementById('status'), ta = document.getElementById('code');
+const forReplace = new URLSearchParams(location.search).get('mode') === 'replace';
+if (forReplace) {
+  document.querySelector('h1').textContent = 'Замена скрипта на iPhone';
+  document.querySelector('main > p').textContent = 'Для нижнего поля «Заменить» в Apps Script при включённой кнопке .*';
+  document.querySelector('ol').hidden = true;
+}
+function replacementText(source) {
+  return source.replace(/[\\$]/g, character => character + character).replace(/\r?\n/g, '\\n');
+}
 let code = '';
 const say = (t, cls) => { st.textContent = t; st.className = 'status ' + (cls || ''); };
 fetch('apps-script/Code.gs', { cache: 'no-store' })
   .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
-  .then(t => { if (!t.includes("action === 'menu-publish'")) throw new Error('version'); code = t; ta.value = t; btn.disabled = false; btn.textContent = 'Скопировать код'; })
+  .then(t => { if (!t.includes("action === 'menu-publish'")) throw new Error('version'); code = forReplace ? replacementText(t) : t; ta.value = code; btn.disabled = false; btn.textContent = forReplace ? 'Скопировать для замены' : 'Скопировать код'; })
   .catch(() => { btn.textContent = 'Код не загрузился'; say('Обновите страницу', 'err'); });
 /* запасной способ для старых браузеров: выделить текст в поле и скопировать */
 function fallback() {
@@ -57,7 +66,7 @@ function fallback() {
 }
 btn.addEventListener('click', () => {
   if (!code) return;
-  const done = () => say('✓ Код скопирован — вставьте его в Apps Script', 'ok');
+  const done = () => say(forReplace ? 'Скопировано. Вставьте текст в нижнее поле «Заменить».' : 'Код скопирован. Вставьте его в Apps Script.', 'ok');
   const fail = () => fallback() ? done() : say('Не получилось. Откройте «Показать код», нажмите в поле и удерживайте → «Выбрать все» → «Скопировать»', 'err');
   if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(code).then(done, fail);
   else fail();
