@@ -1,7 +1,7 @@
 /* Кэш содержит только общедоступные файлы этого приложения. */
 const scope = self.registration.scope;
 const prefix = 'pso:' + new URL(scope).pathname + ':shell:';
-const cacheName = prefix + 'photo-v2';
+const cacheName = prefix + 'photo-v3';
 const app = new URL('./', scope).href;
 const assets = ['menu-editor.js', 'manifest.webmanifest', 'icons/icon.svg', 'icons/apple-touch-icon.png',
   'icons/icon-192.png', 'icons/icon-512.png', 'ocr/tesseract.min.js', 'ocr/worker.min.js',

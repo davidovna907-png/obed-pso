@@ -32,6 +32,12 @@ const MenuEditor = (() => {
     for (const [index, raw] of splitPricedRows(text).entries()) {
       const line = raw.trim();
       if (!line) continue;
+      function problem(message) {
+        const error = Error('Строка '+(index+1)+'. '+message);
+        error.fragment = raw;
+        return error;
+      }
+      if (line.includes('[?]')) throw problem('Сверьте отмеченную цену с фото и уберите знак [?].');
       if (line.startsWith('#')) {
         if (section && !section.items.length) throw Error('В разделе «'+section.title+'» нет блюд.');
         const title = line.slice(1).trim();
@@ -39,12 +45,12 @@ const MenuEditor = (() => {
         section={title,items:[]}; sections.push(section); continue;
       }
       const m = line.match(/^(.+?)\s+(\d{1,4})\s*(?:₽|руб\.?)?$/iu);
-      if (!m || +m[2] < 1) throw Error('Строка '+(index+1)+'. Укажите название и цену, например «Рассольник 140».');
+      if (!m || +m[2] < 1) throw problem('Укажите название и цену, например «Рассольник 140».');
       if (!section) {section={title:'Меню',items:[]};sections.push(section);}
       const name=cleanDish(m[1],section.title).replace(/\s*[-–—]\s*$/,'').trim();
-      const withoutPortions = name.replace(/\d+\s*(?:грамм[а-я]*|гр|г|кг|мл|шт)\.?(?=\s|$)/giu,'');
-      if (/\s\d{2,4}\s+[а-яё]/iu.test(withoutPortions)) {
-        throw Error('Строка '+(index+1)+': похоже, здесь два блюда. Разделите их и проверьте обе цены.');
+      const withoutPortions = name.replace(/\d+\s*(?:грамм[а-я]*|гр|г|кг|мл|л|шт|%)\.?(?=[\s),/]|$)/giu,'');
+      if (/(?:^|\s)\d{2,4}(?:\s*₽)?(?:\s|$)/u.test(withoutPortions)) {
+        throw problem('В названии обнаружена ещё одна возможная цена. Проверьте, где заканчивается блюдо, или укажите единицу измерения.');
       }
       if (!name || name.length>200) throw Error('Проверьте название в строке '+(index+1)+'.');
       section.items.push({id:'m'+(++count),name,price:+m[2]});
@@ -79,7 +85,17 @@ const MenuEditor = (() => {
   function draftLines(raw) {
     const out=[];let pending=null, family='', started=false, section='';
     const flush=()=>{if(pending){out.push(cleanDish(pending.name,section)+' '+pending.price);pending=null;}};
-    for(const rawLine of splitPricedRows(raw)) {
+    const rows=splitPricedRows(raw).filter(row=>row.trim());
+    for(let n=0;n<rows.length;n++) {
+      let rawLine=rows[n];
+      // Цена иногда попадает на отдельную строку. Присоединяем её только
+      // к названию с буквы, без уже распознанной цены или заголовка.
+      if (/^[А-ЯЁа-яё]/u.test(rawLine.trim()) &&
+          !/\d\s*(?:₽|руб\.?)?\s*$/iu.test(rawLine) &&
+          !/^(?:супы|горячие блюда|салаты|премиум(?: блюдо)?|выпечка|напитки|завтрак|блины)\s*[:.]?$/iu.test(rawLine.trim()) &&
+          /^(?:\[\?\]\s*)?\d{1,4}\s*(?:₽|руб\.?)?$/iu.test(rows[n+1]?.trim()||'')) {
+        rawLine+=' '+rows[++n].trim();
+      }
       const line=rawLine.trim().replace(/^[+=|›→—–-]+\s*/u,'').replace(/^Ф\s+(?=[А-ЯЁ])/u,'').replace(/\s+[=—|]\s+(?=\d+\s*$)/u,' ').replace(/^[|—›→\s-]+/u,'').replace(/\s+\|/g,'').trim();
       if(!line)continue;
       const header=line.match(/^(супы|горячие блюда|напитки|завтрак|салаты|премиум(?: блюдо)?|выпечка)(?:$|[\s~≈–-])/iu);
@@ -101,6 +117,30 @@ const MenuEditor = (() => {
     }
     flush();return out.length?out.join('\n'):raw.trim();
   }
+  // Сопоставляем слова с исходной строкой, чтобы одинаковая цена у соседнего блюда
+  // не получила отметку по ошибке. Номера строк TSV локальны для каждой колонки.
+  function flagUncertainPrices(text, tsv) {
+    const rows = new Map();
+    for (const record of (tsv || '').split('\n')) {
+      const fields = record.split('\t');
+      if (fields[0] !== '5' || fields.length < 12) continue;
+      const key = fields.slice(1,5).join('/');
+      if (!rows.has(key)) rows.set(key, []);
+      rows.get(key).push({word:fields[11].trim(), confidence:Number(fields[10])});
+    }
+    const matches = new Map();
+    const compact = line => line.replace(/\s+/gu,'');
+    for (const words of rows.values()) {
+      const key = compact(words.map(w => w.word).join(' '));
+      const last = words.filter(w => !/^(?:₽|руб\.?)$/iu.test(w.word)).at(-1);
+      if (!matches.has(key)) matches.set(key, []);
+      matches.get(key).push(last && /^\d{1,4}(?:₽|руб\.?)?$/iu.test(last.word) && last.confidence < 70);
+    }
+    return text.split('\n').map(line => {
+      if (!matches.get(compact(line))?.shift()) return line;
+      return line.replace(/(^|\s+)(\d{1,4}\s*(?:₽|руб\.?)?\s*)$/iu,'$1[?] $2');
+    }).join('\n');
+  }
   let library;
   async function recognize(src, columns) {
     if (!window.Tesseract) {
@@ -120,7 +160,8 @@ const MenuEditor = (() => {
         const left=Math.floor(img.width*col/columns),right=Math.floor(img.width*(col+1)/columns);
         const canvas=document.createElement('canvas');canvas.width=right-left;canvas.height=img.height;
         canvas.getContext('2d').drawImage(img,-left,0);
-        parts.push((await worker.recognize(canvas)).data.text);
+        const {text, tsv} = (await worker.recognize(canvas, {}, {text:true, tsv:true})).data;
+        parts.push(flagUncertainPrices(text, tsv));
       }
       return {raw:parts.join('\n'),lines:parts.map(draftLines).join('\n')};
     } finally {await worker.terminate();}
@@ -150,7 +191,9 @@ const MenuEditor = (() => {
         const day=result.raw.match(/\b(\d{2})[./](\d{2})[./](20\d{2})\b/);
         draft.date=day?day[3]+'-'+day[2]+'-'+day[1]:'';
         draft.text=result.lines;
-        if(persist())say('Сверьте дату, названия и цены с фото. Исправьте ошибки и удалите лишние строки перед публикацией.');
+        if(persist())say(draft.text.includes('[?]')
+          ? 'Знаком [?] отмечены неясные цены. Сверьте их с фото и уберите отметки.'
+          : 'Черновик готов. Сверьте дату, блюда и цены с фото.');
       } catch {say('Не удалось прочитать фото. Можно вписать блюда и цены вручную или вставить текст с фотографии.');}
       finally{scanning=false;fields();photo.value='';}
     };
@@ -195,7 +238,13 @@ const MenuEditor = (() => {
         if(m.date<=menu.date)throw Error('Выберите дату позже действующего меню. На его блюда уже могут быть заказы.');
         draft.queued=m;if(!persist()){delete draft.queued;return;}
         fields();say('Меню сохранено для отправки. Откройте приложение со связью.');send();
-      }catch(e){say(e.message);}
+      }catch(e){
+        say(e.message);
+        if(e.fragment){
+          const offset=lines.value.indexOf(e.fragment);
+          if(offset>=0){lines.focus();lines.setSelectionRange(offset,offset+e.fragment.length);}
+        }
+      }
     };
     cancel.onclick=()=>{if(sending)return;delete draft.queued;persist();fields();say('Черновик можно изменить.');};
     const sync=()=>{if(!document.hidden&&navigator.onLine){send();receive();}};
