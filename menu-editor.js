@@ -16,12 +16,20 @@ const MenuEditor = (() => {
   }
   function current(base) {
     const menu = read(savedMenu);
-    return valid(menu) && menu.date >= base.date ? Object.assign({},base,menu) : base;
+    // Встроенное меню может содержать проверенные правки на ту же дату.
+    if (!valid(menu) || menu.date <= base.date) return base;
+    return {...base, ...menu, sections:menu.sections.map(section => ({
+      ...section, items:section.items.map(item => {
+        const [name, ...details] = item.name.split(' | ');
+        const desc = details.join(', ');
+        return desc ? {...item, name, desc} : item;
+      })
+    }))};
   }
   function parse(date, text) {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(Date.parse(date)) || new Date(date).toISOString().slice(0,10)!==date) throw Error('Проверьте дату меню.');
     const sections = []; let section, count = 0;
-    for (const [index, raw] of text.split('\n').entries()) {
+    for (const [index, raw] of splitPricedRows(text).entries()) {
       const line = raw.trim();
       if (!line) continue;
       if (line.startsWith('#')) {
@@ -33,7 +41,11 @@ const MenuEditor = (() => {
       const m = line.match(/^(.+?)\s+(\d{1,4})\s*(?:₽|руб\.?)?$/iu);
       if (!m || +m[2] < 1) throw Error('Строка '+(index+1)+'. Укажите название и цену, например «Рассольник 140».');
       if (!section) {section={title:'Меню',items:[]};sections.push(section);}
-      const name=m[1].replace(/\s*[-–—]\s*$/,'').trim();
+      const name=cleanDish(m[1],section.title).replace(/\s*[-–—]\s*$/,'').trim();
+      const withoutPortions = name.replace(/\d+\s*(?:грамм[а-я]*|гр|г|кг|мл|шт)\.?(?=\s|$)/giu,'');
+      if (/\s\d{2,4}\s+[а-яё]/iu.test(withoutPortions)) {
+        throw Error('Строка '+(index+1)+': похоже, здесь два блюда. Разделите их и проверьте обе цены.');
+      }
       if (!name || name.length>200) throw Error('Проверьте название в строке '+(index+1)+'.');
       section.items.push({id:'m'+(++count),name,price:+m[2]});
     }
@@ -50,19 +62,41 @@ const MenuEditor = (() => {
       return canvas.toDataURL('image/jpeg',0.8);
     } finally {URL.revokeObjectURL(url);}
   }
+  // В одном результате OCR могут оказаться две печатные строки с ценами.
+  function splitPricedRows(text) {
+    return text.replace(/(\s\d{2,4}(?:\s*₽)?)[ \t]+(?=[А-ЯЁ][а-яё])/gu,'$1\n').split('\n');
+  }
+  function cleanDish(name, section) {
+    let text=name.trim().replace(/([а-яё])-\s+([а-яё])/giu,'$1-$2')
+      .replace(/\s+и\s+[—–]\s+со\s/giu,' и со ')
+      .replace(/в белом На маринаде/giu,'в белом маринаде');
+    if (/выпечка|блины/iu.test(section)) {
+      text=text.replace(/^с(?=жюльеном|творогом|ветчиной)/iu,'с ');
+      if (/^с\s/iu.test(text) && /\(\s*\d+\s*шт/iu.test(text)) text='Блины '+text;
+    }
+    return text;
+  }
   function draftLines(raw) {
-    const out=[];let pending=null, family='', started=false;
-    const flush=()=>{if(pending){out.push(pending.name+' '+pending.price);pending=null;}};
-    for(const rawLine of raw.split('\n')) {
-      const line=rawLine.trim().replace(/^[|—›→\s-]+/u,'').replace(/\s+\|/g,'').trim();
+    const out=[];let pending=null, family='', started=false, section='';
+    const flush=()=>{if(pending){out.push(cleanDish(pending.name,section)+' '+pending.price);pending=null;}};
+    for(const rawLine of splitPricedRows(raw)) {
+      const line=rawLine.trim().replace(/^[+=|›→—–-]+\s*/u,'').replace(/^Ф\s+(?=[А-ЯЁ])/u,'').replace(/\s+[=—|]\s+(?=\d+\s*$)/u,' ').replace(/^[|—›→\s-]+/u,'').replace(/\s+\|/g,'').trim();
       if(!line)continue;
       const header=line.match(/^(супы|горячие блюда|напитки|завтрак|салаты|премиум(?: блюдо)?|выпечка)(?:$|[\s~≈–-])/iu);
-      if(header){flush();out.push('# '+header[1]);family='';started=true;continue;}
+      if(header){flush();section=header[1];out.push('# '+section);family='';started=true;continue;}
       if(/^заказы принимаем|^до \d\d?:\d\d/iu.test(line)){flush();continue;}
-      if(/^блины[:.]?$/iu.test(line)){flush();family='Блины ';continue;}
-      const item=line.match(/^(.+?)\s+(\d{1,4})\s*(?:₽|руб\.?)?$/iu);
+      if(/^блины\s*[:.]?$/iu.test(line)){flush();family='Блины ';continue;}
+      const normalized=line.replace(/^с(?=жюльеном|творогом|ветчиной)/iu,'с ');
+      const item=normalized.match(/^(.+?)\s+(\d{1,4})\s*(?:₽|руб\.?)?$/iu);
       if(item){flush();started=true;if(!/^с\s/iu.test(item[1]))family='';pending={name:family+item[1],price:item[2]};}
-      else if(pending)pending.name+=' '+line;
+      else if(pending){
+        if (/^(?:Куриный шницель|Куриная печень|Говядина|Мясные ёжики|Стейк|Котлета|Пирожок|Трайфл)\s/u.test(line)) {
+          flush();out.push(line); // У новой позиции отсутствует цена: нужна сверка.
+        } else {
+          const ingredient=/салаты|премиум/iu.test(section) && !pending.name.includes(' | ') && /^[А-ЯЁ]/u.test(line) && line.includes(',');
+          pending.name+=(ingredient?' | ':' ')+line;
+        }
+      }
       else if(started)out.push(line);
     }
     flush();return out.length?out.join('\n'):raw.trim();
